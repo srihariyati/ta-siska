@@ -4659,8 +4659,8 @@ tbody.collapse.show {
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: .25rem
+    border: 1.5px solid #8b8b8b;
+    border-radius: .50rem
 }
 
 .card>hr {
@@ -4683,6 +4683,13 @@ tbody.collapse.show {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     padding: 1.25rem
+}
+
+.card-body-siska {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 2 rem
 }
 
 .card-title {
@@ -7821,6 +7828,11 @@ button.bg-dark:hover {
 .mt-5,
 .my-5 {
     margin-top: 3rem!important
+}
+
+.mt-7,
+.my-7 {
+    margin-top: 7rem!important
 }
 
 .mr-5,

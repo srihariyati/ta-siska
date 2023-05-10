@@ -8,4 +8,12 @@ class Home extends BaseController
     {
         return view('login');
     }
+    public function beranda()
+    {
+        return view('beranda');
+    }
+    public function tabel_kuis()
+    {
+        return view('tbl_kuis');
+    }
 }
