@@ -16,4 +16,8 @@ class Home extends BaseController
     {
         return view('tbl_kuis');
     }
+    public function tabel_tugas()
+    {
+        return view('tbl_tugas');
+    }
 }

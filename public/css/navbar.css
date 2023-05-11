@@ -8,7 +8,7 @@
 }
 
 a {
-    color: #7f8db0;
+    color: #585858;
 }
 
 .wrapper {
@@ -31,6 +31,23 @@ a {
     justify-content: space-between;
     padding: .5rem 1rem;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.navbar2 {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: .5rem 1rem;
+    box-shadow: none;
 }
 
 .navbar .navbar_left .logo a {
@@ -70,7 +87,7 @@ a {
     right: -15px;
     user-select: none;
     background: #fff;
-    border: 1px solid #c7d8e2;
+    border: 1px solid #033754;
     width: 350px;
     height: auto;
     display: none;
@@ -217,7 +234,7 @@ a {
 .navbar .profile .profile_dd ul li.profile_li a:hover {
     background: transparent;
     cursor: default;
-    color: #7f8db0;
+    color: #227362;
 }
 
 .navbar .profile .profile_dd ul li .btn {
@@ -277,4 +294,51 @@ a {
 
 .bg-light {
     background-color: #ffffff!important
+}
+
+.nav-menu {
+    text-align: center;
+    font-size: 1rem;
+    border-bottom: 1px solid #dee2e6;
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-top: 20px;
+}
+
+.nav-menu-link {
+    text-decoration: none;
+    display: inline-block;
+    padding: 13px 13px;
+    color: #212529;
+    margin-right: 5px;
+}
+
+.nav-menu-link:hover {
+    text-decoration: none;
+    border-bottom: 4px solid #227362
+}
+
+.nav-menu-link.active {
+    text-decoration: none;
+    border-bottom: 4px solid #227362
+}
+
+.nav-menu-link.current {
+    border-bottom: 2px solid #227362;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+    .nav-menu {
+        font-size: 1.1rem;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .nav-menu-link {
+        padding: 20px 20px;
+    }
 }

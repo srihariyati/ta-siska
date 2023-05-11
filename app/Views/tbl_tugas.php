@@ -1,13 +1,11 @@
 <?= $this->extend('layout/navbar') ?>
 
 <?= $this->section('title') ?>
-<title>Tabel Kuis | SISKA</title>
+<title>Tabel Tugas | SISKA</title>
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-
-
-  <div class="container mt-7 mb-3">
+<div class="container mt-7 mb-3">
 
       <div class="row">
 
@@ -77,12 +75,18 @@
       <h3 class="font-weight-bolder pr-10 mb-0">Kuis 2</h3>
       <p>Topik 2 - Konsep Dasar Bahasa dan Automata</p>
     </div>
+    
+  </div>
+  <div class="row mt-4"> 
     <div class="col-md-6">
-      <p class="mt-2 mb-0 text-right"><strong>Opened</strong> : Friday, 3 September 2021, 12:00 AM</p>
-      <p class="text-right"><strong>Closed</strong> : Tuesday, 21 September 2021, 11:59 PM</p>
+      <p><strong>Opened</strong> : Friday, 3 September 2021, 12:00 AM</p><br>  
+    </div>     
+  </div>
+  <div class="row mt-0"> 
+    <div class="col-md-6"> 
+    <p><strong>Closed</strong> : Tuesday, 21 September 2021, 11:59 PM</p>
     </div>
   </div>
-
   <!-- tabel  nilai kuis -->
   <div class="row mt-4">
   <table class="table table-sm table-striped ml-2">

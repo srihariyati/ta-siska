@@ -32,6 +32,7 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 $routes->get('/beranda', 'Home::beranda');
 $routes->get('/tabel_kuis', 'Home::tabel_kuis');
+$routes->get('/tabel_tugas', 'Home::tabel_tugas');
 
 /*
  * --------------------------------------------------------------------
