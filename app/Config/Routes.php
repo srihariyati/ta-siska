@@ -33,6 +33,8 @@ $routes->get('/', 'Home::index');
 $routes->get('/beranda', 'Home::beranda');
 $routes->get('/tabel_kuis', 'Home::tabel_kuis');
 $routes->get('/tabel_tugas', 'Home::tabel_tugas');
+$routes->get('/gradebook', 'Home::gradebook');
+$routes->get('/edit_gradebook_all', 'Home::edit_gradebook_all');
 
 /*
  * --------------------------------------------------------------------

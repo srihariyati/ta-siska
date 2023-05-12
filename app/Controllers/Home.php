@@ -20,4 +20,9 @@ class Home extends BaseController
     {
         return view('tbl_tugas');
     }
+    public function edit_gradebook_all()
+    {
+        return view('edit_gradebook_all');
+    }
+
 }

@@ -75,18 +75,29 @@
       <h3 class="font-weight-bolder pr-10 mb-0">Kuis 2</h3>
       <p>Topik 2 - Konsep Dasar Bahasa dan Automata</p>
     </div>
-    
-  </div>
-  <div class="row mt-4"> 
     <div class="col-md-6">
-      <p><strong>Opened</strong> : Friday, 3 September 2021, 12:00 AM</p><br>  
-    </div>     
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td>Participants</td>
+            <td>86</td>
+          </tr>
+          <tr>
+            <td>Submitted</td>
+            <td>86</td>
+          </tr>       
+        </tbody>
+      </table>
+    </div>    
   </div>
-  <div class="row mt-0"> 
-    <div class="col-md-6"> 
-    <p><strong>Closed</strong> : Tuesday, 21 September 2021, 11:59 PM</p>
-    </div>
+
+  <div class="row mt-2 mb-0"> 
+    <div class="col-md-6">
+      <p class="mt-2 mb-0"><strong>Opened</strong> : Friday, 3 September 2021, 12:00 AM</p>
+      <p><strong>Due</strong> : Tuesday, 21 September 2021, 11:59 PM</p>
+    </div>    
   </div>
+
   <!-- tabel  nilai kuis -->
   <div class="row mt-4">
   <table class="table table-sm table-striped ml-2">
@@ -95,48 +106,24 @@
      
       <th scope="col">Nama Mahasiswa</th>
       <th scope="col">Grade</th>
-      <th scope="col">Q1</th>
-      <th scope="col">Q2</th>
-      <th scope="col">Q3</th>
-      <th scope="col">Q4</th>
-      <th scope="col">Q5</th>
-      <th scope="col">Q6</th>
-      <th scope="col">Q7</th>
+      <th scope="col">Nilai Huruf</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>Mark</td>
       <td>100</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
+      <td>A</td>
     </tr>
     <tr>
       <td>Jacob</td>
       <td>50</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>❌</td>
-      <td>✅</td>
-      <td>❌</td>
-      <td>❌</td>
-      <td>✅</td>
+      <td>C</td>
     </tr>
     <tr>
       <td>Lee</td>
-      <td>90</td>
-      <td>❌</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
+      <td>86</td>
+      <td>AB</td>
     </tr>
   </tbody>
 </table>
