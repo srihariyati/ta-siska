@@ -24,5 +24,22 @@ class Home extends BaseController
     {
         return view('edit_gradebook_all');
     }
+    public function visdat_kuis()
+    {
+        return view('visdat_kuis');
+    }
+    public function visdat_tugas()
+    {
+        return view('visdat_tugas');
+    }
+    public function gradebook_personal()
+    {
+        return view('gradebook_personal');
+    }
+    public function edit_grade_personal()
+    {
+        return view('edit_grade_personal');
+    }
+    
 
 }
