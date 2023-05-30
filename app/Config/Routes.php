@@ -19,7 +19,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-// $routes->setAutoRoute(false);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -30,7 +30,12 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('/beranda', 'Home::beranda');
+$routes->get('/login/token', 'Login::generatetoken');
+$routes->get('/beranda/getsiteinfo/(:any)', 'Beranda::getsiteinfo/$1');
+// $route['/beranda/set/(:any)'] = 'Beranda/set/$1';
+$routes->get('/course/(:any)/(:any)', 'Course::getcourseinfo/$1/$2');
+$routes->get('/beranda', 'Beranda::getenrolledcourses');
+$routes->get('/visdat/(:num)', 'Visdat::showdata/$1');
 $routes->get('/tabel_kuis', 'Home::tabel_kuis');
 $routes->get('/tabel_tugas', 'Home::tabel_tugas');
 $routes->get('/gradebook', 'Home::gradebook');

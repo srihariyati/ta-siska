@@ -11,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 
     
 </head>
@@ -21,7 +21,7 @@
     <div class="navbar_left">
       <div class="logo">
         <a class="navbar-brand" href="#">
-          <img src="img/logo_siska_2.svg" width="350" height="46" class="d-inline-block align-top" alt="">
+          <img src="/img/logo_siska_2.svg" width="350" height="46" class="d-inline-block align-top" alt="">
         </a>
       </div>
     </div>
@@ -30,8 +30,8 @@
      
       <div class="profile">
         <div class="icon_wrap">
-          <img src="img/profile.png" alt="profile_pic">
-          <span class="name">Sri Hariyati</span>
+          <img src="/img/profile.png" alt="profile_pic">
+          <span class="name">firstname</span>
           <i class="fas fa-chevron-down"></i>
         </div>
 
