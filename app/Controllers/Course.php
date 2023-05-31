@@ -34,7 +34,7 @@ class Course extends BaseController{
         $response = json_decode($response, true);
         $arrayLength = count($response["courses"]);
         //dd($response);
-        $i = 1;
+      
         $course_info[] =[
             $token,
             $response["courses"][0]["id"],
@@ -75,30 +75,22 @@ class Course extends BaseController{
 
         $response = json_decode($response, true);
         $arrayLength = count($response);
-        dd($response);
+        //dd($response);
         $i = 1;
 
         while( $i < $arrayLength){
             $course_contents_list[] =[
-                $coursename,
                 $response[$i]["id"],
                 $response[$i]["name"],
                 //$response[$i]["summary"],
             ];
             $i++;   
         }
+        
         //dd($course_contents_list);
-
-
-        echo " halaman";
-
-        $status = "assign";
-
-        if ($status=="assign"){
-            //return halaman visdat_tugas
-        } else{
-            //return halaman visdat kuis
-        }   
+        $mydata['course_contents_list'] = $course_contents_list;  
+        $mydata['coursename'] =  $coursename;  
+        return view ('visdat_tugas', $mydata); 
     }
 
     

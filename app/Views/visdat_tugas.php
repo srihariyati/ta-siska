@@ -10,7 +10,7 @@
       <div class="row">
 
         <div class="col-md-6">
-          <h2 class="font-weight-bolder pr-10">Teori Bahasa dan Automata Ganjil 21/22 Kelas A</h2>
+          <h2 class="font-weight-bolder pr-10"><?= $coursename; ?></h2>
         </div>
 
         <div class="col-md-6">
@@ -32,9 +32,9 @@
        
 
         <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
+          <?php foreach($course_contents_list as $cc):?>
+          <a class="dropdown-item" href="#"><?= $cc[1]; ?></a>
+           <?php endforeach;?> 
         </div>
       </div>
     </div>
