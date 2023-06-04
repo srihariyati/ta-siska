@@ -38,11 +38,11 @@ $routes->get('/beranda', 'Beranda::getenrolledcourses');
 $routes->get('/visdat/(:num)', 'Visdat::showdata/$1');
 $routes->get('/tabel_kuis', 'Home::tabel_kuis');
 $routes->get('/tabel_tugas', 'Home::tabel_tugas');
-$routes->get('/gradebook', 'Home::gradebook');
-$routes->get('/edit_gradebook_all', 'Home::edit_gradebook_all');
+$routes->get('/gradebook', 'Gradebook::gradebook');
+$routes->get('/edit_gradebook_all', 'Gradebook::edit_gradebook_all');
 $routes->get('/visdat_kuis', 'Home::visdat_kuis');
 $routes->get('/visdat_tugas', 'Home::visdat_tugas');
-$routes->get('/gradebook_personal', 'Home::gradebook_personal');
+$routes->get('/personal_gradebook', 'PersonalGradebook::getstudent');
 $routes->get('/edit_grade_personal', 'Home::edit_grade_personal');
 
 /*

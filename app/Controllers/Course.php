@@ -75,6 +75,7 @@ class Course extends BaseController{
 
         $response = json_decode($response, true);
         $arrayLength = count($response);
+        
         //dd($response);
         $i = 1;
 
@@ -82,14 +83,17 @@ class Course extends BaseController{
             $course_contents_list[] =[
                 $response[$i]["id"],
                 $response[$i]["name"],
-                //$response[$i]["summary"],
+                $response[$i]["modules"],
             ];
-            $i++;   
+            $i++;
         }
+        $j=1;
         
+        //dd($course_contents_list[0][2][1]["name"]);
+        //dd($content_module_list);
         //dd($course_contents_list);
         $mydata['course_contents_list'] = $course_contents_list;  
-        $mydata['coursename'] =  $coursename;  
+        $mydata['coursename'] =  $coursename; 
         return view ('visdat_tugas', $mydata); 
     }
 

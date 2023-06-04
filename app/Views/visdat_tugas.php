@@ -25,31 +25,37 @@
 <div class="container">
   <div class="row">
     <div class="col col-lg-6">
+
       <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span>Topik 2 - Konsep Bahasa dan AutomataAAAAAAAAAAAAAAAAAAAAAA</span>
-        </button>   
+        <select class="btn btn-light dropdown-toggle w-100 text-left btn-flex" id="course_content" >
+          <option value="<?=$course_contents_list[0][1]; ?>"  selected><?=$course_contents_list[0][1]; ?></option>
+            <?php foreach($course_contents_list as $cc):?>
+            <option value="<?=$cc[0]; ?>"><?= $cc[1]; ?></option>
+            <?php endforeach;?> 
+            </select>   
        
 
-        <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton">
-          <?php foreach($course_contents_list as $cc):?>
-          <a class="dropdown-item" href="#"><?= $cc[1]; ?></a>
-           <?php endforeach;?> 
-        </div>
+        <!-- <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton" >
+         
+          <a class="dropdown-item" href="#"></a>
+           
+        </div> -->
       </div>
     </div>
 
     <div class="col col-lg-4">
     <div class="dropdown">
         <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span>Topik 2 - Konsep Bahasa dan AutomataAAAAAAAAAAAAAAAAAAAAAA</span>
+          <span>Topik</span>
         </button>   
        
 
         <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Action</a>
+          
+          <a class="dropdown-item" href="#"></a>
           <a class="dropdown-item" href="#">Another action</a>
           <a class="dropdown-item" href="#">Something else here</a>
+         
         </div>
       </div>
     </div>
@@ -109,3 +115,17 @@
     
 </div>
 <?= $this->endSection('content') ?>
+
+<?= $this->section('jshere') ?>
+<script>
+    $(document).ready(function() {
+      $('#course_content').on('change', function() {
+        var contentId = this.value;
+        console.log(contentId);
+        // Lakukan aksi lainnya sesuai kebutuhan
+        // Misalnya, kirim permintaan Ajax ke server
+        // untuk mengambil data terkait konten yang dipilih
+      });
+    });
+  </script>
+<?= $this->endSection('jshere') ?>

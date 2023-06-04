@@ -3374,6 +3374,8 @@ tbody.collapse.show {
     border: 1px solid rgba(0, 0, 0, .15);
     border-radius: .25rem;
     white-space: normal;
+    max-height: 25vh;
+    overflow: scroll;
 }
 
 .dropup .dropdown-menu {

@@ -46,10 +46,11 @@
       </div>
     </div>
   </div>
-
 </nav>
 
   <?= $this->renderSection('content') ?>
+
+
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="/js/bootstrap.bundle.min.js"></script>
   <!-- navbar js -->
@@ -73,6 +74,9 @@ $(".show_all .link").click(function(){
 $(".close, .shadow").click(function(){
   $(".popup").hide();
 });
-  </script>
+</script>
+
+<?= $this->renderSection('jshere') ?>
+
 </body>
 </html>
