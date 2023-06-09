@@ -3947,7 +3947,9 @@ tbody.collapse.show {
     border-radius: .25rem;
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none
+    appearance: none;
+    overflow: scroll;
+    max-height: 10vh;
 }
 
 .custom-select:focus {

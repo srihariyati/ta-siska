@@ -87,10 +87,10 @@ class Course extends BaseController{
             ];
             $i++;
         }
-        $j=1;
+      
         
         //dd($course_contents_list[0][2][1]["name"]);
-        //dd($content_module_list);
+        //dd($content_module_lxist);
         //dd($course_contents_list);
         $mydata['course_contents_list'] = $course_contents_list;  
         $mydata['coursename'] =  $coursename; 

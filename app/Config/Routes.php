@@ -19,7 +19,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-$routes->setAutoRoute(false);
+$routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
@@ -33,7 +33,7 @@ $routes->get('/', 'Home::index');
 $routes->get('/login/token', 'Login::generatetoken');
 $routes->get('/beranda/getsiteinfo/(:any)', 'Beranda::getsiteinfo/$1');
 // $route['/beranda/set/(:any)'] = 'Beranda/set/$1';
-$routes->get('/course/(:any)/(:any)', 'Course::getcourseinfo/$1/$2');
+// $routes->get('/course/(:any)/(:any)', 'Course::getcourseinfo/$1/$2');
 $routes->get('/beranda', 'Beranda::getenrolledcourses');
 $routes->get('/visdat/(:num)', 'Visdat::showdata/$1');
 $routes->get('/tabel_kuis', 'Home::tabel_kuis');
@@ -44,6 +44,9 @@ $routes->get('/visdat_kuis', 'Home::visdat_kuis');
 $routes->get('/visdat_tugas', 'Home::visdat_tugas');
 $routes->get('/personal_gradebook', 'PersonalGradebook::getstudent');
 $routes->get('/edit_grade_personal', 'Home::edit_grade_personal');
+
+$routes->get('/get-course-module', 'Module::getCourseModule', ['as' => 'getCourseModule']);
+
 
 /*
  * --------------------------------------------------------------------

@@ -5,6 +5,7 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
+
 <div class="container mt-7 mb-3">
 
       <div class="row">
@@ -27,36 +28,19 @@
     <div class="col col-lg-6">
 
       <div class="dropdown">
-        <select class="btn btn-light dropdown-toggle w-100 text-left btn-flex" id="course_content" >
-          <option value="<?=$course_contents_list[0][1]; ?>"  selected><?=$course_contents_list[0][1]; ?></option>
-            <?php foreach($course_contents_list as $cc):?>
-            <option value="<?=$cc[0]; ?>"><?= $cc[1]; ?></option>
-            <?php endforeach;?> 
-            </select>   
-       
-
-        <!-- <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton" >
-         
-          <a class="dropdown-item" href="#"></a>
-           
-        </div> -->
+        <select class="custom-select dropdown-toggle w-100 text-left btn-flex" id="course_content" >
+          <?php foreach($course_contents_list as $cc):?>
+          <option value="<?=$cc[0]; ?>"><?= $cc[1]; ?></option>
+          <?php endforeach;?> 
+        </select>  
       </div>
     </div>
 
     <div class="col col-lg-4">
     <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span>Topik</span>
-        </button>   
-       
-
-        <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton">
-          
-          <a class="dropdown-item" href="#"></a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-         
-        </div>
+          <select class="custom-select dropdown-toggle w-100 text-left btn-flex" id="content_module" >
+           
+        </select> 
       </div>
     </div>
 
@@ -117,15 +101,23 @@
 <?= $this->endSection('content') ?>
 
 <?= $this->section('jshere') ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/view/content_module.js"></script>
 <script>
     $(document).ready(function() {
-      $('#course_content').on('change', function() {
-        var contentId = this.value;
-        console.log(contentId);
-        // Lakukan aksi lainnya sesuai kebutuhan
-        // Misalnya, kirim permintaan Ajax ke server
-        // untuk mengambil data terkait konten yang dipilih
-      });
+      handleCourseContentChange();
+      
+
+        $('#course_content').on('change', function() {
+            handleCourseContentChange();
+
+        });
+        
+        $('#content_module').on('change', function() {
+            handleContentModuleChange();
+
+        });
+
     });
   </script>
 <?= $this->endSection('jshere') ?>
