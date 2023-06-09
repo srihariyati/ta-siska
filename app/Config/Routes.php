@@ -45,7 +45,7 @@ $routes->get('/visdat_tugas', 'Home::visdat_tugas');
 $routes->get('/personal_gradebook', 'PersonalGradebook::getstudent');
 $routes->get('/edit_grade_personal', 'Home::edit_grade_personal');
 
-$routes->get('/get-course-module', 'Module::getCourseModule', ['as' => 'getCourseModule']);
+$routes->get('/get-course-module', 'Course::getCourseModule', ['as' => 'getCourseModule']);
 
 
 /*

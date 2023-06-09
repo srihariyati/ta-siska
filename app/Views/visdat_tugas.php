@@ -11,7 +11,8 @@
       <div class="row">
 
         <div class="col-md-6">
-          <h2 class="font-weight-bolder pr-10"><?= $coursename; ?></h2>
+        <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"> <?= $coursename; ?> </h2>
+
         </div>
 
         <div class="col-md-6">

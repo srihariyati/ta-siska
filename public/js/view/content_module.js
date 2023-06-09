@@ -1,9 +1,12 @@
 function handleCourseContentChange() {
     var contentId = $('#course_content').val();
+    var courseId = $('#courseTitle').data('courseid');
+    var token = $('#courseTitle').data('token');
+
     console.log(contentId);
 
     $.ajax({
-        url: `${BASE_URL}get-course-module?id=${contentId}`,
+        url: `${BASE_URL}get-course-module?courseid=${courseId}&contentid=${contentId}&token=${token}`,
         method: 'GET',
         dataType: 'json',
         success: function(response) {

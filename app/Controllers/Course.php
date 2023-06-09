@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 use CodeIgniter\Controller;
+use CodeIgniter\API\ResponseTrait;
 
 
 class Course extends BaseController{
-    public function getcourseinfo($token, $courseid)
+    use ResponseTrait;
+
+    public function getCourseInfo($token, $courseid)
     {
         $token = $token;
         $courseid= $courseid;
@@ -46,12 +49,14 @@ class Course extends BaseController{
        return $this->getcoursecontent();
     }
 
-    public function getcoursecontent(){
+    public function getCourseContent()
+    {
         $course_info = $this->data['course_info'];
 
-        $token=$course_info[0][0];
-        $courseid=  $course_info[0][1];
-        $coursename= $course_info[0][2];
+        $token = $course_info[0][0];
+        $courseid = $course_info[0][1];
+        $coursename = $course_info[0][2];
+
         $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -83,19 +88,91 @@ class Course extends BaseController{
             $course_contents_list[] =[
                 $response[$i]["id"],
                 $response[$i]["name"],
+                $response[$i]["modules"]
+            ];
+            $i++;
+        }
+   
+        
+        $mydata['course_contents_list'] = $course_contents_list;  
+        $mydata['coursename'] =  $coursename; 
+        $mydata['courseid'] = $courseid;
+        $mydata['token'] = $token;
+        return view ('visdat_tugas', $mydata); 
+    }
+
+    
+    public function getCourseModule()
+    {
+        $token = $this->request->getVar('token');
+        $courseid = $this->request->getVar('courseid');
+
+        $contentid =  $this->request->getVar('contentid');
+        
+        //dd($courseid);
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"core_course_get_contents",
+            "courseid"=>$courseid,
+        ];
+        
+        $data = http_build_query($param);
+        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        //kalau gapake ini gabisa akses moodle, karena masalah ssl
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $response = json_decode($response, true);
+        $arrayLength = count($response);
+        
+        //dd($response);
+        $i = 1;
+
+        while( $i < $arrayLength){
+            $content_module[] =[
+                $response[$i]["id"],
                 $response[$i]["modules"],
             ];
             $i++;
         }
-      
         
-        //dd($course_contents_list[0][2][1]["name"]);
-        //dd($content_module_lxist);
-        //dd($course_contents_list);
-        $mydata['course_contents_list'] = $course_contents_list;  
-        $mydata['coursename'] =  $coursename; 
-        return view ('visdat_tugas', $mydata); 
+       
+
+        $filteredModules = [];
+        // Iterasi melalui array response
+        foreach ($content_module as $course) {
+            if ($course[0] == $contentid) {
+                $filteredModules = $course[1];
+                break;
+            }
+        }
+       
+        $result = [];
+        
+
+        foreach ($filteredModules as $module) {
+            if ($module['modname'] == 'quiz' || $module['modname'] == 'assign') {
+                $result[] = [
+                    'moduleId' => $module['id'],
+                    'moduleName' => $module['name']
+                ];
+            }
+        }
+        //dd($result);
+        
+        return $this->response->setJSON($result);
     }
+
+    
 
     
 
