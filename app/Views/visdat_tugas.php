@@ -39,8 +39,7 @@
 
     <div class="col col-lg-4">
     <div class="dropdown">
-          <select class="custom-select dropdown-toggle w-100 text-left btn-flex" id="content_module" >
-           
+          <select class="custom-select dropdown-toggle w-100 text-left btn-flex" id="content_module" > 
         </select> 
       </div>
     </div>
@@ -62,11 +61,12 @@
     <!-- nama kuis, dan waktu kuis -->
   <div class="row mt-4">
     <div class="col-md-6">
-      <h3 class="font-weight-bolder pr-10 mb-0">Kuis 2</h3>
-      <p>Topik 2 - Konsep Dasar Bahasa dan Automata</p>
+      <h3 class="font-weight-bolder pr-10 mb-0" id="modTitle"></h3>
+      <span id="contentName"></span>
+     
+      <span id="openedDate"></span>
+      <span id="closedDate"></span>
 
-      <p class="mt-2 mb-0"><strong>Opened</strong> : Friday, 3 September 2021, 12:00 AM</p>
-      <p><strong>Closed</strong> : Tuesday, 21 September 2021, 11:59 PM</p>
     </div>
     <div class="col-md-6">
     <table class="table table-bordered">
