@@ -61,7 +61,8 @@
     <!-- nama kuis, dan waktu kuis -->
   <div class="row mt-4">
     <div class="col-md-6">
-      <h3 class="font-weight-bolder pr-10 mb-0" id="modTitle"></h3>
+      <span id="modTitle"></span>
+      <!-- <h3 class="font-weight-bolder pr-10 mb-0" id="modTitle"></h3> -->
       <span id="contentName"></span>
      
       <span id="openedDate"></span>
@@ -73,11 +74,11 @@
         <tbody>
           <tr>
             <td>Participants</td>
-            <td>86</td>
+            <td> <span id="courseParticipant"><span></td>
           </tr>
           <tr>
             <td>Submitted</td>
-            <td>86</td>
+            <td><span id="submittedParticipant"></span></td>
           </tr>       
         </tbody>
       </table>
@@ -103,20 +104,17 @@
 
 <?= $this->section('jshere') ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/js/view/content_module.js"></script>
+<script src="/js/view/contentModule.js"></script>
 <script>
     $(document).ready(function() {
       handleCourseContentChange();
       
-
         $('#course_content').on('change', function() {
             handleCourseContentChange();
-
         });
         
         $('#content_module').on('change', function() {
             handleContentModuleChange();
-
         });
 
     });

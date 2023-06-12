@@ -5,7 +5,9 @@ function handleCourseContentChange() {
     var courseId = $('#courseTitle').data('courseid');
     var token = $('#courseTitle').data('token');
 
-    console.log(contentId);
+    console.log('courseId : ' + courseId);
+    console.log('contentId : ' + contentId);
+
 
     $.ajax({
 
@@ -19,6 +21,7 @@ function handleCourseContentChange() {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
+            console.log("getCourseModule : ");
             console.log(response);
             $('#content_module').empty();
             $('#contentName').empty();
@@ -54,14 +57,14 @@ function handleContentModuleChange() {
     var moduleId = $('#content_module').val();
     var token = $('#courseTitle').data('token');
     var courseId = $('#courseTitle').data('courseid');
-    console.log(courseId);
+
 
     $.ajax({
-        url: `${BASE_URL}course/getModule?token=${token}&courseid=${courseId}&cmid=${moduleId}`,
+        url: `${BASE_URL}course/getQuizAssign?token=${token}&courseid=${courseId}&cmid=${moduleId}`,
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-
+            console.log("getQuizAssign : ");
             console.log(response);
             $('#modTitle').empty();
             $('#openedDate').empty();
@@ -72,16 +75,13 @@ function handleContentModuleChange() {
 
                 //if response assign
                 if (module.mod == "assign") {
-                    console.log("assign nich");
+                    console.log('modName : Assign');
                     //return halaman visdat tugas
                     for (var i = 0; i < response.length; i++) {
                         var module = response[i];
-                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0">' + module.assignName + '</h3>';
+                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0" >' + module.assignName + '</h3>';
+                        console.log(modName);
 
-                        // var dueDateTimestamp = module.dueDate * 1000; // Convert to milliseconds
-                        // var dueDateFormatted = moment(dueDateTimestamp).format('DD MMMM YYYY, hh:mm A');
-                        //var dueDate = '<p class="mt-2 mb-0" id="dueDate"><strong>Due Date</strong>: ' + dueDateFormatted + '</p>';
-                        // var unixTimestamp = module.dueDate; // Unix timestamp in seconds
                         var openedDate = module.openedDate;
                         var closedDate = module.closedDate;
 
@@ -95,17 +95,33 @@ function handleContentModuleChange() {
                         $('#openedDate').append(openedDate);
                         $('#closedDate').append(closedDate);
 
+                        getCourseParticipant(token, courseId);
+                        getSubmittedParticipant(token, module.assignId, module.groupId);
+
+                        //ambil data participant tugas
                     }
 
 
                     //if response quiz
                 } else if (module.mod == 'quiz') {
-                    console.log("quiz nich");
+                    console.log('modName : Quiz');
                     //return halamn visdat kuis
                     for (var i = 0; i < response.length; i++) {
                         var module = response[i];
                         var modName = '<h3 class="font-weight-bolder pr-10 mb-0">' + module.quizName + '</h3>';
+
+                        var openedDate = module.openedDate;
+                        var closedDate = module.closedDate;
+
+                        var formattedOpenedDate = formatUnixTimestamp(openedDate);
+                        var formattedClosedDate = formatUnixTimestamp(closedDate);
+
+                        var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
+                        var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
                         $('#modTitle').append(modName);
+                        $('#openedDate').append(openedDate);
+                        $('#closedDate').append(closedDate);
+
                     }
                 }
 
@@ -116,10 +132,6 @@ function handleContentModuleChange() {
         }
 
     });
-
-
-
-
 
 }
 
@@ -132,4 +144,51 @@ function formatUnixTimestamp(unixTimestamp) {
         hour: 'numeric',
         minute: 'numeric'
     });
+}
+
+function getCourseParticipant(token, courseId) {
+    console.log(token);
+    console.log(courseId);
+    $('#courseParticipant').empty();
+
+
+    //kolom all participant
+    //function core_enrol_get_enrolled_users
+    //jumlah user yang enrol mata kuliah dengan role: student
+
+    $.ajax({
+        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var courseParticipant = response.length;
+            $('#courseParticipant').append(courseParticipant);
+
+            console.log("course participant : " + courseParticipant);
+        }
+    });
+}
+
+
+function getSubmittedParticipant(token, assignId, groupId) {
+
+    console.log(token);
+    console.log(assignId);
+    console.log(groupId);
+
+    //kolom submitted assignment
+    //function mod_assign_list_participants :mendapatkan user dengan
+    //ketentuan role:student dan submited:true
+    $.ajax({
+        url: `${BASE_URL}course/getSubmittedParticipant?token=${token}&assignid=${assignId}&groupid=${groupId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var submitedParticipant = response.length;
+            console.log("submittedparticipant : " + submitedParticipant);
+        }
+
+    });
+
+
 }

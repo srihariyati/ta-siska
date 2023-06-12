@@ -176,13 +176,11 @@ class Course extends BaseController{
         return $this->response->setJSON($result);
     }
 
-    public function getModule()
+    public function getQuizAssign()
     {
         $token = $this->request->getVar('token');
         $courseid = $this->request->getVar('courseid');
         $cmid = $this->request->getVar('cmid');
-
-       
 
         $param =[
             "wstoken" =>$token,
@@ -208,6 +206,7 @@ class Course extends BaseController{
         $response = json_decode($response, true);
         $arrayLength = count($response);
 
+        
         if ($response["cm"]["modname"] == "quiz"){
            //mod_quiz_get_quizzes_by_courses
            
@@ -243,10 +242,12 @@ class Course extends BaseController{
                 
                     $filteredQuiz[] = [
                         'mod' => "quiz",
+                        'cmid' => $quiz['coursemodule'],
+                        'groupId' => $quiz['groupingid'],
                         'quizId' => $quiz['id'],
                         'quizName'=> $quiz['name'],
-                        'timeOpen'=> $quiz['timeopen'],
-                        'timeClose'=>$quiz['timeclose']
+                        'openedDate'=> $quiz['timeopen'],
+                        'closedDate'=>$quiz['timeclose']
                     ];
                     //dd($quiz['coursemodule']);
                 }
@@ -258,8 +259,6 @@ class Course extends BaseController{
 
         } else if ($response["cm"]["modname"]== "assign"){
            //mod_assign_get_assignments
-           //dd($courseid);
-
            $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -291,14 +290,17 @@ class Course extends BaseController{
                 if ($assign['cmid']==$cmid){
                     $filteredAssign[] = [
                         'mod'=> "assign",
+                        'cmId'=> $assign['cmid'],
                         'assignId' => $assign['id'],
                         'assignName'=> $assign['name'],
                         'openedDate'=> $assign['allowsubmissionsfromdate'],
                         'closedDate'=>$assign['duedate'],
+                        'groupId' => $response["cm"]["groupingid"]
                     ];
-                   // dd($filteredAssign);
+                   //dd($filteredAssign);
                 }
             }
+            
 
             return $this->response->setJSON($filteredAssign);      
         }
@@ -306,6 +308,104 @@ class Course extends BaseController{
     
     }
 
+    public function getCourseParticipant()
+    {
+        $token = $this->request->getVar('token');
+        $courseid = $this->request->getVar('courseid');
+
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"core_enrol_get_enrolled_users",
+            "courseid"=>$courseid,  
+        ];
+
+        $data = http_build_query($param);
+        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        //kalau gapake ini gabisa akses moodle, karena masalah ssl
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+
+        $response_courseparticipant = curl_exec($curl);
+        curl_close($curl);
+
+        $response_courseparticipant = json_decode($response_courseparticipant, true);
+        $arrayLength = count($response_courseparticipant);
+
+        //dd($arrayLength);
+
+        foreach($response_courseparticipant as $participant){
+            if($participant['roles'][0]['shortname'] == "student"){
+                $courseParticipant[] =[
+                    'id' => $participant['id'],
+                    'username'=> $participant["username"],
+                    'fullname'=> $participant["fullname"]
+                   ];
+            }
+          
+        }
+        return $this->response->setJSON($courseParticipant);  
+        
+    }
+
+
+    public function getSubmittedParticipant()
+    {
+        $token = $this->request->getVar('token');
+        $assignid = $this->request->getVar('assignid');
+        $groupid = $this ->request->getVar('groupid');
+
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"mod_assign_list_participants",
+            "assignid"=>$assignid,
+            "groupid"=> $groupid,
+            "filter"=>"",  
+        ];
+
+        $data = http_build_query($param);
+        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        //kalau gapake ini gabisa akses moodle, karena masalah ssl
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+
+        $response_submittedparticipant = curl_exec($curl);
+        curl_close($curl);
+
+        $response_submittedparticipant = json_decode($response_submittedparticipant, true);
+        $arrayLength = count($response_submittedparticipant);
+        //dd($response_submittedparticipant);
+
+        foreach($response_submittedparticipant as $participant){
+            if($participant['submissionstatus']=='submitted'){
+                $submittedParticipant[] = [
+                    'id' => $participant['id'],
+                    'username'=> $participant["username"],
+                    'fullname'=> $participant["fullname"]
+                ];
+            }
+        }
+
+
+        return $this->response->setJSON($submittedParticipant);
+
+        
+
+            
+        
+
+    }
     
 
     
