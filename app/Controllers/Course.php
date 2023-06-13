@@ -388,13 +388,17 @@ class Course extends BaseController{
         //dd($response_submittedparticipant);
 
         foreach($response_submittedparticipant as $participant){
-            if($participant['submissionstatus']=='submitted'){
+            if($participant['roles'][0]['shortname']=='student'){
+                if($participant['submissionstatus']=='submitted'){
                 $submittedParticipant[] = [
                     'id' => $participant['id'],
                     'username'=> $participant["username"],
-                    'fullname'=> $participant["fullname"]
+                    'fullname'=> $participant["fullname"],
+                    'roles'=>$participant['roles'][0]['shortname']
                 ];
             }
+            }
+            
         }
 
 

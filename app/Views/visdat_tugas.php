@@ -5,6 +5,17 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
+<style>
+         svg rect {
+            fill: gray;
+         }
+         
+         svg text {
+            fill: yellow;
+            font: 12px sans-serif;
+            text-anchor: center;
+         }
+      </style>
 
 <div class="container mt-7 mb-3">
 
@@ -58,39 +69,28 @@
   </div>
 
 <div class="container">
-    <!-- nama kuis, dan waktu kuis -->
+ 
   <div class="row mt-4">
     <div class="col-md-6">
+      <!-- nama kuis, dan waktu kuis -->
       <span id="modTitle"></span>
-      <!-- <h3 class="font-weight-bolder pr-10 mb-0" id="modTitle"></h3> -->
       <span id="contentName"></span>
      
       <span id="openedDate"></span>
       <span id="closedDate"></span>
 
     </div>
-    <div class="col-md-6">
-    <table class="table table-bordered">
-        <tbody>
-          <tr>
-            <td>Participants</td>
-            <td> <span id="courseParticipant"><span></td>
-          </tr>
-          <tr>
-            <td>Submitted</td>
-            <td><span id="submittedParticipant"></span></td>
-          </tr>       
-        </tbody>
-      </table>
 
-      <!-- code loading bar here!-->
-      dddd
+    <div class="col-md-6">
+      <!-- tabel participant dan loadchart partiicpant-->
+      <span id=tableParticipant></span>
+      <div id="chartParticipant"></div>
     </div>
   </div>
   
   <div class="row mt-4">
     <div class="col-md-6">
-        dddd
+      <div id="chartGradeAssignment"></div>
     <!-- kode visdat -->
     </div>
     <div class="col-md-6">
@@ -105,6 +105,9 @@
 <?= $this->section('jshere') ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/view/contentModule.js"></script>
+<script src="/js/view/chartAssign.js" ></script>
+<script src = "/js/d3.v7.min.js"></script>
+
 <script>
     $(document).ready(function() {
       handleCourseContentChange();

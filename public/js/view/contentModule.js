@@ -69,6 +69,7 @@ function handleContentModuleChange() {
             $('#modTitle').empty();
             $('#openedDate').empty();
             $('#closedDate').empty();
+            $('#tableParticipant').empty();
 
             for (var i = 0; i < response.length; i++) {
                 var module = response[i];
@@ -81,6 +82,7 @@ function handleContentModuleChange() {
                         var module = response[i];
                         var modName = '<h3 class="font-weight-bolder pr-10 mb-0" >' + module.assignName + '</h3>';
                         console.log(modName);
+                        console.log("AssignId:" + module.assignId);
 
                         var openedDate = module.openedDate;
                         var closedDate = module.closedDate;
@@ -88,17 +90,24 @@ function handleContentModuleChange() {
                         var formattedOpenedDate = formatUnixTimestamp(openedDate);
                         var formattedClosedDate = formatUnixTimestamp(closedDate);
 
+                        //append opened date dan closed date
                         var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
                         var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+
+                        //append table participant khusus assign
+                        var tableParticipant = '<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td<tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr></tbody></table>';
 
                         $('#modTitle').append(modName);
                         $('#openedDate').append(openedDate);
                         $('#closedDate').append(closedDate);
-
-                        getCourseParticipant(token, courseId);
-                        getSubmittedParticipant(token, module.assignId, module.groupId);
+                        $('#tableParticipant').append(tableParticipant);
 
                         //ambil data participant tugas
+                        getParticipant(token, courseId, module.assignId, module.assignName, module.groupId);
+
+                        //ambil data grade
+                        getGradeAssignment();
+
                     }
 
 
@@ -146,10 +155,17 @@ function formatUnixTimestamp(unixTimestamp) {
     });
 }
 
+function getParticipant(token, courseId, assignId, assignName, groupId) {
+    getCourseParticipant(token, courseId);
+    getSubmittedParticipant(token, assignId, groupId, assignName);
+
+}
+
 function getCourseParticipant(token, courseId) {
     console.log(token);
     console.log(courseId);
     $('#courseParticipant').empty();
+    $('#submittedParticipant').empty();
 
 
     //kolom all participant
@@ -169,12 +185,14 @@ function getCourseParticipant(token, courseId) {
     });
 }
 
-
-function getSubmittedParticipant(token, assignId, groupId) {
+function getSubmittedParticipant(token, assignId, groupId, assignName) {
 
     console.log(token);
     console.log(assignId);
     console.log(groupId);
+
+    //$('#submittedParticipant').empty();
+    $('#chartParticipant').empty();
 
     //kolom submitted assignment
     //function mod_assign_list_participants :mendapatkan user dengan
@@ -184,11 +202,23 @@ function getSubmittedParticipant(token, assignId, groupId) {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            var submitedParticipant = response.length;
-            console.log("submittedparticipant : " + submitedParticipant);
+            var submittedParticipant = response.length;
+            console.log("submittedparticipant : " + submittedParticipant);
+
+            $('#submittedParticipant').append(submittedParticipant);
+
+            var chartTitle = '<h6>Persentase Pengumpulan Tugas</h6>'
+            $('#chartParticipant').append(chartTitle);
+
+            // chartAssign.js
+            window.chartParticipant(33, submittedParticipant, assignName);
         }
 
     });
 
 
+}
+
+function getGradeAssignment() {
+    window.chartGrade();
 }
