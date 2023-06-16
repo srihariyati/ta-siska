@@ -87,7 +87,14 @@ function chartParticipant(courseParticipant, submittedParticipant, assignTitle) 
 
 function chartGrade() {
     console.log("chart grade");
-    // Data
+    //Kasih margin yang rapi
+    //buat y axis dan x axis
+    // buat rounded radius pada bar
+    // buat hover action
+    // buat grid background
+
+
+    // Data nilai grade mahasiswa
     var data = [
         { grade: 'A', jumlah: 10 },
         { grade: 'AB', jumlah: 8 },
@@ -95,23 +102,23 @@ function chartGrade() {
         { grade: 'BC', jumlah: 6 },
         { grade: 'C', jumlah: 4 },
         { grade: 'D', jumlah: 2 },
-        { grade: 'E', jumlah: 1 }
+        { grade: 'E', jumlah: 5 }
     ];
 
     // Ukuran grafik
     var width = 400;
     var height = 300;
 
-    // Mengambil nilai maksimum jumlah mahasiswa
-    var maxJumlah = d3.max(data, function(d) { return d.jumlah; });
+    // Skala x (nilai huruf)
+    var xScale = d3.scaleBand()
+        .domain(data.map(function(d) { return d.grade; }))
+        .range([0, width])
+        .padding(0.2);
 
-    // Skala y
+    // Skala y (jumlah mahasiswa)
     var yScale = d3.scaleLinear()
-        .domain([0, maxJumlah])
+        .domain([0, d3.max(data, function(d) { return d.jumlah; })])
         .range([height, 0]);
-
-    // Menentukan interval yang cocok untuk sumbu y
-    var yTicks = yScale.ticks(5);
 
     // Membuat elemen SVG
     var svg = d3.select("#chartGradeAssignment")
@@ -124,58 +131,50 @@ function chartGrade() {
         .data(data)
         .enter()
         .append("rect")
-        .attr("x", function(d, i) { return i * (width / data.length); })
+        .attr("x", function(d) { return xScale(d.grade); })
         .attr("y", function(d) { return yScale(d.jumlah); })
-        .attr("width", width / data.length - 10)
+        .attr("width", xScale.bandwidth())
         .attr("height", function(d) { return height - yScale(d.jumlah); })
-        .attr("fill", "green");
+        .attr("fill", function(d) {
+            if (d.grade === 'A' || d.grade === 'AB' || d.grade === 'B' || d.grade === 'BC') {
+                var opacity = 1 - ((d.grade.charCodeAt(0) - 65) * 0.2);
+                return "rgba(0, 128, 0, " + opacity + ")"; // Warna hijau dengan tingkat kejernihan yang berkurang
+            } else {
+                var opacity = 1 - ((d.grade.charCodeAt(0) - 67) * 0.2);
+                return "rgba(255, 0, 0, " + opacity + ")"; // Warna merah dengan tingkat kejernihan yang berkurang
+            }
+        });
 
-    // Menambahkan label
+    // Menambahkan label jumlah mahasiswa
     var labels = svg.selectAll("text")
         .data(data)
         .enter()
         .append("text")
-        .attr("x", function(d, i) { return i * (width / data.length) + (width / data.length) / 2; })
+        .attr("x", function(d) { return xScale(d.grade) + xScale.bandwidth() / 2; })
         .attr("y", function(d) { return yScale(d.jumlah) - 5; })
         .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
         .text(function(d) { return d.jumlah; })
         .style("fill", "white");
 
-    // Menambahkan label grade
-    var gradeLabels = svg.selectAll(".grade-label")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("x", function(d, i) { return i * (width / data.length) + (width / data.length) / 2; })
-        .attr("y", height - 10)
-        .attr("text-anchor", "middle")
-        .text(function(d) { return d.grade; })
-        .style("fill", "black");
+    function yAxis(g) {
+        g.attr('transform', 'translate(${margin.lect}, 0)')
+            .call(d3.axisLeft(y).ticks(null, data.format))
+            .attr('font-size', '20px')
+    }
 
-    // Menambahkan judul grafik
-    svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", 20)
-        .attr("text-anchor", "middle")
-        .text("Bar Chart")
-        .style("fill", "black");
+    function xAxis(g) {
+        g.attr('transform', 'translate(0, ${height-margin.bottom})')
+            .call(d3.axisBottom(x).tickFormat(i => data[i].grade))
+            .attr('font-size', '20px')
 
-    // Menambahkan label pada sumbu y
-    svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -height / 2)
-        .attr("y", 10)
-        .attr("text-anchor", "middle")
-        .text("Jumlah Mahasiswa")
-        .style("fill", "black");
+    }
 
-    // Menggambar sumbu y
-    var yAxis = d3.axisLeft(yScale)
-        .tickValues(yTicks);
-
-    svg.append("g")
-        .attr("class", "y-axis")
-        .attr("transform", "translate(30,0)")
-        .call(yAxis);
+    svg.append('g')
+        .call(xAxis)
+        .call(yAxis)
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale))
+        .call(d3.axisLeft(yScale));
 
 }

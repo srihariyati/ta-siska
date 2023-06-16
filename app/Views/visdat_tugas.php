@@ -6,15 +6,8 @@
 
 <?= $this->section('content') ?>
 <style>
-         svg rect {
-            fill: gray;
-         }
+     
          
-         svg text {
-            fill: yellow;
-            font: 12px sans-serif;
-            text-anchor: center;
-         }
       </style>
 
 <div class="container mt-7 mb-3">
