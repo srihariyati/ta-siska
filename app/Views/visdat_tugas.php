@@ -77,8 +77,20 @@
     <div class="col-md-6">
       <!-- tabel participant dan loadchart partiicpant-->
       <span id=tableParticipant></span>
+ 
+    </div>
+    
+    <div class="col-md-6">
+     <!-- mungkin disini bisa masukkan dskrispi tugas -->
+    
+     
+    </div>
+    <div class="col-md-6">
+      <!-- tabel participant dan loadchart partiicpant-->
+    
       <div id="chartParticipant"></div>
     </div>
+
   </div>
   
   <div class="row mt-4">
@@ -88,7 +100,7 @@
     </div>
     <div class="col-md-6">
         <!-- kode lagend here -->
-        dd
+  
     </div>
   </div>
     

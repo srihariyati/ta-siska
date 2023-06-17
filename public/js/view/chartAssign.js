@@ -85,52 +85,80 @@ function chartParticipant(courseParticipant, submittedParticipant, assignTitle) 
 
 }
 
+
 function chartGrade() {
     console.log("chart grade");
-    //Kasih margin yang rapi
-    //buat y axis dan x axis
-    // buat rounded radius pada bar
-    // buat hover action
-    // buat grid background
+    // Kasih margin yang rapi
+    var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
+    // buat ukuran grafik
+    var width = document.getElementById("chartGradeAssignment").clientWidth;
+    var height = document.getElementById("chartGradeAssignment").clientWidth / 1.5 - margin.top - margin.bottom;
 
     // Data nilai grade mahasiswa
     var data = [
         { grade: 'A', jumlah: 10 },
         { grade: 'AB', jumlah: 8 },
-        { grade: 'B', jumlah: 12 },
+        { grade: 'B', jumlah: 20 },
         { grade: 'BC', jumlah: 6 },
         { grade: 'C', jumlah: 4 },
         { grade: 'D', jumlah: 2 },
         { grade: 'E', jumlah: 5 }
     ];
 
-    // Ukuran grafik
-    var width = 400;
-    var height = 300;
+    // Membuat elemen SVG
+    var svg = d3.select("#chartGradeAssignment")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
+
+    var chart = svg.append('g')
+        .attr("transform", "translate(" + (margin.left * 10) + "," + margin.top + ")");
 
     // Skala x (nilai huruf)
     var xScale = d3.scaleBand()
         .domain(data.map(function(d) { return d.grade; }))
         .range([0, width])
-        .padding(0.2);
+        .padding(0.05);
 
     // Skala y (jumlah mahasiswa)
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return d.jumlah; })])
+        .domain([0, (d3.max(data, function(d) { return d.jumlah; }) + 2)])
         .range([height, 0]);
 
-    // Membuat elemen SVG
-    var svg = d3.select("#chartGradeAssignment")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    //menampilkan yAxis
+    chart.append('g')
+        .call(d3.axisLeft(yScale).ticks(5))
+        .style("font-size", "16px");
+
+    //menampilkan xAxis
+    chart.append('g')
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale))
+        .style("font-size", "16px");
+
+    chart.append('g')
+        .attr('class', 'grid')
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom()
+            .scale(xScale)
+            .tickSize(-height, 10, 10)
+            .tickFormat(''))
+
+    chart.append('g')
+        .attr('class', 'grid')
+        .call(d3.axisLeft()
+            .scale(yScale)
+            .tickSize(-width, 10, 10)
+            .tickFormat(''))
 
     // Membuat elemen batang
-    var bars = svg.selectAll("rect")
+    chart.selectAll("rect")
         .data(data)
         .enter()
         .append("rect")
+        .attr("ry", 5) // Radius sudut vertikal
+        .attr("rx", 5) // Radius sudut vertikal
         .attr("x", function(d) { return xScale(d.grade); })
         .attr("y", function(d) { return yScale(d.jumlah); })
         .attr("width", xScale.bandwidth())
@@ -143,38 +171,89 @@ function chartGrade() {
                 var opacity = 1 - ((d.grade.charCodeAt(0) - 67) * 0.2);
                 return "rgba(255, 0, 0, " + opacity + ")"; // Warna merah dengan tingkat kejernihan yang berkurang
             }
-        });
+        })
 
-    // Menambahkan label jumlah mahasiswa
-    var labels = svg.selectAll("text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("x", function(d) { return xScale(d.grade) + xScale.bandwidth() / 2; })
-        .attr("y", function(d) { return yScale(d.jumlah) - 5; })
-        .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "middle")
-        .text(function(d) { return d.jumlah; })
-        .style("fill", "white");
+    svg.append('text')
+        .attr('x', -((height - margin.left) / 2))
+        .attr('y', margin.left + 10)
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .text('Jumlah Mahasiswa')
+        .style("font-size", "12px");
 
-    function yAxis(g) {
-        g.attr('transform', 'translate(${margin.lect}, 0)')
-            .call(d3.axisLeft(y).ticks(null, data.format))
-            .attr('font-size', '20px')
-    }
+    chart.append('text')
+        .attr('x', (width - margin.left - margin.right) / 2 + margin.left)
+        .attr('y', height + margin.bottom - 20)
+        .attr('dy', '1em')
+        .style('text-anchor', 'middle')
+        .text('Nilai (Grades)')
+        .style("font-size", "12px");
 
-    function xAxis(g) {
-        g.attr('transform', 'translate(0, ${height-margin.bottom})')
-            .call(d3.axisBottom(x).tickFormat(i => data[i].grade))
-            .attr('font-size', '20px')
+    chart.append('style').text(`
+    .grid line {
+        stroke-width: 0.2;
+    }`);
 
-    }
 
-    svg.append('g')
-        .call(xAxis)
-        .call(yAxis)
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale))
-        .call(d3.axisLeft(yScale));
+
+
+
 
 }
+
+
+
+
+
+// function chartGarade() {
+//     console.log("chart grade assignmnet");
+//     // Data nilai grade mahasiswa
+//     var data = [
+//         { grade: 'A', jumlah: 10 },
+//         { grade: 'AB', jumlah: 8 },
+//         { grade: 'B', jumlah: 12 },
+//         { grade: 'BC', jumlah: 6 },
+//         { grade: 'C', jumlah: 4 },
+//         { grade: 'D', jumlah: 2 },
+//         { grade: 'E', jumlah: 5 }
+//     ];
+
+//     //deklarasi nilai untuk ukuran canvas svg
+//     //mengambil lebar maksimum dari elemen dgn id chartGrdeAssignment
+//     var width = document.getElementById("chartGradeAssignment");
+//     var height = 300;
+//     var margin = { top: 50, bottom: 50, left: 50, right: 50 };
+
+//     var svg = d3.select('#chartGradeAssignment')
+//         .append('svg')
+//         .attr('width', width - margin.left - margin.right)
+//         .attr('height', height - margin.top - margin.bottom)
+//         .attr('viewBox', [0, 0, width, height]);
+
+
+//     var xScale = d3.scaleBand()
+//         .domain(data.map(function(d) { return d.grade; }))
+//         .range([0, width])
+//         .padding(0.2);
+
+//     var yScale = d3.scaleLinear()
+//         .domain([0, d3.max(data, function(d) { return d.jumlah; })])
+//         .range([height, 0]);
+
+//     svg
+//         .append('g')
+//         .attr('fill', 'royalBlue')
+//         .selectAll('rect')
+//         .data(data.sort((a, b) => d3.descending(a.jumlah, b.jumlah)))
+//         .join('rect')
+//         .attr('x', (d, i) => xScale(i))
+//         .attr('y', d => yScale(d.jumlah))
+//         .attr('title', (d) => d.jumlah)
+//         .attr('class', 'rect')
+//         .attr('height', d => yScale(0) - yScale(d.jumlah))
+//         .attr('width', xScale.bandwidth());
+
+
+
+
+// }
