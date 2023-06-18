@@ -51,19 +51,19 @@
     
     <div class="col-md-auto">
       <a href="#">
-        <span class="material-symbols-outlined fa-3x">bar_chart</span>
+        <span id="vis_grade" class="material-symbols-outlined fa-3x">bar_chart</span>
       </a>
     </div>
     <div class="col-md-auto">
       <a href="#">
-        <span class="material-symbols-outlined fa-3x">table</span>
+        <span id="table_grade" class="material-symbols-outlined fa-3x">table</span>
       </a>
     </div>
   </div>
 
 <div class="container">
  
-  <div class="row mt-4">
+  <div class="row mt-6">
     <div class="col-md-6">
       <!-- nama kuis, dan waktu kuis -->
       <span id="modTitle"></span>
@@ -71,37 +71,62 @@
      
       <span id="openedDate"></span>
       <span id="closedDate"></span>
-
     </div>
 
     <div class="col-md-6">
       <!-- tabel participant dan loadchart partiicpant-->
       <span id=tableParticipant></span>
- 
-    </div>
-    
-    <div class="col-md-6">
-     <!-- mungkin disini bisa masukkan dskrispi tugas -->
-    
-     
-    </div>
+    </div>  
+  </div>
+
+  <div class="row mt-6">
+
+    <div class="col-md-6"></div>
     <div class="col-md-6">
       <!-- tabel participant dan loadchart partiicpant-->
-    
       <div id="chartParticipant"></div>
     </div>
-
-  </div>
   
+  </div>
   <div class="row mt-4">
+    <!-- table disnii aktif jika user memlih view table -->
+    <div id="tableGradeAssignment"></div>
+    <table class="table table-sm table-striped ml-2">
+  <thead>
+    <tr>
+     
+      <th scope="col">Nama Mahasiswa</th>
+      <th scope="col">Grade</th>
+      <th scope="col">Nilai Huruf</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Mark</td>
+      <td>100</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <td>Jacob</td>
+      <td>50</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>Lee</td>
+      <td>86</td>
+      <td>AB</td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+  <div class="row mt-6">
     <div class="col-md-6">
       <div id="chartGradeAssignment"></div>
-    <!-- kode visdat -->
     </div>
-    <div class="col-md-6">
-        <!-- kode lagend here -->
-  
-    </div>
+      <div class="col-md-6">
+        <div id="lagendGradeAssignment"></div>
+      </div>
   </div>
     
 </div>
@@ -123,6 +148,12 @@
         
         $('#content_module').on('change', function() {
             handleContentModuleChange();
+        });
+        $('#table_grade').on('click', function(){
+          handletableAssignment();
+        });
+        $('#vis_grade').on('click', function(){
+          handleCourseContentChange();
         });
 
     });

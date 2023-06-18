@@ -93,8 +93,9 @@ function chartGrade() {
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
     // buat ukuran grafik
-    var width = document.getElementById("chartGradeAssignment").clientWidth;
+    var width = document.getElementById("chartGradeAssignment").clientWidth - 100;
     var height = document.getElementById("chartGradeAssignment").clientWidth / 1.5 - margin.top - margin.bottom;
+    console.log(width);
 
     // Data nilai grade mahasiswa
     var data = [
@@ -120,7 +121,7 @@ function chartGrade() {
     var xScale = d3.scaleBand()
         .domain(data.map(function(d) { return d.grade; }))
         .range([0, width])
-        .padding(0.05);
+        .padding(0.1);
 
     // Skala y (jumlah mahasiswa)
     var yScale = d3.scaleLinear()
@@ -145,7 +146,7 @@ function chartGrade() {
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom()
             .scale(xScale)
-            .tickSize(-height, 1, 0)
+            .tickSize(-height, 0, 0)
             .tickFormat(''))
         .selectAll('.tick line')
         .attr('stroke-opacity', 0.5);
@@ -154,10 +155,11 @@ function chartGrade() {
         .attr('class', 'grid')
         .call(d3.axisLeft()
             .scale(yScale)
-            .tickSize(-width, 0, 1)
+            .tickSize(-width, 0, 0) // Set tickSize to 0 for removing the outline border
             .tickFormat(''))
         .selectAll('.tick line')
         .attr('stroke-opacity', 0.5);
+
 
     // Membuat elemen batang
     chart.selectAll("rect")
@@ -191,7 +193,9 @@ function chartGrade() {
                 .style("top", (mouseY + 20) + "px") // Position tooltip relative to mouse Y-coordinate
                 .style("background-color", "rgba(255, 255, 255, 0.8)") // Set background color to 50% white
                 .style("color", "black") // Set text color to black
-                .style("z-index", 1); // Set higher z-index to appear in front
+                .style("z-index", 1) // Set higher z-index to appear in front
+                .style("box-shadow", "0 1px 4px rgba(0, 0, 0, 0.5)") // Add box-shadow effect
+                .style("font-size", "12px");
         })
         .on("mouseout", function(d) {
             // Hide tooltip
@@ -235,61 +239,81 @@ function chartGrade() {
         font-size: 14px;
         transition: opacity 0.3s ease-in-out;
     }`);
+
+    legendChartAssignment(data);
+
+
+
 }
 
 
+function legendChartAssignment(data) {
 
+    console.log(data);
+    // Kasih margin yang rapi
+    var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
+    // buat ukuran grafik
+    var width = document.getElementById("chartGradeAssignment").clientWidth - 100;
+    var height = document.getElementById("chartGradeAssignment").clientWidth / 1.5 - margin.top - margin.bottom;
 
-// function chartGarade() {
-//     console.log("chart grade assignmnet");
-//     // Data nilai grade mahasiswa
-//     var data = [
-//         { grade: 'A', jumlah: 10 },
-//         { grade: 'AB', jumlah: 8 },
-//         { grade: 'B', jumlah: 12 },
-//         { grade: 'BC', jumlah: 6 },
-//         { grade: 'C', jumlah: 4 },
-//         { grade: 'D', jumlah: 2 },
-//         { grade: 'E', jumlah: 5 }
-//     ];
+    console.log(width);
+    var marginTop = 150; // Adjust the top margin
+    // Define the legend colors based on grades
+    var legendColors = {
+        'A': 'rgba(34, 115, 98, 0.8)', // Green
+        'AB': 'rgba(34, 115, 98, 0.6)',
+        'B': 'rgba(34, 115, 98, 0.4)',
+        'BC': 'rgba(34, 115, 98, 0.2)',
+        'C': 'rgba(255, 0, 0, 0.8)', // Red
+        'D': 'rgba(255, 0, 0, 0.6)',
+        'E': 'rgba(255, 0, 0, 0.4)'
+    };
 
-//     //deklarasi nilai untuk ukuran canvas svg
-//     //mengambil lebar maksimum dari elemen dgn id chartGrdeAssignment
-//     var width = document.getElementById("chartGradeAssignment");
-//     var height = 300;
-//     var margin = { top: 50, bottom: 50, left: 50, right: 50 };
+    // Create a new SVG element for the legend
+    var svg = d3.select("#lagendGradeAssignment")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
 
-//     var svg = d3.select('#chartGradeAssignment')
-//         .append('svg')
-//         .attr('width', width - margin.left - margin.right)
-//         .attr('height', height - margin.top - margin.bottom)
-//         .attr('viewBox', [0, 0, width, height]);
+    // Create a legend group
+    var legend = svg.append('g')
+        .attr('class', 'legend')
+        .attr('transform', 'translate(10, ' + marginTop + ')'); // Apply the top margin
 
+    // Bind the data to the legend group
+    var legendItems = legend.selectAll('g')
+        .data(data)
+        .enter()
+        .append('g')
+        .attr('transform', function(d, i) {
+            var x, y;
+            if (i < 4) {
+                x = i * 100; // Adjust the horizontal spacing between legend items in the first row
+                y = 0; // Position the first row at y = 0
+            } else {
+                x = (i - 4) * 100; // Adjust the horizontal spacing between legend items in the second row
+                y = 40; // Position the second row at y = 40
+            }
+            return 'translate(' + x + ', ' + y + ')';
+        });
 
-//     var xScale = d3.scaleBand()
-//         .domain(data.map(function(d) { return d.grade; }))
-//         .range([0, width])
-//         .padding(0.2);
+    // Add a square box to each legend item
+    legendItems.append('rect')
+        .attr('width', 30) // Adjust the width of the square box
+        .attr('height', 30) // Adjust the height of the square box
+        .attr('rx', 5)
+        .attr('ry', 5)
+        .attr('fill', function(d) {
+            return legendColors[d.grade];
+        })
 
-//     var yScale = d3.scaleLinear()
-//         .domain([0, d3.max(data, function(d) { return d.jumlah; })])
-//         .range([height, 0]);
-
-//     svg
-//         .append('g')
-//         .attr('fill', 'royalBlue')
-//         .selectAll('rect')
-//         .data(data.sort((a, b) => d3.descending(a.jumlah, b.jumlah)))
-//         .join('rect')
-//         .attr('x', (d, i) => xScale(i))
-//         .attr('y', d => yScale(d.jumlah))
-//         .attr('title', (d) => d.jumlah)
-//         .attr('class', 'rect')
-//         .attr('height', d => yScale(0) - yScale(d.jumlah))
-//         .attr('width', xScale.bandwidth());
-
-
-
-
-// }
+    // Add text labels to each legend item
+    legendItems.append('text')
+        .attr('x', 50) // Adjust the horizontal position of the text label
+        .attr('y', 20) // Adjust the vertical position of the text label
+        .text(function(d) {
+            return d.grade;
+        })
+        .style('font-size', '12px');
+}

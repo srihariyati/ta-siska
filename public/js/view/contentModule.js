@@ -70,6 +70,11 @@ function handleContentModuleChange() {
             $('#openedDate').empty();
             $('#closedDate').empty();
             $('#tableParticipant').empty();
+            $('#chartParticipant').empty();
+            $('#chartGradeAssignment').empty();
+            $('#lagendGradeAssignment').empty();
+
+
 
             for (var i = 0; i < response.length; i++) {
                 var module = response[i];
@@ -221,4 +226,16 @@ function getSubmittedParticipant(token, assignId, groupId, assignName) {
 
 function getGradeAssignment() {
     window.chartGrade();
+}
+
+function handletableAssignment() {
+
+    //hilangkn chart dan gantikan dengan table
+    $('#chartParticipant').empty();
+    $('#chartGradeAssignment').empty();
+    $('#lagendGradeAssignment').empty();
+
+
+
+
 }
