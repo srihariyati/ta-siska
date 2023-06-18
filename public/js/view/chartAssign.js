@@ -41,7 +41,7 @@ function chartParticipant(courseParticipant, submittedParticipant, assignTitle) 
         .attr("ry", 10) // Radius sudut vertikal
         .style("fill", function(d) {
             if (data[0] >= 50) {
-                return "green"; // Warna batang saat persentase terpenuhi
+                return "#227362"; // Warna batang saat persentase terpenuhi
             } else {
                 return "lightgray"; // Warna batang saat persentase tidak terpenuhi
             }
@@ -88,6 +88,7 @@ function chartParticipant(courseParticipant, submittedParticipant, assignTitle) 
 
 function chartGrade() {
     console.log("chart grade");
+
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
@@ -101,7 +102,7 @@ function chartGrade() {
         { grade: 'AB', jumlah: 8 },
         { grade: 'B', jumlah: 20 },
         { grade: 'BC', jumlah: 6 },
-        { grade: 'C', jumlah: 4 },
+        { grade: 'C', jumlah: 14 },
         { grade: 'D', jumlah: 2 },
         { grade: 'E', jumlah: 5 }
     ];
@@ -137,20 +138,26 @@ function chartGrade() {
         .call(d3.axisBottom(xScale))
         .style("font-size", "16px");
 
+
+    //buat background grid
     chart.append('g')
         .attr('class', 'grid')
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom()
             .scale(xScale)
-            .tickSize(-height, 10, 10)
+            .tickSize(-height, 1, 0)
             .tickFormat(''))
+        .selectAll('.tick line')
+        .attr('stroke-opacity', 0.5);
 
     chart.append('g')
         .attr('class', 'grid')
         .call(d3.axisLeft()
             .scale(yScale)
-            .tickSize(-width, 10, 10)
+            .tickSize(-width, 0, 1)
             .tickFormat(''))
+        .selectAll('.tick line')
+        .attr('stroke-opacity', 0.5);
 
     // Membuat elemen batang
     chart.selectAll("rect")
@@ -166,13 +173,39 @@ function chartGrade() {
         .attr("fill", function(d) {
             if (d.grade === 'A' || d.grade === 'AB' || d.grade === 'B' || d.grade === 'BC') {
                 var opacity = 1 - ((d.grade.charCodeAt(0) - 65) * 0.2);
-                return "rgba(0, 128, 0, " + opacity + ")"; // Warna hijau dengan tingkat kejernihan yang berkurang
+                return "rgba(34, 115, 98, " + opacity + ")"; // Warna hijau dengan tingkat kejernihan yang berkurang
             } else {
                 var opacity = 1 - ((d.grade.charCodeAt(0) - 67) * 0.2);
                 return "rgba(255, 0, 0, " + opacity + ")"; // Warna merah dengan tingkat kejernihan yang berkurang
             }
         })
+        .on("mouseover", function(event, d) { // Pass the event object as the first argument
+            // Show tooltip
+            var mouseCoords = d3.pointer(event, this);
+            var mouseX = mouseCoords[0];
+            var mouseY = mouseCoords[1];
 
+            tooltip.style("opacity", 1)
+                .html(`<strong>Grade: ${d.grade}</strong><br/>${d.jumlah} Mahasiswa`)
+                .style("left", (mouseX + 20) + "px") // Position tooltip relative to mouse X-coordinate
+                .style("top", (mouseY + 20) + "px") // Position tooltip relative to mouse Y-coordinate
+                .style("background-color", "rgba(255, 255, 255, 0.8)") // Set background color to 50% white
+                .style("color", "black") // Set text color to black
+                .style("z-index", 1); // Set higher z-index to appear in front
+        })
+        .on("mouseout", function(d) {
+            // Hide tooltip
+            tooltip.style("opacity", 0);
+        });
+
+
+    // Membuat elemen tooltip
+    var tooltip = d3.select("#chartGradeAssignment")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+    //membuat text axis
     svg.append('text')
         .attr('x', -((height - margin.left) / 2))
         .attr('y', margin.left + 10)
@@ -192,13 +225,16 @@ function chartGrade() {
     chart.append('style').text(`
     .grid line {
         stroke-width: 0.2;
+    }
+    .tooltip {
+        position: absolute;
+        pointer-events: none;
+        opacity: 0;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: opacity 0.3s ease-in-out;
     }`);
-
-
-
-
-
-
 }
 
 
