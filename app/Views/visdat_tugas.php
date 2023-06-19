@@ -5,10 +5,6 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-<style>
-     
-         
-      </style>
 
 <div class="container mt-7 mb-3">
 
@@ -76,57 +72,34 @@
     <div class="col-md-6">
       <!-- tabel participant dan loadchart partiicpant-->
       <span id=tableParticipant></span>
+      <div id=chartQuizGrades></div>
     </div>  
   </div>
 
   <div class="row mt-6">
-
     <div class="col-md-6"></div>
-    <div class="col-md-6">
-      <!-- tabel participant dan loadchart partiicpant-->
-      <div id="chartParticipant"></div>
-    </div>
-  
+
+    <!-- tabel participant dan loadchart partiicpant-->
+    <div class="col-md-6"><div id="chartParticipant"></div></div>
   </div>
+
   <div class="row mt-4">
     <!-- table disnii aktif jika user memlih view table -->
-    <div id="tableGradeAssignment"></div>
-    <table class="table table-sm table-striped ml-2">
-  <thead>
-    <tr>
-     
-      <th scope="col">Nama Mahasiswa</th>
-      <th scope="col">Grade</th>
-      <th scope="col">Nilai Huruf</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Mark</td>
-      <td>100</td>
-      <td>A</td>
-    </tr>
-    <tr>
-      <td>Jacob</td>
-      <td>50</td>
-      <td>C</td>
-    </tr>
-    <tr>
-      <td>Lee</td>
-      <td>86</td>
-      <td>AB</td>
-    </tr>
-  </tbody>
-</table>
+    <div class="col"><span id="tableGradeAssignment"></span></div>
   </div>
 
+
+  <!-- QUIZ -->
   <div class="row mt-6">
-    <div class="col-md-6">
-      <div id="chartGradeAssignment"></div>
-    </div>
-      <div class="col-md-6">
-        <div id="lagendGradeAssignment"></div>
-      </div>
+    <div class="col-sm-4"><span id="descQuizQues"></span></div>
+    <div class="col-sm-8"><div id="chartQuizQues"></div></div>
+  </div>
+
+
+  <!-- ASSIGN -->
+  <div class="row mt-6">
+    <div class="col-md-6"><div id="chartGradeAssignment"></div></div>
+    <div class="col-md-6"><div id="lagendGradeAssignment"></div></div>
   </div>
     
 </div>
@@ -136,6 +109,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/view/contentModule.js"></script>
 <script src="/js/view/chartAssign.js" ></script>
+<script src="/js/view/chartQuiz.js" ></script>
 <script src = "/js/d3.v7.min.js"></script>
 
 <script>

@@ -5,3 +5,21 @@
 #chartGradeAssignment {
     width: 100%!important;
 }
+
+#chartQuizGrades {
+    width: 100%!important;
+}
+
+#chartQuizQues {
+    width: 100%!important;
+}
+
+.green-text {
+    color: green;
+    font-weight: bold;
+}
+
+.red-text {
+    color: red;
+    font-weight: bold;
+}

@@ -73,8 +73,10 @@ function handleContentModuleChange() {
             $('#chartParticipant').empty();
             $('#chartGradeAssignment').empty();
             $('#lagendGradeAssignment').empty();
-
-
+            $('#tableGradeAssignment').empty();
+            $('#chartQuizGrades').empty();
+            $('#chartQuizQues').empty();
+            $('#descQuizQues').empty();
 
             for (var i = 0; i < response.length; i++) {
                 var module = response[i];
@@ -110,6 +112,8 @@ function handleContentModuleChange() {
                         //ambil data participant tugas
                         getParticipant(token, courseId, module.assignId, module.assignName, module.groupId);
 
+                        //append assign ID to data module.assignId
+
                         //ambil data grade
                         getGradeAssignment();
 
@@ -137,6 +141,9 @@ function handleContentModuleChange() {
                         $('#closedDate').append(closedDate);
 
                     }
+
+                    //ambil data grade
+                    getGradeQuiz();
                 }
 
             }
@@ -186,6 +193,8 @@ function getCourseParticipant(token, courseId) {
             $('#courseParticipant').append(courseParticipant);
 
             console.log("course participant : " + courseParticipant);
+
+
         }
     });
 }
@@ -225,17 +234,92 @@ function getSubmittedParticipant(token, assignId, groupId, assignName) {
 }
 
 function getGradeAssignment() {
-    window.chartGrade();
+    window.chartAssign();
 }
 
 function handletableAssignment() {
-
+    var token = $('#courseTitle').data('token');
+    var assignId = 1;
+    var courseId = $('#courseTitle').data('courseid');
     //hilangkn chart dan gantikan dengan table
     $('#chartParticipant').empty();
     $('#chartGradeAssignment').empty();
     $('#lagendGradeAssignment').empty();
+    $('#tableGradeAssignment').empty();
 
 
+    //ajax here
+    $.ajax({
+        // url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            //append table here
+            //append table participant khusus assign
+            var tableGrade = '<table  id="table" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
+            $('#tableGradeAssignment').append(tableGrade);
+            showTableGradeAssignment(response);
+            //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
+            //data ini yang akan ditampilkan dalam tabel
 
 
+        }
+    });
+}
+
+function showTableGradeAssignment(responseData) {
+
+    // Get the table element by its ID
+    var table = document.getElementById("table");
+
+    // Remove all existing rows from the table when user force click
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+    // Sort the responseData array by username
+    responseData.sort(function(a, b) {
+        var usernameA = a.username.toUpperCase();
+        var usernameB = b.username.toUpperCase();
+        if (usernameA < usernameB) {
+            return -1;
+        }
+        if (usernameA > usernameB) {
+            return 1;
+        }
+        return 0;
+    });
+
+    // Loop through the response data and create table rows
+    for (var i = 0; i < responseData.length; i++) {
+        var row = table.insertRow(i + 1); // Insert a new row at index 'i + 1'
+
+        var usernameCell = row.insertCell(0);
+        usernameCell.textContent = responseData[i].username;
+
+        var fullnameCell = row.insertCell(1);
+        fullnameCell.textContent = responseData[i].fullname;
+
+        var gradeCell = row.insertCell(2);
+        gradeCell.textContent = responseData[i].grade;
+
+        var letterGradeCell = row.insertCell(3);
+        letterGradeCell.textContent = responseData[i].lettergrade;
+
+        // Add CSS class based on grade value
+        if (responseData[i].grade <= 50) {
+            gradeCell.classList.add("red-text");
+            letterGradeCell.classList.add("red-text");
+        } else {
+            gradeCell.classList.add("green-text");
+            letterGradeCell.classList.add("green-text");
+        }
+    }
+
+}
+
+function getGradeQuiz() {
+    window.chartQuizGrades();
+    window.chartQuizQues();
 }
