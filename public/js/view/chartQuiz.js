@@ -160,18 +160,18 @@ function chartQuizQues() {
     var height = document.getElementById("chartQuizQues").clientWidth / 1.5 - margin.top - margin.bottom;
     console.log(width);
 
-    // Data nilai grade mahasiswa
+    // tingkat kelulusan dalam %
     var data = [
-        { q: 'Q1', t: 5, f: 1 },
-        { q: 'Q2', t: 4, f: 5 },
-        { q: 'Q3', t: 1, f: 6 },
-        { q: 'Q4', t: 6, f: 3 },
-        { q: 'Q5', t: 1, f: 2 },
-        { q: 'Q6', t: 4, f: 1 },
-        { q: 'Q7', t: 10, f: 2 },
-        { q: 'Q8', t: 4, f: 5 },
-        { q: 'Q9', t: 7, f: 6 },
-        { q: 'Q10', t: 2, f: 7 },
+        { q: 'Q1', t: 80, f: 20 },
+        { q: 'Q2', t: 90, f: 10 },
+        { q: 'Q3', t: 70, f: 30 },
+        { q: 'Q4', t: 10, f: 90 },
+        { q: 'Q5', t: 50, f: 50 },
+        { q: 'Q6', t: 60, f: 40 },
+        { q: 'Q7', t: 40, f: 60 },
+        { q: 'Q8', t: 50, f: 50 },
+        { q: 'Q9', t: 70, f: 30 },
+        { q: 'Q10', t: 25, f: 75 },
     ];
 
     // Membuat elemen SVG
@@ -191,7 +191,7 @@ function chartQuizQues() {
 
     // Skala y (jumlah mahasiswa)
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return d.t + d.f; })])
+        .domain([0, (d3.max(data, function(d) { return d.t + d.f; }) + 2)])
         .range([height, 0]);
 
     //menampilkan yAxis
@@ -301,7 +301,7 @@ function chartQuizQues() {
         .attr('y', margin.left + 10)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
-        .text('Jumlah Mahasiswa')
+        .text('Tingkat Kelulusn per Pertanyaan (%)')
         .style("font-size", "12px");
 
     chart.append('text')
@@ -309,7 +309,7 @@ function chartQuizQues() {
         .attr('y', height + margin.bottom - 20)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
-        .text('Nilai (Grades)')
+        .text('Pertanyaan')
         .style("font-size", "12px");
 
     chart.append('style').text(`

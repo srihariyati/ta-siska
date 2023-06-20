@@ -85,8 +85,14 @@
 
   <div class="row mt-4">
     <!-- table disnii aktif jika user memlih view table -->
-    <div class="col"><span id="tableGradeAssignment"></span></div>
+    <div class="col"><span id="tableGradeAssignment"></span></div>   
   </div>
+
+  <div class="row mt-4">
+    <!-- table disnii aktif jika user memlih view table -->
+    <div class="col"><span id="tableGradeQuiz"></span></div>   
+  </div>
+
 
 
   <!-- QUIZ -->
@@ -124,7 +130,11 @@
             handleContentModuleChange();
         });
         $('#table_grade').on('click', function(){
-          handletableAssignment();
+          var modName = $('#mod').data('modname');
+          console.log("modname di html", modName);
+
+          //set mod=Quiz||Assign
+          handleTable(modName);
         });
         $('#vis_grade').on('click', function(){
           handleCourseContentChange();

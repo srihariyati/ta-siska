@@ -546,12 +546,10 @@ class Course extends BaseController{
                             'grade'=>intval($d['grade']),
                             'lettergrade' => $letterGrade
                         ];
-                       
                     }
-                }
-
-                
-            }         
+                }  
+            }   
+        }      
         // data respone dibawa ke controller lagi melalui function js
         // untuk mendapatkan fullname dari user
 
@@ -559,11 +557,34 @@ class Course extends BaseController{
         // get fullname dan username participant
         //dd($gradeList);
         return $this->response->setJSON($gradeList);
+    
     }
 
+    public function getGradeQuiz()
+    {
+        $quizid =$this->request->getVar('quizid');
 
-
-    
-
+        $grade = [
+            [
+                "fullname"=>"AI",
+                "grade"=>100,
+                "q1"=>true,
+                "q2"=>false,
+                "q3"=>true,
+                "q4"=>false,
+                "q5"=>true,
+            ],
+            [
+                "fullname"=>"AI",
+                "grade"=>100,
+                "q1"=>true,
+                "q2"=>false,
+                "q3"=>true,
+                "q4"=>false,
+                "q5"=>true,
+            ],
+        ];           
+           
+        return $this->response->setJSON($grade);
     }
 }

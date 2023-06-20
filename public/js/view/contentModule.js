@@ -77,6 +77,7 @@ function handleContentModuleChange() {
             $('#chartQuizGrades').empty();
             $('#chartQuizQues').empty();
             $('#descQuizQues').empty();
+            $('#tableGradeQuiz').empty();
 
             for (var i = 0; i < response.length; i++) {
                 var module = response[i];
@@ -87,7 +88,7 @@ function handleContentModuleChange() {
                     //return halaman visdat tugas
                     for (var i = 0; i < response.length; i++) {
                         var module = response[i];
-                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0" >' + module.assignName + '</h3>';
+                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0" id="mod" data-modname="' + module.mod + '" >' + module.assignName + '</h3>';
                         console.log(modName);
                         console.log("AssignId:" + module.assignId);
 
@@ -126,8 +127,8 @@ function handleContentModuleChange() {
                     //return halamn visdat kuis
                     for (var i = 0; i < response.length; i++) {
                         var module = response[i];
-                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0">' + module.quizName + '</h3>';
-
+                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0"  id="mod" data-modname="' + module.mod + '">' + module.quizName + '</h3>';
+                        console.log(modName);
                         var openedDate = module.openedDate;
                         var closedDate = module.closedDate;
 
@@ -237,36 +238,91 @@ function getGradeAssignment() {
     window.chartAssign();
 }
 
-function handletableAssignment() {
+function handleTable(modName) {
+
+
     var token = $('#courseTitle').data('token');
-    var assignId = 1;
     var courseId = $('#courseTitle').data('courseid');
+    var assignId = 1;
+    var quizId = 1;
+
     //hilangkn chart dan gantikan dengan table
     $('#chartParticipant').empty();
     $('#chartGradeAssignment').empty();
     $('#lagendGradeAssignment').empty();
     $('#tableGradeAssignment').empty();
+    $('#chartQuizQues').empty();
+    $('#descQuizQues').empty();
+    $('#chartQuizGrades').empty();
+
+    if (modName == 'quiz') {
+        console.log('tble quiz')
+        $.ajax({
+            url: `${BASE_URL}course/getGradeQuiz?token=${token}&quizid=${quizId}`,
+            metho: 'GET',
+            dataType: 'json',
+            success: function(response) {
 
 
-    //ajax here
-    $.ajax({
-        // url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
-        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
-        method: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            console.log(response);
-            //append table here
-            //append table participant khusus assign
-            var tableGrade = '<table  id="table" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
-            $('#tableGradeAssignment').append(tableGrade);
-            showTableGradeAssignment(response);
-            //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
-            //data ini yang akan ditampilkan dalam tabel
+                // ++++++++++++++++++++++++++++++++++++++++++++++
+                // Menghitung jumlah kolom berdasarkan data respons
+                var jumlahKolom = Object.keys(response[0]).length;
+
+                // Membuat string HTML untuk tabel
+                var tableGrade = '<table id="table" class="table table-sm table-striped"><thead><tr>';
+
+                // Menambahkan kolom-kolom pada kepala tabel
+                for (var i = 0; i < jumlahKolom; i++) {
+                    tableGrade += '<th scope="col">' + Object.keys(response[0])[i] + '</th>';
+                }
+
+                tableGrade += '</tr></thead><tbody>';
+
+                // Menambahkan baris-baris pada tubuh tabel
+                for (var j = 0; j < response.length; j++) {
+                    tableGrade += '<tr>';
+                    for (var k = 0; k < jumlahKolom; k++) {
+                        tableGrade += '<td>' + response[j][Object.keys(response[0])[k]] + '</td>';
+                    }
+                    tableGrade += '</tr>';
+                }
+
+                tableGrade += '</tbody></table>';
+                // ++++++++++++++++++++++++++++++++++++++++++++++
+                console.log(response);
+                $('#tableGradeQuiz').append(tableGrade);
+            }
+
+            //append to table
+            //kolom :usernanme/nim mhs, nama mhs,grade, pertanyaan (true or false)
 
 
-        }
-    });
+        });
+
+    } else
+    if (modName == 'assign') {
+        //ajax here
+        $.ajax({
+            // url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+            url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                console.log(response);
+                //append table here
+                //append table participant khusus assign
+                var tableGrade = '<table  id="table" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
+                $('#tableGradeAssignment').append(tableGrade);
+                showTableGradeAssignment(response);
+                //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
+                //data ini yang akan ditampilkan dalam tabel
+
+
+            }
+        });
+
+    }
+
 }
 
 function showTableGradeAssignment(responseData) {
@@ -322,4 +378,9 @@ function showTableGradeAssignment(responseData) {
 function getGradeQuiz() {
     window.chartQuizGrades();
     window.chartQuizQues();
+}
+
+function showTableGradeQuiz() {
+    //append data into row and cell
+
 }
