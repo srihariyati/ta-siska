@@ -10,9 +10,8 @@
       <div class="row">
 
         <div class="col-md-6">
-          <h2 class="font-weight-bolder pr-10">Teori Bahasa dan Automata Ganjil 21/22 Kelas A</h2>
+        <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"> <?= $coursename; ?> </h2>
         </div>
-
         <div class="col-md-6">
         </div>
 
@@ -64,7 +63,11 @@
 
   <!-- tabel  nilai kuis -->
   <div class="row mt-4">
-  <table class="table table-sm  ml-2">
+  <div class="table-container">
+    <table class="table table-sm table-striped" id="tableGradebook"></table>
+  </div>   
+
+  <!-- <table class="table table-sm  ml-2">
   <thead>
     <tr>
      
@@ -108,8 +111,21 @@
       <th>90.2</th>
     </tr>
   </tfoot>
-</table>
+</table> -->
 
   </div>
 </div>
 <?= $this->endSection('content') ?>
+
+<?= $this->section('jshere') ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src = "/js/d3.v7.min.js"></script>
+<script src= "/js/view/gradebook.js"></script>
+
+<script>
+    $(document).ready(function() {
+     handleTableGradebook();
+
+    });
+  </script>
+<?= $this->endSection('jshere') ?>

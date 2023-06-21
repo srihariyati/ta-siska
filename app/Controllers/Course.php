@@ -335,12 +335,12 @@ class Course extends BaseController{
         $response_courseparticipant = curl_exec($curl);
         curl_close($curl);
 
-        $response_courseparticipant = json_decode($response_participant, true);
-        $arrayLength = count($response_participant);
+        $response_courseparticipant = json_decode($response_courseparticipant, true);
+        $arrayLength = count($response_courseparticipant);
 
         //dd($arrayLength);
 
-        foreach($response_participant as $participant){
+        foreach($response_courseparticipant as $participant){
             if($participant['roles'][0]['shortname'] == "student"){
                 $courseParticipant[] =[
                     'id' => $participant['id'],

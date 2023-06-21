@@ -1,3 +1,5 @@
+var courseParticipant; // Declare a global variable
+
 function handleCourseContentChange() {
     // mengambil content id untuk membuat dependent dropdown untuk module assign dan kuis
     // function dijalankan ketika user memilih content/topik mata kuliah pada dropdown menu pertama
@@ -190,10 +192,11 @@ function getCourseParticipant(token, courseId) {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            var courseParticipant = response.length;
+            courseParticipant = response.length;
             $('#courseParticipant').append(courseParticipant);
 
             console.log("course participant : " + courseParticipant);
+
 
 
         }
@@ -226,7 +229,10 @@ function getSubmittedParticipant(token, assignId, groupId, assignName) {
             $('#chartParticipant').append(chartTitle);
 
             // chartAssign.js
-            window.chartParticipant(33, submittedParticipant, assignName);
+            // 33 diganti dengan $courseParticipant
+
+            console.log("dari get subbmiteed par :coursepart", courseParticipant);
+            window.chartParticipant(courseParticipant, submittedParticipant, assignName);
         }
 
     });

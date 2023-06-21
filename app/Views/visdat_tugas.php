@@ -20,8 +20,8 @@
 
       </div>
       <nav class="nav-menu mt-2">
-        <a href="#" class="nav-menu-link active">Tugas</a>
-        <a href="#" class="nav-menu-link">Mahasiswa</a>
+        <a href="#"> <span id="btnCourse" class="nav-menu-link active">Tugas</span></a>
+        <a href="/gradebook/<?= $token; ?>/<?= $courseid; ?>"> <span id="btnMhs" class="nav-menu-link">Mahasiswa</span></a>
       </nav>
 </div>
 <div class="container">
@@ -116,6 +116,7 @@
 <script src="/js/view/contentModule.js"></script>
 <script src="/js/view/chartAssign.js" ></script>
 <script src="/js/view/chartQuiz.js" ></script>
+<script src="/js/view/handleButton.js" ></script>
 <script src = "/js/d3.v7.min.js"></script>
 
 <script>
@@ -139,6 +140,10 @@
         $('#vis_grade').on('click', function(){
           handleCourseContentChange();
         });
+
+        // $('#btnMhs').on('click', function(){
+        //   handleMhsButton();
+        // });
 
     });
   </script>
