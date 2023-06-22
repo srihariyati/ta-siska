@@ -61,6 +61,7 @@ class Gradebook extends BaseController
     {
         $token = $this->request->getVar('token');
         $courseid = $this->request->getVar('courseid');
+        $mod = $this->request->getVar('mod');
 
         $param =[
             "wstoken" =>$token,
@@ -89,42 +90,99 @@ class Gradebook extends BaseController
         $response_gradebook = $response["usergrades"];
 
        //dd($response_gradebook);
-
-        
-
-        
         $gradebook =[];
-        foreach($response_gradebook as $gb){
-            $userid = $gb['userid'];
-            $userfullname = $gb['userfullname'];
-            $grades = [];
+        
 
-            foreach($gb['gradeitems'] as $gbitems){
-
-                //hanya mengambil quiz dan tugas
-                if($gbitems['itemmodule']=='quiz' || $gbitems['itemmodule']=='assign'){
-
-                    $grades[] =[
-                        'itemid'=>$gbitems['id'],
-                        'itemname'=> $gbitems['itemname'],
-                        'grade'=> $gbitems['graderaw'],
-                        'itemmodule'=>$gbitems['itemmodule']
-                    ];
+        if($mod =='quiz'){
+            foreach($response_gradebook as $gb){
+                $userid = $gb['userid'];
+                $userfullname = $gb['userfullname'];
+                $grades = [];
+    
+                foreach($gb['gradeitems'] as $gbitems){
+    
+                    //hanya mengambil quiz dan tugas
+                    if($gbitems['itemmodule']=='quiz'){
+    
+                        $grades[] =[
+                            'itemid'=>$gbitems['id'],
+                            'itemname'=> $gbitems['itemname'],
+                            'grade'=> $gbitems['graderaw'],
+                            'itemmodule'=>$gbitems['itemmodule']
+                        ];
+                    }
                 }
+    
+                $gradebook[]=[
+                    'userid'=>$userid,
+                    'userfullname'=>$userfullname,
+                    'grades'=>$grades
+                ];
+                
             }
+            return $this->response->setJSON($gradebook);
+        } else if ($mod =='assign'){
+            foreach($response_gradebook as $gb){
+                $userid = $gb['userid'];
+                $userfullname = $gb['userfullname'];
+                $grades = [];
+    
+                foreach($gb['gradeitems'] as $gbitems){
+    
+                    //hanya mengambil quiz dan tugas
+                    if($gbitems['itemmodule']=='assign'){
+    
+                        $grades[] =[
+                            'itemid'=>$gbitems['id'],
+                            'itemname'=> $gbitems['itemname'],
+                            'grade'=> $gbitems['graderaw'],
+                            'itemmodule'=>$gbitems['itemmodule']
+                        ];
+                    }
+                }
+    
+                $gradebook[]=[
+                    'userid'=>$userid,
+                    'userfullname'=>$userfullname,
+                    'grades'=>$grades
+                ];
+                
+            }
+            return $this->response->setJSON($gradebook);
+        } else {
 
-            $gradebook[]=[
-                'userid'=>$userid,
-                'userfullname'=>$userfullname,
-                'grades'=>$grades
-            ];
-            
-            
+            //dd($gradebook);
+            foreach($response_gradebook as $gb){
+                $userid = $gb['userid'];
+                $userfullname = $gb['userfullname'];
+                $grades = [];
+    
+                foreach($gb['gradeitems'] as $gbitems){
+    
+                    //hanya mengambil quiz dan tugas
+                    if($gbitems['itemmodule']=='quiz' || $gbitems['itemmodule']=='assign'){
+    
+                        $grades[] =[
+                            'itemid'=>$gbitems['id'],
+                            'itemname'=> $gbitems['itemname'],
+                            'grade'=> $gbitems['graderaw'],
+                            'itemmodule'=>$gbitems['itemmodule']
+                        ];
+                    }
+                }
+    
+                $gradebook[]=[
+                    'userid'=>$userid,
+                    'userfullname'=>$userfullname,
+                    'grades'=>$grades
+                ];
+                
+            }
+            return $this->response->setJSON($gradebook);
 
         }
 
-        //dd($gradebook);
-       return $this->response->setJSON($gradebook);
+        
     }
 
 
