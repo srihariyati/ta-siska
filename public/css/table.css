@@ -1,7 +1,7 @@
 .table-container {
     width: 100%;
     overflow-x: auto;
-    max-height: 500px;
+    /* max-height: 500px; */
     /* Adjust the maximum height as needed */
     position: relative;
     /* Add position relative */

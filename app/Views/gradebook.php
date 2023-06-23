@@ -59,7 +59,7 @@
   <!-- tabel  nilai kuis -->
   <div class="row mt-4">
     <div class="table-container">
-      <table class="table table-sm table-striped" id="tableGradebook"></table>
+      <table class="table table-sm table-hover" id="tableGradebook"></table>
     </div>   
   </div>
 </div>
@@ -76,7 +76,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
 
+<script src = "/js/dataTables.fixedColumns.min.js"></script>
 <script src = "/js/d3.v7.min.js"></script>
 <script src= "/js/view/gradebook.js"></script>
 
