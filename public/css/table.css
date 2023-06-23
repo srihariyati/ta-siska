@@ -6,3 +6,13 @@
     position: relative;
     /* Add position relative */
 }
+
+table th:nth-child(1) {
+    width: 500px;
+    max-width: 500px;
+}
+
+table td:nth-child(1) {
+    width: 500px;
+    max-width: 500px;
+}

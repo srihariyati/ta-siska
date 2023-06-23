@@ -59,9 +59,11 @@
   <!-- tabel  nilai kuis -->
   <div class="row mt-4">
     <div class="table-container">
-      <table class="table table-sm table-hover" id="tableGradebook"></table>
+      <table class="table table-sm table-hover" style="width:100%" id="tableGradebook"></table>
     </div>   
   </div>
+
+
 </div>
 
 <?= $this->endSection('content') ?>
@@ -77,8 +79,8 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.3.3/js/dataTables.fixedColumns.min.js"></script>
 
-<script src = "/js/dataTables.fixedColumns.min.js"></script>
 <script src = "/js/d3.v7.min.js"></script>
 <script src= "/js/view/gradebook.js"></script>
 
@@ -100,7 +102,6 @@
      //select quiz
      //handle table quiz
      handleTableGradebookQuiz();
-     // js->ajax->sendmod->fitler data on controller-> send to ajax respone-> send to js functio databtables quiz
      });    
 
      $('#modAssign').on('click', function(){
