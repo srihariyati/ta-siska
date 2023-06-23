@@ -1,6 +1,7 @@
 var courseId;
 var token;
 
+
 function handleTableGradebook() {
     courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
@@ -12,68 +13,7 @@ function handleTableGradebook() {
         dataType: 'json',
         success: function(response) {
             console.log(response);
-
-            // // Convert the responseData to a DataTable-compatible format
-            // var dataTableData = [];
-
-            // // Create table headers
-            // var headerRow = ['Nama Mahasiswa'];
-            // var gradeItems = response[0].grades;
-            // gradeItems.forEach(function(item) {
-            //     headerRow.push(item.itemname);
-            // });
-            // dataTableData.push(headerRow);
-
-            // // Iterate over the responseData to create rows for each user
-            // response.forEach(function(user) {
-            //     var rowData = [];
-            //     rowData.push(user.userfullname);
-
-            //     if (user.grades && Array.isArray(user.grades)) {
-            //         user.grades.forEach(function(item) {
-            //             rowData.push(item.grade);
-            //         });
-            //     }
-
-            //     dataTableData.push(rowData);
-            // });
-
-            // // Create DataTable instance
-            // var table = $('#tableGradebook').DataTable({
-            //     data: dataTableData,
-            //     paging: false,
-            //     searching: false,
-            //     info: false
-            // });
-
-            // // Calculate column totals for the mean
-            // var columnTotals = Array.from({ length: gradeItems.length }, function() {
-            //     return 0;
-            // });
-
-            // table.columns().every(function() {
-            //     var column = this;
-
-            //     if (column.index() > 0) {
-            //         var data = column.data();
-
-            //         data.each(function(value, index) {
-            //             if (!isNaN(value)) {
-            //                 columnTotals[index - 1] += parseFloat(value);
-            //             }
-            //         });
-            //     }
-            // });
-
-            // // Calculate and create footer cells for grade means
-            // var meanFooterRow = ['MEAN'];
-            // columnTotals.forEach(function(total) {
-            //     var gradeMean = total / response.length;
-            //     meanFooterRow.push(gradeMean.toFixed(2));
-            // });
-
-            // table.row.add(meanFooterRow).draw('page');
-            showTableGradebook(response)
+            showTableGradebook(response);
         }
     });
 }
@@ -252,17 +192,14 @@ function handleTableGradebookAssign() {
 }
 
 function showTableGradebook(responseData) {
-    // Prepare the DataTables data array
-    var dataTableData = [];
+    $('#tableGradebook').empty();
 
-    // Add the header row
-    var headerRow = ['Nama Mahasiswa'];
+    var dataTableData = [];
+    var headerRow = [];
     responseData[0].grades.forEach(function(item) {
         headerRow.push(item.itemname);
     });
-    dataTableData.push(headerRow);
 
-    // Add the data rows
     responseData.forEach(function(user) {
         var rowData = [user.userfullname];
         user.grades.forEach(function(item) {
@@ -271,21 +208,21 @@ function showTableGradebook(responseData) {
         dataTableData.push(rowData);
     });
 
-    // Initialize DataTables
     var table = $('#tableGradebook').DataTable({
-        data: dataTableData,
         destroy: true,
+        data: dataTableData,
+        fixedHeader: true,
+        footer: true, // Show the footer
         columns: [
-            { title: 'Nama Mahasiswa' },
-            // Generate column definitions for each grade item
-            ...responseData[0].grades.map(function(item) {
-                return { title: item.itemname };
+            { title: 'Nama Mahasiswa', width: '400px' }, // Set width for 'Nama Mahasiswa' column
+            ...headerRow.map(function(item) {
+                return { title: item }; // Set width for other columns
             })
         ],
         paging: true,
         searching: true,
-        info: false,
-        dom: 'Bfrtip', // Add the dom option for buttons
+        info: true,
+        dom: 'Bfrtip',
         buttons: [{
                 extend: 'pdf',
                 orientation: 'landscape',
@@ -301,26 +238,25 @@ function showTableGradebook(responseData) {
                 },
             },
             'copy'
-        ]
+        ],
+
     });
-
-
 
     // Calculate the mean for each column
     table.columns().every(function() {
         var column = this;
         if (column.index() > 0) {
-            var data = column.data();
-            var columnMean = data.reduce(function(sum, value) {
+            var columnData = column.data();
+            var columnMean = columnData.reduce(function(sum, value) {
                 return sum + parseFloat(value);
-            }, 0) / data.length;
-
+            }, 0) / columnData.length;
             $(column.footer()).html(columnMean.toFixed(2));
         }
     });
-    // Hide the buttons
+
     $('.dt-buttons').hide();
 }
+
 
 // function showTableGradebookQuiz(responseData) {
 
