@@ -7,13 +7,11 @@ class Gradebook extends BaseController
 {
     public function getGradebookView($token, $courseid)
     {
-        $token = $token;
+
         //get var idcourse
         //get all gradebook
         //return all gradebook, assign, quiz, fulname, usernmae/nim
 
-        $token = $token;
-        $courseid= $courseid;
         $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -185,5 +183,11 @@ class Gradebook extends BaseController
         
     }
 
+    public function getModuleGrade(){
+        return ("module grade");
+    }
+    public function getPersonalGrade(){
+        return ("personal grade");
+    }
 
 }

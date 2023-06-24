@@ -21,7 +21,7 @@
       </div>
       <nav class="nav-menu mt-2">
         <a href="#"> <span id="btnCourse" class="nav-menu-link active">Tugas</span></a>
-        <a href="/gradebook/<?= $token; ?>/<?= $courseid; ?>"> <span id="btnMhs" class="nav-menu-link">Mahasiswa</span></a>
+        <a href="<?=base_url('gradebook/getGradebookView/' . $token . '/' . $courseid)?>"><span id="btnMhs" class="nav-menu-link">Mahasiswa</span></a>
       </nav>
 </div>
 <div class="container">
