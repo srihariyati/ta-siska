@@ -55,8 +55,9 @@ function showTableGradebook(responseData) {
     var dataTableData = [];
     var headerRow = [];
     responseData[0].grades.forEach(function(item) {
-        headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGrade" style="text-decoration:none;">${item.itemname}</a>`);
+        headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGrade?itemid=${item.itemid}" style="text-decoration:none;">${item.itemname}</a>`);
     });
+
     responseData.forEach(function(user) {
         var rowData = [`<a href='${BASE_URL}gradebook/getPersonalGrade?userid=${user.userid}' style="text-decoration:none;" method="GET">${user.userfullname}</a>`];
         user.grades.forEach(function(item) {

@@ -32,15 +32,11 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->get('/login/token', 'Login::generatetoken');
 $routes->get('/beranda/getsiteinfo/(:any)', 'Beranda::getsiteinfo/$1');
-// $route['/beranda/set/(:any)'] = 'Beranda/set/$1';
-// $routes->get('/course/(:any)/(:any)', 'Course::getcourseinfo/$1/$2');
+
 $routes->get('/beranda', 'Beranda::getenrolledcourses');
 $routes->get('/visdat/(:num)', 'Visdat::showdata/$1');
 $routes->get('/tabel_kuis', 'Home::tabel_kuis');
 $routes->get('/tabel_tugas', 'Home::tabel_tugas');
-
-// // important
-// $routes->get('/gradebook/(:any)/(:num)', 'Gradebook::getGradebookView/$1/$2');
 
 $routes->get('/edit_gradebook_all', 'Gradebook::edit_gradebook_all');
 $routes->get('/visdat_kuis', 'Home::visdat_kuis');
@@ -49,9 +45,6 @@ $routes->get('/visdat_tugas', 'Home::visdat_tugas');
 
 $routes->get('/personal_gradebook', 'PersonalGradebook::getstudent');
 $routes->get('/edit_grade_personal', 'Home::edit_grade_personal');
-
-//$routes->get('/get-course-module', 'Course::getCourseModule', ['as' => 'getCourseModule']);
-
 
 /*
  * --------------------------------------------------------------------
