@@ -55,11 +55,10 @@ function showTableGradebook(responseData) {
     var dataTableData = [];
     var headerRow = [];
     responseData[0].grades.forEach(function(item) {
-        headerRow.push(item.itemname);
+        headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGrade" style="text-decoration:none;">${item.itemname}</a>`);
     });
-
     responseData.forEach(function(user) {
-        var rowData = [`<a href='${BASE_URL}/login/token' target='_blank'>${user.userfullname}</a>`];
+        var rowData = [`<a href='${BASE_URL}gradebook/getPersonalGrade?userid=${user.userid}' style="text-decoration:none;" method="GET">${user.userfullname}</a>`];
         user.grades.forEach(function(item) {
             rowData.push(item.grade);
         });
@@ -122,20 +121,5 @@ function showTableGradebook(responseData) {
         }
 
     });
-    // $('#tableGradebook tbody tr').css('width', '500px');
-
-
-    // // Calculate the mean for each column
-    // table.columns().every(function() {
-    //     var column = this;
-    //     if (column.index() > 0) {
-    //         var columnData = column.data();
-    //         var columnMean = columnData.reduce(function(sum, value) {
-    //             return sum + parseFloat(value);
-    //         }, 0) / columnData.length;
-    //         $(column.footer()).html(columnMean.toFixed(2));
-    //     }
-    // });
-
     $('.dt-buttons').hide();
 }
