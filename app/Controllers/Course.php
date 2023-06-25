@@ -10,10 +10,13 @@ use Config\Services;
 class Course extends BaseController{
     use ResponseTrait;
 
-    public function getCourseInfo($token, $courseid)
+    public function getCourseInfo($token, $courseid, $mod)
     {
         $token = $token;
         $courseid= $courseid;
+        $mod = $mod;
+
+    
         $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -48,7 +51,13 @@ class Course extends BaseController{
 
         //dd($course_info);
        $this->data['course_info'] = $course_info;
-       return $this->getcoursecontent();
+
+       if ($mod=='gradebook'){
+        return $this->response->setJSON($course_info);  
+       }else if($mod == 'beranda'){
+        return $this->getcoursecontent();
+       }
+      
     }
 
     public function getCourseContent()
@@ -100,7 +109,8 @@ class Course extends BaseController{
         $mydata['coursename'] =  $coursename; 
         $mydata['courseid'] = $courseid;
         $mydata['token'] = $token;
-        return view ('visdat_tugas', $mydata); 
+
+        return view ('visdat_tugas', $mydata);
     }
 
     
@@ -587,4 +597,5 @@ class Course extends BaseController{
            
         return $this->response->setJSON($grade);
     }
+    
 }

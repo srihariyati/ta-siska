@@ -8,8 +8,12 @@ function handleTableGradebook() {
     console.log(token);
 
     $.ajax({
-        url: `${BASE_URL}gradebook/getGradebook?token=${token}&courseid=${courseId}`,
+        url: `${BASE_URL}gradebook/getGradebook`,
         method: 'GET',
+        data: {
+            token: token,
+            courseId: courseId,
+        },
         dataType: 'json',
         success: function(response) {
             console.log(response);
@@ -21,8 +25,13 @@ function handleTableGradebook() {
 function handleTableGradebookQuiz() {
     var mod = 'quiz';
     $.ajax({
-        url: `${BASE_URL}gradebook/getGradebook?token=${token}&courseid=${courseId}&mod=${mod}`,
+        url: `${BASE_URL}gradebook/getGradebook`,
         method: 'GET',
+        data: {
+            token: token,
+            courseId: courseId,
+            mod: mod,
+        },
         dataType: 'json',
         success: function(response) {
             console.log(response);
@@ -33,10 +42,16 @@ function handleTableGradebookQuiz() {
 
 function handleTableGradebookAssign() {
     var mod = 'assign';
+
     console.log("handleTableGradebookAssign", courseId);
     $.ajax({
-        url: `${BASE_URL}gradebook/getGradebook?token=${token}&courseid=${courseId}&mod=${mod}`,
+        url: `${BASE_URL}gradebook/getGradebook`,
         method: 'GET',
+        data: {
+            token: token,
+            courseId: courseId,
+            mod: mod,
+        },
         dataType: 'json',
         success: function(response) {
             console.log(response);
@@ -123,4 +138,70 @@ function showTableGradebook(responseData) {
 
     });
     $('.dt-buttons').hide();
+}
+
+function getCourseInfo() {
+    courseId = $('#courseTitle').data('courseid');
+    token = $('#courseTitle').data('token');
+
+    var rute = 'gradebook';
+
+    console.log(token);
+    console.log(courseId);
+
+    //ajax to controller yang punya course info 
+    $.ajax({
+        url: `${BASE_URL}course/getCourseInfo/${token}/${courseId}/${rute}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            for (var i = 0; i < response.length; i++) {
+                var course = response[i];
+                var courseName = course[2];
+
+                $('#courseTitle').append(courseName);
+            }
+
+        }
+    });
+
+}
+
+function getStudentInfo() {
+    var userid = $('#StudentName').data('userid');
+    token = $('#courseTitle').data('token');
+
+    console.log(userid);
+
+    //ajax to cntroller get student infomatin
+    //ajax to controller yang punya course info 
+    $.ajax({
+        url: `${BASE_URL}gradebook/getStudentInfo`,
+        method: 'GET',
+        data: {
+            userid: userid,
+            token: token,
+        },
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            for (var i = 0; i < response.length; i++) {
+                var student = response[i];
+                var username = student.username;
+                console.log(username);
+
+                $('#StudentNIM').append(username);
+            }
+
+        }
+    });
+
+
+}
+
+function showPersonalGradeChart(gradeData) {
+    console.log(gradeData);
+
+    //proses group barchart here with gradeData
+
 }

@@ -10,7 +10,7 @@
       <div class="row">
 
         <div class="col-md-6">
-          <h2 class="font-weight-bolder pr-10">Teori Bahasa dan Automata Ganjil 21/22 Kelas A</h2>
+          <h2 class="font-weight-bolder pr-10" id="courseTitle" data-token = "<?=$token?>" data-courseid="<?=$personal_grade['courseid']?>"></h2>
         </div>
 
         <div class="col-md-6">
@@ -62,10 +62,13 @@
 
   <div class="row mt-5">
     <div class="col-md-4">
-      <h5>Waliam Mursyida</h5>
-      <p>19081070100xx</p>
+      <h4 id="StudentName" data-userid="<?=$personal_grade['userid']?>"><?=$personal_grade['userfullname']?></h4>
+      <p id="StudentNIM"></p>
+      <?php $personal_grade_items = json_encode($personal_grade['gradeitems']);?>
+     
     </div>
     <div class="col-md-2">
+      
       <p class="mb-2">Grade Mahasiswa</p>
       <h5>🏆98.70</h5>
     </div>
@@ -78,4 +81,34 @@
   <div class="row mt-2">
     <!-- visdat disini -->
   </div>
+
+
   <?= $this->endSection('content') ?>
+
+<?= $this->section('jshere') ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src = "/js/d3.v7.min.js"></script>
+<script src= "/js/view/gradebook.js"></script>
+
+<script>
+    $(document).ready(function() {
+      var personalGradeItems = <?= $personal_grade_items ?>;
+
+      getCourseInfo();  
+      getStudentInfo();
+      showPersonalGradeChart(personalGradeItems);
+
+
+      //get course info diisni pake controller yang udah ada aja, gausah buat baru lagi dari id course yang direturn
+      //get chart here
+      //nanti tinggal append
+      //data username disini jga
+
+      //ambil course id -> untuk appen course name
+      //ambil user id untuk dapatin nim/username
+      
+    
+    });
+
+</script>
+<?= $this->endSection('jshere') ?>

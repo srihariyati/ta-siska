@@ -28,7 +28,7 @@
               <p class="card-text"><?= $ec[2]; ?></p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a class="navbar-brand" href="<?=base_url('course/getcourseinfo/' . $ec[0] . '/' . $ec[1])?>">
+                  <a class="navbar-brand" href="<?=base_url('course/getcourseinfo/' . $ec[0] . '/' . $ec[1]).'/beranda'?>">
                     <button type="button"class="btn btn-sm btn-outline-secondary">show</button>
                   </a>
                 </div>

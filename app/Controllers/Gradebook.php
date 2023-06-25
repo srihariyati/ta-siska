@@ -2,15 +2,32 @@
 
 namespace App\Controllers;
 use CodeIgniter\Controller;
+use CodeIgniter\HTTP\RequestInterface;
 
 class Gradebook extends BaseController
-{
-    public function getGradebookView($token, $courseid)
-    {
+{   
+    private $token;
+    private $courseid;
 
-        //get var idcourse
-        //get all gradebook
-        //return all gradebook, assign, quiz, fulname, usernmae/nim
+    public function __construct(){
+        //setting dynamic!!!!
+        $this->token = '774ccae9ca7328a2e4b977f5ebfa6770';
+        $this->courseid = 3;
+
+        //kalau bisa ada global variabel untuk user username/nim, dan course name
+
+        // $this->token = $token;
+        // $this->courseid = $courseid;
+
+        //data course bisa diambil dari token dan courseid dari geGradebookView 
+        // pada href visdat_tugas line 24
+    }
+
+    // public function getGradebookView($token, $courseid)
+    public function getGradebookView()
+    {
+        $token = $this->token;
+        $courseid = $this->courseid;
 
         $param =[
             "wstoken" =>$token,
@@ -57,9 +74,12 @@ class Gradebook extends BaseController
 
     public function getGradebook()
     {
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseid');
+        // $token = $this->request->getVar('token');
+        // $courseid = $this->request->getVar('courseid');
         $mod = $this->request->getVar('mod');
+
+        $token = $this->token;
+        $courseid = $this->courseid;
 
         $param =[
             "wstoken" =>$token,
@@ -119,6 +139,7 @@ class Gradebook extends BaseController
                 
             }
             return $this->response->setJSON($gradebook);
+
         } else if ($mod =='assign'){
             foreach($response_gradebook as $gb){
                 $userid = $gb['userid'];
@@ -184,11 +205,12 @@ class Gradebook extends BaseController
     }
 
     public function getPersonalGrade(){
+
         $userid = $this->request->getVar('userid');
         
         //harusnya token dan courseid adalah global variabel
-        $token = '774ccae9ca7328a2e4b977f5ebfa6770';
-        $courseid = '3';
+        $token = $this->token;
+        $courseid =  $this->courseid;
 
         $param =[
             "wstoken" =>$token,
@@ -227,22 +249,28 @@ class Gradebook extends BaseController
                     'userid'=>$rg['userid'],
                     'courseid'=>$rg['courseid'],
                     'userfullname'=>$rg['userfullname'],
-                    'gradesitems'=>$rg['gradeitems'],
+                    'gradeitems'=>$rg['gradeitems'],
                 ];
             }
         }
+
         //dapatkan coursename, courseid
-       return ($personalGrade);
+        //dd($personalGrade);
         // return view('gradebook', $data);
         //return kehalaman baru dengan $mydata dengan isi semua data
+        $mydata['token'] = $token;
+        $mydata['personal_grade'] = $personalGrade;
+        return view('personal_gradebook', $mydata);
+
+        //set mod here to return response
     }
 
     public function getModuleGrade(){
         $itemid = $this->request->getVar('itemid');
 
         //harusnya token dan courseid adalah global variabel
-        $token = '774ccae9ca7328a2e4b977f5ebfa6770';
-        $courseid = '3';
+        $token = $this->token;
+        $courseid = $this->courseid;
 
         //get item id
         //plih data grade dari semua user yang item id nya ==$item id
@@ -304,6 +332,40 @@ class Gradebook extends BaseController
 
         dd($modulelGrade);
         ///return halaman untuk show dan edit nilai 
+    }
+
+    public function getStudentInfo(){ 
+
+        $userid = $this->request->getVar('userid');
+        $token = $this->request->getVar('token');
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"core_user_get_users_by_field",
+            "field"=>"id",
+            "values[0]"=>$userid
+
+        ];
+        
+        $data = http_build_query($param);
+        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        //kalau gapake ini gabisa akses moodle, karena masalah ssl
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $response = json_decode($response, true);
+        $arrayLength = count($response);
+
+        return $this->response->setJSON($response);
+    
     }
     
 }
