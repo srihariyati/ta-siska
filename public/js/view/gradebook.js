@@ -203,5 +203,13 @@ function showPersonalGradeChart(gradeData) {
     console.log(gradeData);
 
     //proses group barchart here with gradeData
+    //gunakan d3.js
+
+
+    //ngambil mean data dari semua grade 
+    //pake controller yang ada
+
+
+
 
 }

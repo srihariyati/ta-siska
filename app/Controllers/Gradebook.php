@@ -177,6 +177,7 @@ class Gradebook extends BaseController
                 $grades = [];
     
                 foreach($gb['gradeitems'] as $gbitems){
+                    
     
                     //hanya mengambil quiz dan tugas
                     if($gbitems['itemmodule']=='quiz' || $gbitems['itemmodule']=='assign'){
@@ -238,13 +239,61 @@ class Gradebook extends BaseController
 
         $response_gradebook = $response["usergrades"];
 
-       //dd($response_gradebook);
         $personalGrade =[];
+        $gradeRawAll=[];
 
-        //pilih data denga userid==$userid
+        $gradeSums = [];
+        $gradeCounts = [];
         
+
         foreach($response_gradebook as $rg){
+
+            //----MENGHITUNG MEAN UNTUK TIAP GRADE RAW BERDASARKAN GRADEID----//
+            //ambil semua data iditem/grade dan graderaw
+            foreach($rg['gradeitems'] as $rgi){
+                $gradeRawAll[]=[
+                    'idgrade'=>$rgi['id'],
+                    'graderaw'=>$rgi['graderaw']
+                ];
+            }
+
+            //data $gradeRawAll berisi data yang berulang
+            foreach ($gradeRawAll as $grade) {
+                //looping untuk tiap idgrade
+                $idgrade = $grade['idgrade'];
+                $graderaw = $grade['graderaw'];
+            
+                //jika idgrade belum ada ddialam array $gradesum
+                if (!isset($gradeSums[$idgrade])) {
+                    //deklarasi awal nilainya 0 jika data grade belum ada
+                    //id grade dijadikan index   
+                    $gradeSums[$idgrade] = 0; //jumlah dr seluruh grade
+                    $gradeCounts[$idgrade] = 0; //banyaknya dr seluruh grade
+                }
+
+                $gradeSums[$idgrade] += $graderaw; //proses sum data grade raw untuk id yang sama
+                $gradeCounts[$idgrade]++; //menghitung banyaknya data yang dihitung
+            }
+            
+            $gradeMeans = [];
+           
+            foreach ($gradeSums as $idgrade => $sum) {
+                dd($sum);
+                $mean = $sum / $gradeCounts[$idgrade]; //lakukan perhitungan
+                $gradeMeans[] = [
+                    "idgrade" => $idgrade,
+                    "mean" => $mean
+                ];
+            }
+            
+
             if($rg['userid']==$userid){
+                $userid = $rg['userid'];
+                $courseid = $rg['courseid'];
+                $userfullname = $rg['userfullname'];
+                
+                
+
                 $personalGrade=[
                     'userid'=>$rg['userid'],
                     'courseid'=>$rg['courseid'],
@@ -254,8 +303,18 @@ class Gradebook extends BaseController
             }
         }
 
+        //userid
+        //courseid
+        //userfullname
+        //gradeitems {graderaw, mean}{gradeaw, mean}
+
+
+        //ambil mean dari data per grade items
+        //format data yan ditampilkan
+
         //dapatkan coursename, courseid
-        //dd($personalGrade);
+        // dd($gradeMeans);
+        dd($gradeRawAll);
         // return view('gradebook', $data);
         //return kehalaman baru dengan $mydata dengan isi semua data
         $mydata['token'] = $token;
