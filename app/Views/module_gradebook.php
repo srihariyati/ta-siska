@@ -10,7 +10,7 @@
   <div class="row">
 
     <div class="col-md-6">
-      <h2 class="font-weight-bolder pr-10">Teori Bahasa dan Automata Ganjil 21/22 Kelas A</h2>
+          <h2 class="font-weight-bolder pr-10" id="courseTitle" data-token = "<?=$token?>" data-courseid="<?=$courseid?>"></h2>
     </div>
 
     <div class="col-md-6">
@@ -49,45 +49,43 @@
 </div>
 
 <div class="container mt-4">
+  <?php foreach($module_grade as $mg):?>
   <div class="card mb-3">
     <div class="row">
       <div class="col-md-4">
       <div class="card-body">
-          <h6 class="card-title">Waliam Mursiyda</h6>
+          <h6 class="card-title"><?= $mg['userfullname']; ?></h6>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card-body">
-          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="card-body">
-          <h5 class="card-title">12</h5>
-        </div>
-      </div> 
-    </div>
-  </div>
 
-  <div class="card mb-3">
-    <div class="row">
-      <div class="col-md-4">
-      <div class="card-body">
-          <h6 class="card-title">Waliam Mursiyda</h6>
-        </div>
-      </div>
       <div class="col-md-6">
         <div class="card-body">
           <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
         </div>
       </div>
+
       <div class="col-md-2">
         <div class="card-body">
-          <h5 class="card-title">12</h5>
+          <h5 class="card-title"><?= $mg['grade']; ?></h5>
         </div>
       </div> 
     </div>
   </div>
+  <?php endforeach;?>
 </div>
 
 <?= $this->endSection('content') ?>
+<?= $this->section('jshere') ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src= "/js/view/gradebook.js"></script>
+
+<script>
+    $(document).ready(function() {
+      
+      getCourseInfo();    
+      getContentModuleInfo();
+    
+    });
+
+</script>
+<?= $this->endSection('jshere') ?>

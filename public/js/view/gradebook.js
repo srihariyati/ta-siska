@@ -372,3 +372,12 @@ function showPersonalGradeChart(gradeData) {
             transition: opacity 0.3s ease-in-out;
         }`);
 }
+
+function getContentModuleInfo() {
+
+    //get course id
+    //get module id
+    //get content id
+
+    console.log('content module');
+}
