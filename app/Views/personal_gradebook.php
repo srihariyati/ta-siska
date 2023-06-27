@@ -80,6 +80,7 @@
 
   <div class="row mt-2">
     <!-- visdat disini -->
+    <div class="col"><div id="PersonalGradeChart"></div></div>   
   </div>
 
 
@@ -97,8 +98,6 @@
       getCourseInfo();  
       getStudentInfo();
       showPersonalGradeChart(personalGradeItems);
-
-
       //get course info diisni pake controller yang udah ada aja, gausah buat baru lagi dari id course yang direturn
       //get chart here
       //nanti tinggal append

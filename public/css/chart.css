@@ -1,16 +1,8 @@
-#chartParticipant {
-    width: 100%!important;
-}
-
-#chartGradeAssignment {
-    width: 100%!important;
-}
-
-#chartQuizGrades {
-    width: 100%!important;
-}
-
-#chartQuizQues {
+#chartParticipant,
+#chartGradeAssignment,
+#chartQuizGrades,
+#chartQuizQues,
+#PersonalGradeChart {
     width: 100%!important;
 }
 
@@ -22,4 +14,17 @@
 .red-text {
     color: red;
     font-weight: bold;
+}
+
+.bar-grademean {
+    fill: #FFAF10;
+}
+
+.bar-green,
+.bar-graderaw {
+    fill: #227362;
+}
+
+.bar-red {
+    fill: #FF0000;
 }
