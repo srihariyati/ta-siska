@@ -370,7 +370,7 @@ class Gradebook extends BaseController
 
         $response_gradebook = $response["usergrades"];
 
-       dd($response_gradebook);
+       //dd($response_gradebook);
         $modulelGrade =[];
 
         foreach($response_gradebook as $rg){
@@ -380,13 +380,14 @@ class Gradebook extends BaseController
 
             foreach($rg['gradeitems'] as $gi){
                 if($gi['id']==$itemid){
-
+                    $cmid = $gi['cmid'];
                     $modulelGrade[]=[
                         'userid'=>$userid,
                         'gradeid'=>$gi['id'],
                         'userfullname'=>$userfullname,
                         'itemname'=> $gi['itemname'],
                         'itemmodule'=> $gi['itemmodule'],
+                        'cmid'=>$cmid,
                         'grade'=>$gi['graderaw'],
                     ];
                 }
@@ -394,9 +395,10 @@ class Gradebook extends BaseController
             }
             
         }
-        //dd($modulelGrade);
+     
         $mydata['token'] = $token;
         $mydata['courseid'] = $courseid;
+        $mydata['cmid'] =$cmid;
         $mydata['module_grade'] = $modulelGrade;
         return view('module_gradebook', $mydata);
         ///return halaman untuk show dan edit nilai 

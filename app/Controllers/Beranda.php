@@ -6,10 +6,16 @@ use CodeIgniter\Controller;
 
 class Beranda extends BaseController
 {
+
+    public function __construct()
+    {
+        $this->session = \Config\Services::session();
+    }
     //untuk mendapatkan userid dan fisrtname
-    public function getsiteinfo($token){
-       
-        $token = $token;
+    public function getSiteInfo(){
+
+        $token = session('token');
+        
         
         $status = true;
         $param =[
@@ -39,14 +45,14 @@ class Beranda extends BaseController
             $response["firstname"],
             $response["userid"],
         ];
-        //dd($webservice_site_info);
-        $this->data['webservice_site_info'] = $webservice_site_info;
-        return $this->getenrolledcourses();
+
+        session()->set('webservice_site_info', $webservice_site_info);
+        return redirect()->to('Beranda/getEnrolledCourses');
 
     }
 
-    public function getenrolledcourses(){      
-        $webservice_site_info = $this->data['webservice_site_info'];
+    public function getEnrolledCourses(){      
+        $webservice_site_info = session('webservice_site_info');
 
         $main_url = $webservice_site_info[0][0];
         $token =$webservice_site_info[0][1];

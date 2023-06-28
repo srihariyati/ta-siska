@@ -27,7 +27,7 @@
 <div class="container">
   <div class="row mt-4">
     <div class="col-md-6">
-      <h3 class="font-weight-bolder pr-10 mb-0">Kuis 2</h3>
+      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" >Kuis 2</h3>
       <p>Topik 2 - Konsep Dasar Bahasa dan Automata</p>
     </div>
   </div>    
@@ -81,7 +81,7 @@
 
 <script>
     $(document).ready(function() {
-      
+            
       getCourseInfo();    
       getContentModuleInfo();
     

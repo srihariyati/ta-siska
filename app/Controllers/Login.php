@@ -5,9 +5,10 @@ use CodeIgniter\Controller;
 
 class Login extends BaseController
 {
-
-   
-
+    public function __construct()
+    {
+        $this->session = \Config\Services::session();
+    }
     public function generatetoken()
     {
         //autententikasi beerhasil maka generate token
@@ -48,9 +49,13 @@ class Login extends BaseController
             //dd($token[0][0]);
             
             $token = $token[0][0];
-            echo $token;
-            //return redirect("beranda/set/$token");
-            return redirect()->to("beranda/getsiteinfo/$token");
+            //echo $token;
+
+            // Set session data
+            session()->set('token', $token);
+
+            //redirect to controller
+            return redirect()->to('Beranda/getSiteInfo');
         }       
     }
 }

@@ -374,10 +374,17 @@ function showPersonalGradeChart(gradeData) {
 }
 
 function getContentModuleInfo() {
+    var cmid = $('#contentModule').data('cmid');
+    courseId = $('#courseTitle').data('courseid');
+    token = $('#courseTitle').data('token');
+    var rute = 'gradebook';
+
+    //ambil informasi contentmodule berdasarkan cmid
+    //
 
     //get course id
     //get module id
     //get content id
 
-    console.log('content module');
+    console.log(cmid);
 }

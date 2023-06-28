@@ -31,9 +31,8 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('/login/token', 'Login::generatetoken');
-$routes->get('/beranda/getsiteinfo/(:any)', 'Beranda::getsiteinfo/$1');
 
-$routes->get('/beranda', 'Beranda::getenrolledcourses');
+
 $routes->get('/visdat/(:num)', 'Visdat::showdata/$1');
 $routes->get('/tabel_kuis', 'Home::tabel_kuis');
 $routes->get('/tabel_tugas', 'Home::tabel_tugas');
