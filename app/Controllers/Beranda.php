@@ -7,26 +7,29 @@ use CodeIgniter\Controller;
 class Beranda extends BaseController
 {
 
+    public $main_url;
+    public $token;
+    public $userid;
+
     public function __construct()
     {
         $this->session = \Config\Services::session();
+        $this->main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
+        $this->token = session('token');
     }
+
     //untuk mendapatkan userid dan fisrtname
     public function getSiteInfo(){
-
-        $token = session('token');
-        
-        
         $status = true;
         $param =[
-            "wstoken" =>$token,
+            "wstoken" =>$this->token,
             "moodlewsrestformat"=>"json",
             "wsfunction"=>"core_webservice_get_site_info",
             ];
+
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL, $this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -38,13 +41,12 @@ class Beranda extends BaseController
         curl_close($curl);
 
         $response = json_decode($response, true);
-        //dd($response);
-        $webservice_site_info[] =[
-            $url,
-            $token,
-            $response["firstname"],
-            $response["userid"],
+
+        $webservice_site_info =[
+            'userid'=>$response["userid"],
+            'firstname'=>$response["firstname"],
         ];
+        //dd($webservice_site_info);
 
         session()->set('webservice_site_info', $webservice_site_info);
         return redirect()->to('Beranda/getEnrolledCourses');
@@ -53,23 +55,19 @@ class Beranda extends BaseController
 
     public function getEnrolledCourses(){      
         $webservice_site_info = session('webservice_site_info');
+        $userid = $webservice_site_info['userid'];
 
-        $main_url = $webservice_site_info[0][0];
-        $token =$webservice_site_info[0][1];
-        $userid = $webservice_site_info[0][3];
-
+        //mendapatkan mata kuliah yang di enrol oleh $userid
         $param =[
-            "wstoken" =>$token,
+            "wstoken" =>$this->token,
             "moodlewsrestformat"=>"json",
             "wsfunction"=>"core_enrol_get_users_courses",
             "userid"=>$userid,
             ];
 
         $data = http_build_query($param);
-        $url = $main_url;
         $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -83,28 +81,19 @@ class Beranda extends BaseController
         gettype($response);
         $arrayLength = count($response);
 
-        $i = 0;
-
-        while( $i < $arrayLength){
+        foreach($response as $ec){
             $enrolled_course[] =[
-                $token,
-                $response[$i]["id"],
-                $response[$i]["displayname"],
+                'token'=> $this->token,
+                'courseid'=>$ec["id"],
+                'coursedisplayname'=>$ec["displayname"],
             ];
-            $i++;   
-        }           
-        
-        //dd($enrolled_course);
+        }
+
         $mydata['enrolled_course'] = $enrolled_course;
-        $mydata['firstname'] = $webservice_site_info[0][2];
+        $mydata['firstname'] = $webservice_site_info['firstname'];
 
         //dd($mydata);
-        return view ('beranda', $mydata);
-        //$this->load()->view('beranda', $mydata);
-        //return redirect()->to("beranda2/$mydata");          
+        return view ('beranda', $mydata);        
     }
 
-    public function set($token){
-        echo $token;
-    }
 }

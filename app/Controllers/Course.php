@@ -10,12 +10,17 @@ use Config\Services;
 class Course extends BaseController{
     use ResponseTrait;
 
+    public $main_url;
+
+    public function __construct(){
+        $this->main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
+    }
+
     public function getCourseInfo($token, $courseid, $mod)
     {
         $token = $token;
         $courseid= $courseid;
         $mod = $mod;
-
     
         $param =[
             "wstoken" =>$token,
@@ -26,9 +31,8 @@ class Course extends BaseController{
         ];
         
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -40,21 +44,21 @@ class Course extends BaseController{
         curl_close($curl);
 
         $response = json_decode($response, true);
-        $arrayLength = count($response["courses"]);
+        
         //dd($response);
       
-        $course_info[] =[
-            $token,
-            $response["courses"][0]["id"],
-            $response["courses"][0]["displayname"],
+        $course_info =[
+            'token'=>$token,
+            'courseid'=>$response["courses"][0]["id"],
+            'displayname'=>$response["courses"][0]["displayname"],
         ];
 
         //dd($course_info);
-       $this->data['course_info'] = $course_info;
 
-       if ($mod=='gradebook'){
+       if ($mod=='gradebook'){ //jika gradebook.js yang akses
         return $this->response->setJSON($course_info);  
-       }else if($mod == 'beranda'){
+       }else if($mod == 'beranda'){ //jika beranda yang akses
+        $this->data['course_info'] = $course_info;
         return $this->getcoursecontent();
        }
       
@@ -64,9 +68,9 @@ class Course extends BaseController{
     {
         $course_info = $this->data['course_info'];
 
-        $token = $course_info[0][0];
-        $courseid = $course_info[0][1];
-        $coursename = $course_info[0][2];
+        $token = $course_info['token'];
+        $courseid = $course_info['courseid'];
+        $coursename = $course_info['displayname'];
 
         $param =[
             "wstoken" =>$token,
@@ -76,9 +80,8 @@ class Course extends BaseController{
         ];
         
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -92,25 +95,25 @@ class Course extends BaseController{
         $response = json_decode($response, true);
         $arrayLength = count($response);
         
-        //dd($response);
-        $i = 1;
+        
+        $i = 1; //skip index 0 yang berisi 'General'
 
         while( $i < $arrayLength){
-            $course_contents_list[] =[
-                $response[$i]["id"],
-                $response[$i]["name"],
-                $response[$i]["modules"]
-            ];
+                $course_contents_list[] =[
+                    'contentid'=>$response[$i]["id"],
+                    'contentname'=>$response[$i]["name"],
+                ]; 
+            
             $i++;
         }
-   
+        //dd($course_contents_list);
         
         $mydata['course_contents_list'] = $course_contents_list;  
         $mydata['coursename'] =  $coursename; 
         $mydata['courseid'] = $courseid;
         $mydata['token'] = $token;
 
-        return view ('visdat_tugas', $mydata);
+        return view ('visdat', $mydata);
     }
 
     
@@ -128,9 +131,8 @@ class Course extends BaseController{
         ];
         
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -143,48 +145,38 @@ class Course extends BaseController{
 
         $response = json_decode($response, true);
         $arrayLength = count($response);
-
         //dd($response);
-      
+        //mengambil semua content pada course
         $i = 1;
 
-        while( $i < $arrayLength){
-            $content_module[] =[
-                $response[$i]["id"],
-                $response[$i]["name"],
-                $response[$i]["modules"],
-            ];
-            $i++;
-        }
-        
-        $filteredModules = [];
-        // Iterasi melalui array response
-        foreach ($content_module as $course) {
-            if ($course[0] == $contentid) {
-                $filteredModules[] =[
-                    'contentName'=> $course[1],
-                    'modules' => $course[2],
-
-                ] ;
-                break;
-            }
-        }
-       
-        //dd($filteredModules[0]['contentName']);
-        $result = [];
-        
-
-        foreach ($filteredModules[0]['modules'] as $module) {
-            if ($module['modname'] == 'quiz' || $module['modname'] == 'assign') {
-                $result[] = [
-                    'contentName' =>$filteredModules[0]['contentName'],
-                    'moduleId' => $module['id'],
-                    'moduleName' => $module['name']
+        //pilih content pada course (hanya pilih content yang id ==contentid)
+         
+        foreach($response as $cc){
+            if($cc['id']==$contentid){
+                $content_module =[
+                    'contentid'=>$cc["id"],
+                    'contentname'=>$cc["name"],
+                    'contentmodules'=>$cc["modules"],
                 ];
             }
         }
-        //dd($result);    
-        return $this->response->setJSON($result);
+
+        //melakukan filter, memilih module yang ada didalam content yang dipilih
+        //berdasarkan content id
+        //hanya memilih module dalam mod kuis dan assign
+        $filteredModules = [];
+        foreach($content_module['contentmodules'] as $cm){
+            if ($cm['modname'] == 'quiz' || $cm['modname'] == 'assign'){
+                $filteredModules[] = [
+                    'contentid'=>$content_module['contentid'],
+                    'contentName'=>$content_module['contentname'],
+                    'moduleId'=>$cm['id'],
+                    'moduleName'=>$cm['name']
+                ];
+            }
+        }
+
+       return $this->response->setJSON($filteredModules);
     }
 
     public function getQuizAssign()
@@ -201,9 +193,8 @@ class Course extends BaseController{
         ];
         
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -229,9 +220,8 @@ class Course extends BaseController{
             ];
         
             $data = http_build_query($param);
-            $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL,$url);
+            curl_setopt($curl, CURLOPT_URL, $this->main_url);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl, CURLOPT_POST, true);
@@ -278,9 +268,8 @@ class Course extends BaseController{
             ];
         
             $data = http_build_query($param);
-            $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL,$url);
+            curl_setopt($curl, CURLOPT_URL,$this->main_url);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl, CURLOPT_POST, true);
@@ -332,9 +321,8 @@ class Course extends BaseController{
         ];
 
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -381,9 +369,8 @@ class Course extends BaseController{
         ];
 
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -440,9 +427,8 @@ class Course extends BaseController{
         ];
 
         $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -492,9 +478,8 @@ class Course extends BaseController{
       
           
             $data = http_build_query($param);
-            $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL,$url);
+            curl_setopt($curl, CURLOPT_URL,$this->main_url);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl, CURLOPT_POST, true);

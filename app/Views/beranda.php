@@ -14,9 +14,7 @@
 
   
     <div class="container">
-
       <div class="row">
-
         <?php foreach($enrolled_course as $ec):?>
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
@@ -25,10 +23,11 @@
             <!-- <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text> -->
 
             <div class="card-body">
-              <p class="card-text"><?= $ec[2]; ?></p>
+              <p class="card-text"><?= $ec['coursedisplayname']; ?></p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a class="navbar-brand" href="<?=base_url('course/getcourseinfo/' . $ec[0] . '/' . $ec[1]).'/beranda'?>">
+                  <!-- coba tes pake session -->
+                  <a class="navbar-brand" href="<?=base_url('course/getcourseinfo/' . $ec['token'] . '/' . $ec['courseid']).'/beranda'?>">
                     <button type="button"class="btn btn-sm btn-outline-secondary">show</button>
                   </a>
                 </div>

@@ -13,14 +13,13 @@ function handleCourseContentChange() {
 
     $.ajax({
 
-        url: `${BASE_URL}course/getCourseModule?courseid=${courseId}&contentid=${contentId}&token=${token}`,
+        url: `${BASE_URL}course/getCourseModule`,
         method: 'GET',
         data: {
             courseid: courseId,
             contentid: contentId,
             token: token
         },
-        method: 'GET',
         dataType: 'json',
         success: function(response) {
             console.log("getCourseModule : ");
@@ -29,8 +28,9 @@ function handleCourseContentChange() {
             $('#contentName').empty();
 
             if (response.length == 0) {
-                var option = '<option value=""  style="font-style: italic;">Tidak Ada Tugas/Kuis</option>';
+                var option = '<option value="0"  style="font-style: italic;">Tidak Ada Tugas/Kuis</option>';
                 $('#content_module').append(option);
+
 
             } else {
                 for (var i = 0; i < response.length; i++) {
@@ -42,14 +42,17 @@ function handleCourseContentChange() {
                 //tidak didalam looping karena akkan menampilkan sebanyak jumlah index didalam response
                 var contentName = '<p>' + module.contentName + '</p>';
                 $('#contentName').append(contentName);
+
+
             }
+
+
             handleContentModuleChange();
-
-
         },
         error: function(xhr, status, error) {
             console.error(error);
         }
+
     });
 }
 
@@ -62,8 +65,13 @@ function handleContentModuleChange() {
 
 
     $.ajax({
-        url: `${BASE_URL}course/getQuizAssign?token=${token}&courseid=${courseId}&cmid=${moduleId}`,
+        url: `${BASE_URL}course/getQuizAssign`,
         method: 'GET',
+        data: {
+            courseid: courseId,
+            cmid: moduleId,
+            token: token
+        },
         dataType: 'json',
         success: function(response) {
             console.log("getQuizAssign : ");
@@ -121,7 +129,6 @@ function handleContentModuleChange() {
                         getGradeAssignment();
 
                     }
-
 
                     //if response quiz
                 } else if (module.mod == 'quiz') {
