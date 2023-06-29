@@ -27,14 +27,14 @@
 <div class="container">
   <div class="row mt-4">
     <div class="col-md-6">
-      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" >Kuis 2</h3>
-      <p>Topik 2 - Konsep Dasar Bahasa dan Automata</p>
+      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" ></h3>
+      <p id="contentName"></p>
     </div>
   </div>    
   <div class="row mt-4">
     <div class="col-md-4">
       <p class="mb-0">Rata-rata nilai mahasiswa:</p>
-      <h4 class="font-weight-bold">71</h4>
+      <h4 class="font-weight-bold" id='meanGrade'></h4>
      
     </div>
     <div class="col-md-4">
@@ -72,6 +72,7 @@
     </div>
   </div>
   <?php endforeach;?>
+  <?php $module_grade = json_encode($module_grade);?>
 </div>
 
 <?= $this->endSection('content') ?>
@@ -81,9 +82,16 @@
 
 <script>
     $(document).ready(function() {
-            
+      var module_grade = <?= $module_grade ?>;
+     
       getCourseInfo();    
       getContentModuleInfo();
+      getMeanGradeModule(module_grade);
+
+      //get ketepatan waktu pengumpulan tugas
+      //get subbimteed participant
+      //get all participant
+      //submmited participant % from all participant
     
     });
 

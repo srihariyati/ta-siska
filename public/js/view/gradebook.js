@@ -155,12 +155,10 @@ function getCourseInfo() {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            for (var i = 0; i < response.length; i++) {
-                var course = response[i];
-                var courseName = course[2];
+            console.log('js:ocurseinfo', response.displayname);
+            var courseName = response.displayname;
+            $('#courseTitle').append(courseName);
 
-                $('#courseTitle').append(courseName);
-            }
 
         }
     });
@@ -377,14 +375,51 @@ function getContentModuleInfo() {
     var cmid = $('#contentModule').data('cmid');
     courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
-    var rute = 'gradebook';
+
 
     //ambil informasi contentmodule berdasarkan cmid
-    //
+    //ajax get content module information
+    $.ajax({
+        url: `${BASE_URL}gradebook/getModuleInfo`,
+        method: 'GET',
+        data: {
+            token: token,
+            courseid: courseId,
+            cmid: cmid,
+        },
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+
+            var modulename = response.cmname;
+            var contentname = response.cname;
+            $('#contentModule').append(modulename);
+            $('#contentName').append(contentname);
+
+
+        }
+    });
+
 
     //get course id
     //get module id
     //get content id
 
     console.log(cmid);
+}
+
+function getMeanGradeModule(module_grade) {
+    console.log(module_grade);
+
+    // Calculate the mean grade
+    var sum = 0;
+    for (var i = 0; i < module_grade.length; i++) {
+        sum += module_grade[i].grade;
+    }
+
+    var mean = (sum / module_grade.length).toFixed(2);
+
+    // console.log('Mean grade:', mean);
+    $('#meanGrade').append(mean);
+
 }
