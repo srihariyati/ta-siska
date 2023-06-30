@@ -483,6 +483,7 @@ class Gradebook extends BaseController
                         'cname'=>$contentname,
                         'cmid'=>$cmm['id'],
                         'cmname'=>$cmm['name'],
+                        'instanceid'=>$cmm['instance'], // instance == quiz/assign id 
                         'cmmod'=>$cmm['modname']
                     ];
                 }

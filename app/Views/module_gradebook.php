@@ -27,7 +27,7 @@
 <div class="container">
   <div class="row mt-4">
     <div class="col-md-6">
-      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" ></h3>
+      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>"></h3>
       <p id="contentName"></p>
     </div>
   </div>    
@@ -83,11 +83,16 @@
 <script>
     $(document).ready(function() {
       var module_grade = <?= $module_grade ?>;
+      var modmodule = $('#contentModule').data('mod');
+
+      console.log(modmodule);
      
       getCourseInfo();    
       getContentModuleInfo();
       getMeanGradeModule(module_grade);
 
+
+      //if mod item is assign
       //get ketepatan waktu pengumpulan tugas
       //get subbimteed participant
       //get all participant

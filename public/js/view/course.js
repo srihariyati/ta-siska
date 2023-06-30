@@ -31,23 +31,41 @@ function handleCourseContentChange() {
                 var option = '<option value="0"  style="font-style: italic;">Tidak Ada Tugas/Kuis</option>';
                 $('#content_module').append(option);
 
-
             } else {
                 for (var i = 0; i < response.length; i++) {
-                    var module = response[i];
-                    var option = '<option value=' + module.moduleId + '>' + module.moduleName + '</option>';
 
+                    var module = response[i]; //moduleId == cmid //instanceid == quiz/assign id
+                    // var option = '<option value=' + module.moduleId + '>' + module.moduleName + '</option>';
+                    var option = '<option value=' + module.instance + ',' + module.modulemod + '>' + module.moduleName + '</option>';
                     $('#content_module').append(option);
+
+                    //langsung append nama module nya disini aja gak sih? sekalian nama id dan mod nya
+
+
+                    var instanceid = module.instance;
+                    var modulemod = module.modulemod;
+                    //kenapa ga kirim assign/kuis id kesini?
+                    //setelah dikirim langsung jalanin function untuk dapat data kuis dan tugas
+
+                    //if modulemod quiz getQuiz(token, courseId, instanceid)
+                    //if modulemod assign getAssign()
                 }
+
+                // if (modulemod == 'quiz') {
+                //     getQuiz(token, courseId, instanceid);
+                // } else if (modulemod == 'assign') {
+                //     console.log('assign boss');
+                //     getAssign(token, courseId, instanceid);
+                // }
+
                 //tidak didalam looping karena akkan menampilkan sebanyak jumlah index didalam response
                 var contentName = '<p>' + module.contentName + '</p>';
                 $('#contentName').append(contentName);
 
 
             }
-
-
-            handleContentModuleChange();
+            //handleContentModuleChange();
+            handleModuleChange();
         },
         error: function(xhr, status, error) {
             console.error(error);
@@ -56,115 +74,239 @@ function handleCourseContentChange() {
     });
 }
 
-function handleContentModuleChange() {
-    // function dijalankan jika user sudah memilih content && module
-
-    var moduleId = $('#content_module').val();
-    var token = $('#courseTitle').data('token');
+function handleModuleChange() {
     var courseId = $('#courseTitle').data('courseid');
+    var token = $('#courseTitle').data('token');
+    var instanceid = $('#content_module').val().split(',')[0];
+    var modulemod = $('#content_module').val().split(',')[1];
 
+    console.log(modulemod);
 
+    if (modulemod == 'quiz') {
+        getQuiz(token, courseId, instanceid);
+    } else if (modulemod == 'assign') {
+        getAssign(token, courseId, instanceid);
+    }
+}
+
+function getQuiz(token, courseId, instanceid) {
+    console.log('quiz', token, courseId, instanceid);
+    emptyPage();
+    //ajax to get Quiz controller
     $.ajax({
-        url: `${BASE_URL}course/getQuizAssign`,
+
+        url: `${BASE_URL}course/getQuiz`,
         method: 'GET',
         data: {
+            token: token,
             courseid: courseId,
-            cmid: moduleId,
-            token: token
+            instanceid: instanceid,
         },
         dataType: 'json',
         success: function(response) {
-            console.log("getQuizAssign : ");
-            console.log(response);
-            $('#modTitle').empty();
-            $('#openedDate').empty();
-            $('#closedDate').empty();
-            $('#tableParticipant').empty();
-            $('#chartParticipant').empty();
-            $('#chartGradeAssignment').empty();
-            $('#lagendGradeAssignment').empty();
-            $('#tableGradeAssignment').empty();
-            $('#chartQuizGrades').empty();
-            $('#chartQuizQues').empty();
-            $('#descQuizQues').empty();
-            $('#tableGradeQuiz').empty();
+            console.log(response.quizName);
 
-            for (var i = 0; i < response.length; i++) {
-                var module = response[i];
+            var modName = '<h3 class="font-weight-bolder pr-10 mb-0"  id="mod" data-modname="' + response.mod + '">' + response.quizName + '</h3>';
+            var openedDate = response.openedDate;
+            var closedDate = response.closedDate;
 
-                //if response assign
-                if (module.mod == "assign") {
-                    console.log('modName : Assign');
-                    //return halaman visdat tugas
-                    for (var i = 0; i < response.length; i++) {
-                        var module = response[i];
-                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0" id="mod" data-modname="' + module.mod + '" >' + module.assignName + '</h3>';
-                        console.log(modName);
-                        console.log("AssignId:" + module.assignId);
+            var formattedOpenedDate = formatUnixTimestamp(openedDate);
+            var formattedClosedDate = formatUnixTimestamp(closedDate);
 
-                        var openedDate = module.openedDate;
-                        var closedDate = module.closedDate;
+            var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
+            var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+            $('#modTitle').append(modName);
+            $('#openedDate').append(openedDate);
+            $('#closedDate').append(closedDate);
 
-                        var formattedOpenedDate = formatUnixTimestamp(openedDate);
-                        var formattedClosedDate = formatUnixTimestamp(closedDate);
-
-                        //append opened date dan closed date
-                        var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
-                        var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
-
-                        //append table participant khusus assign
-                        var tableParticipant = '<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td<tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr></tbody></table>';
-
-                        $('#modTitle').append(modName);
-                        $('#openedDate').append(openedDate);
-                        $('#closedDate').append(closedDate);
-                        $('#tableParticipant').append(tableParticipant);
-
-                        //ambil data participant tugas
-                        getParticipant(token, courseId, module.assignId, module.assignName, module.groupId);
-
-                        //append assign ID to data module.assignId
-
-                        //ambil data grade
-                        getGradeAssignment();
-
-                    }
-
-                    //if response quiz
-                } else if (module.mod == 'quiz') {
-                    console.log('modName : Quiz');
-                    //return halamn visdat kuis
-                    for (var i = 0; i < response.length; i++) {
-                        var module = response[i];
-                        var modName = '<h3 class="font-weight-bolder pr-10 mb-0"  id="mod" data-modname="' + module.mod + '">' + module.quizName + '</h3>';
-                        console.log(modName);
-                        var openedDate = module.openedDate;
-                        var closedDate = module.closedDate;
-
-                        var formattedOpenedDate = formatUnixTimestamp(openedDate);
-                        var formattedClosedDate = formatUnixTimestamp(closedDate);
-
-                        var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
-                        var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
-                        $('#modTitle').append(modName);
-                        $('#openedDate').append(openedDate);
-                        $('#closedDate').append(closedDate);
-
-                    }
-
-                    //ambil data grade
-                    getGradeQuiz();
-                }
-
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
+            //ambil data grade
+            getGradeQuiz();
         }
-
     });
 
+} //menerima parameter token, courseid, dan instance id
+
+
+function getAssign(token, courseId, instanceid) {
+    console.log('getassign', token, courseId, instanceid);
+    emptyPage();
+    //ajax to get assign controller
+    //ajax to get Quiz controller
+    $.ajax({
+
+        url: `${BASE_URL}course/getAssign`,
+        method: 'GET',
+        data: {
+            token: token,
+            courseid: courseId,
+            instanceid: instanceid,
+        },
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            var modName = '<h3 class="font-weight-bolder pr-10 mb-0" id="mod" data-modname="' + response.mod + '" >' + response.assignName + '</h3>';
+            console.log('assign harusnya', modName);
+            console.log("AssignId:" + response.assignId);
+
+            var openedDate = response.openedDate;
+            var closedDate = response.closedDate;
+
+            var formattedOpenedDate = formatUnixTimestamp(openedDate);
+            var formattedClosedDate = formatUnixTimestamp(closedDate);
+
+            //append opened date dan closed date
+            var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
+            var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+
+            //append table participant khusus assign
+            var tableParticipant = '<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td<tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr></tbody></table>';
+
+            $('#modTitle').append(modName);
+            $('#openedDate').append(openedDate);
+            $('#closedDate').append(closedDate);
+            $('#tableParticipant').append(tableParticipant);
+
+            //ambil data participant tugas
+            //getParticipant(token, courseId, response.assignId, response.assignName, response.groupId);
+            getCourseParticipant(token, courseId);
+            getSubmittedParticipant(token, response.assignId, response.assignName);
+            //append assign ID to data module.assignId
+
+            //ambil data grade
+            getGradeAssignment();
+
+        }
+    });
 }
+
+
+function emptyPage() {
+    $('#modTitle').empty();
+    $('#openedDate').empty();
+    $('#closedDate').empty();
+    $('#tableParticipant').empty();
+    $('#chartParticipant').empty();
+    $('#chartGradeAssignment').empty();
+    $('#lagendGradeAssignment').empty();
+    $('#tableGradeAssignment').empty();
+    $('#chartQuizGrades').empty();
+    $('#chartQuizQues').empty();
+    $('#descQuizQues').empty();
+    $('#tableGradeQuiz').empty();
+}
+
+// function handleContentModuleChange() {
+//     // function dijalankan jika user sudah memilih content && module
+
+//     // var moduleId = $('#content_module').val();
+//     var instancemodule = $('#content_module').val();
+//     var token = $('#courseTitle').data('token');
+//     var courseId = $('#courseTitle').data('courseid');
+//     var modName = $('#mod').data('modname');
+//     console.log("modname di html", modName);
+
+
+//     $.ajax({
+//         url: `${BASE_URL}course/getQuizAssign`,
+//         method: 'GET',
+//         data: {
+//             courseid: courseId,
+//             instance: instancemodule,
+//             token: token
+//         },
+//         dataType: 'json',
+//         success: function(response) {
+//             console.log("getQuizAssign : ");
+//             console.log(response);
+//             $('#modTitle').empty();
+//             $('#openedDate').empty();
+//             $('#closedDate').empty();
+//             $('#tableParticipant').empty();
+//             $('#chartParticipant').empty();
+//             $('#chartGradeAssignment').empty();
+//             $('#lagendGradeAssignment').empty();
+//             $('#tableGradeAssignment').empty();
+//             $('#chartQuizGrades').empty();
+//             $('#chartQuizQues').empty();
+//             $('#descQuizQues').empty();
+//             $('#tableGradeQuiz').empty();
+
+//             for (var i = 0; i < response.length; i++) {
+//                 var module = response[i];
+
+//                 //if response assign
+//                 if (module.mod == "assign") {
+//                     console.log('modName : Assign');
+//                     //return halaman visdat tugas
+//                     for (var i = 0; i < response.length; i++) {
+//                         var module = response[i];
+//                         var modName = '<h3 class="font-weight-bolder pr-10 mb-0" id="mod" data-modname="' + module.mod + '" >' + module.assignName + '</h3>';
+//                         console.log(modName);
+//                         console.log("AssignId:" + module.assignId);
+
+//                         var openedDate = module.openedDate;
+//                         var closedDate = module.closedDate;
+
+//                         var formattedOpenedDate = formatUnixTimestamp(openedDate);
+//                         var formattedClosedDate = formatUnixTimestamp(closedDate);
+
+//                         //append opened date dan closed date
+//                         var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
+//                         var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+
+//                         //append table participant khusus assign
+//                         var tableParticipant = '<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td<tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr></tbody></table>';
+
+//                         $('#modTitle').append(modName);
+//                         $('#openedDate').append(openedDate);
+//                         $('#closedDate').append(closedDate);
+//                         $('#tableParticipant').append(tableParticipant);
+
+//                         //ambil data participant tugas
+//                         getParticipant(token, courseId, module.assignId, module.assignName, module.groupId);
+
+//                         //append assign ID to data module.assignId
+
+//                         //ambil data grade
+//                         getGradeAssignment();
+
+//                     }
+
+//                     //if response quiz
+//                 } else if (module.mod == 'quiz') {
+//                     console.log('modName : Quiz');
+//                     //return halamn visdat kuis
+//                     for (var i = 0; i < response.length; i++) {
+//                         var module = response[i];
+//                         var modName = '<h3 class="font-weight-bolder pr-10 mb-0"  id="mod" data-modname="' + module.mod + '">' + module.quizName + '</h3>';
+//                         console.log(modName);
+//                         var openedDate = module.openedDate;
+//                         var closedDate = module.closedDate;
+
+//                         var formattedOpenedDate = formatUnixTimestamp(openedDate);
+//                         var formattedClosedDate = formatUnixTimestamp(closedDate);
+
+//                         var openedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
+//                         var closedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+//                         $('#modTitle').append(modName);
+//                         $('#openedDate').append(openedDate);
+//                         $('#closedDate').append(closedDate);
+
+//                     }
+
+//                     //ambil data grade
+//                     getGradeQuiz();
+//                 }
+
+//             }
+//         },
+//         error: function(xhr, status, error) {
+//             console.error(error);
+//         }
+
+//     });
+
+// }
 
 function formatUnixTimestamp(unixTimestamp) {
     return new Date(unixTimestamp * 1000).toLocaleString('id-ID', {
@@ -177,18 +319,11 @@ function formatUnixTimestamp(unixTimestamp) {
     });
 }
 
-function getParticipant(token, courseId, assignId, assignName, groupId) {
-    getCourseParticipant(token, courseId);
-    getSubmittedParticipant(token, assignId, groupId, assignName);
-
-}
-
 function getCourseParticipant(token, courseId) {
     console.log(token);
     console.log(courseId);
     $('#courseParticipant').empty();
     $('#submittedParticipant').empty();
-
 
     //kolom all participant
     //function core_enrol_get_enrolled_users
@@ -199,22 +334,18 @@ function getCourseParticipant(token, courseId) {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
+            console.log(response);
             courseParticipant = response.length;
             $('#courseParticipant').append(courseParticipant);
 
             console.log("course participant : " + courseParticipant);
-
-
-
         }
     });
 }
 
-function getSubmittedParticipant(token, assignId, groupId, assignName) {
-
+function getSubmittedParticipant(token, assignId, assignName) {
     console.log(token);
     console.log(assignId);
-    console.log(groupId);
 
     //$('#submittedParticipant').empty();
     $('#chartParticipant').empty();
@@ -223,10 +354,11 @@ function getSubmittedParticipant(token, assignId, groupId, assignName) {
     //function mod_assign_list_participants :mendapatkan user dengan
     //ketentuan role:student dan submited:true
     $.ajax({
-        url: `${BASE_URL}course/getSubmittedParticipant?token=${token}&assignid=${assignId}&groupid=${groupId}`,
+        url: `${BASE_URL}course/getSubmittedParticipant?token=${token}&assignid=${assignId}`,
         method: 'GET',
         dataType: 'json',
         success: function(response) {
+
             var submittedParticipant = response.length;
             console.log("submittedparticipant : " + submittedParticipant);
 
@@ -243,8 +375,6 @@ function getSubmittedParticipant(token, assignId, groupId, assignName) {
         }
 
     });
-
-
 }
 
 function getGradeAssignment() {

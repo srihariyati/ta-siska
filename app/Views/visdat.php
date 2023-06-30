@@ -121,25 +121,28 @@
 
 <script>
     $(document).ready(function() {
+      
+
       handleCourseContentChange();
       
         $('#course_content').on('change', function() {
-            handleCourseContentChange();
+            handleCourseContentChange(); //menampilkan dropdown 2 : topik/content
         });
         
         $('#content_module').on('change', function() {
-            handleContentModuleChange();
+          handleModuleChange();
         });
-        $('#table_grade').on('click', function(){
-          var modName = $('#mod').data('modname');
-          console.log("modname di html", modName);
 
-          //set mod=Quiz||Assign
-          handleTable(modName);
-        });
-        $('#vis_grade').on('click', function(){
-          handleCourseContentChange();
-        });
+        // $('#table_grade').on('click', function(){
+        //   var modName = $('#mod').data('modname');
+        //   console.log("modname di html", modName);
+
+        //   //set mod=Quiz||Assign
+        //   handleTable(modName);
+        // });
+        // $('#vis_grade').on('click', function(){
+        //   handleCourseContentChange();
+        // });
 
         // $('#btnMhs').on('click', function(){
         //   handleMhsButton();

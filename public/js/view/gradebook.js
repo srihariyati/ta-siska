@@ -393,19 +393,13 @@ function getContentModuleInfo() {
 
             var modulename = response.cmname;
             var contentname = response.cname;
+            var instanceid = response.instanceid;
             $('#contentModule').append(modulename);
             $('#contentName').append(contentname);
 
 
         }
     });
-
-
-    //get course id
-    //get module id
-    //get content id
-
-    console.log(cmid);
 }
 
 function getMeanGradeModule(module_grade) {
@@ -421,5 +415,38 @@ function getMeanGradeModule(module_grade) {
 
     // console.log('Mean grade:', mean);
     $('#meanGrade').append(mean);
+
+}
+
+function getSubmissionTimeliness() {
+
+    var token = $('#courseTitle').data('token');
+    var courseId = $('#courseTitle').data('courseid');
+    var assignId = $('#contentModule').data('id');
+
+    //get all course participant
+
+    $.ajax({
+        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            courseParticipant = response.length;
+            console.log("course participant : " + courseParticipant);
+        }
+    });
+
+    //get submission participant
+    $.ajax({
+        url: `${BASE_URL}course/getSubmittedParticipant?token=${token}&assignid=${assignId}&groupid=${groupId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var submittedParticipant = response.length;
+            console.log("submittedparticipant : " + submittedParticipant);
+        }
+    });
+
+
 
 }

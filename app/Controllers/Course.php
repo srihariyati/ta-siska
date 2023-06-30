@@ -161,6 +161,7 @@ class Course extends BaseController{
             }
         }
 
+
         //melakukan filter, memilih module yang ada didalam content yang dipilih
         //berdasarkan content id
         //hanya memilih module dalam mod kuis dan assign
@@ -171,7 +172,9 @@ class Course extends BaseController{
                     'contentid'=>$content_module['contentid'],
                     'contentName'=>$content_module['contentname'],
                     'moduleId'=>$cm['id'],
-                    'moduleName'=>$cm['name']
+                    'moduleName'=>$cm['name'],
+                    'instance'=>$cm['instance'], //instance == quiz/assign id
+                    'modulemod'=>$cm['modname']
                 ];
             }
         }
@@ -179,40 +182,12 @@ class Course extends BaseController{
        return $this->response->setJSON($filteredModules);
     }
 
-    public function getQuizAssign()
-    {
+    public function getQuiz(){
         $token = $this->request->getVar('token');
         $courseid = $this->request->getVar('courseid');
-        $cmid = $this->request->getVar('cmid');
-
+        $instanceid = $this->request->getVar('instanceid');
+       
         $param =[
-            "wstoken" =>$token,
-            "moodlewsrestformat"=>"json",
-            "wsfunction"=>"core_course_get_course_module",
-            "cmid"=>$cmid,
-        ];
-        
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $arrayLength = count($response);
-
-        
-        if ($response["cm"]["modname"] == "quiz"){
-           //mod_quiz_get_quizzes_by_courses
-           
-           $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
             "wsfunction"=>"mod_quiz_get_quizzes_by_courses",
@@ -239,9 +214,9 @@ class Course extends BaseController{
             $filteredQuiz = [];
            
             foreach($response_quiz['quizzes'] as $quiz){
-                if ($quiz['coursemodule']==$cmid){
+                if ($quiz['id']==$instanceid){ //bisa ni diganti pake instance
                 
-                    $filteredQuiz[] = [
+                    $filteredQuiz = [
                         'mod' => "quiz",
                         'cmid' => $quiz['coursemodule'],
                         'groupId' => $quiz['groupingid'],
@@ -250,17 +225,19 @@ class Course extends BaseController{
                         'openedDate'=> $quiz['timeopen'],
                         'closedDate'=>$quiz['timeclose']
                     ];
-                    //dd($quiz['coursemodule']);
+                   
                 }
             }
-
-            //dd($filteredQuiz);
+            // dd($filteredQuiz);
             return $this->response->setJSON( $filteredQuiz);
+    }
 
+    public function getAssign(){
+        $token = $this->request->getVar('token');
+        $courseid = $this->request->getVar('courseid');
+        $instanceid = $this->request->getVar('instanceid');
 
-        } else if ($response["cm"]["modname"]== "assign"){
-           //mod_assign_get_assignments
-           $param =[
+        $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
             "wsfunction"=>"mod_assign_get_assignments",
@@ -287,15 +264,15 @@ class Course extends BaseController{
 
             $filteredAssign = [];
             foreach($response_assign['courses'][0]['assignments'] as $assign){
-                if ($assign['cmid']==$cmid){
-                    $filteredAssign[] = [
+                if ($assign['id']==$instanceid){
+                    $filteredAssign = [
                         'mod'=> "assign",
                         'cmId'=> $assign['cmid'],
                         'assignId' => $assign['id'],
                         'assignName'=> $assign['name'],
                         'openedDate'=> $assign['allowsubmissionsfromdate'],
                         'closedDate'=>$assign['duedate'],
-                        'groupId' => $response["cm"]["groupingid"]
+                        //'groupId' => $response["cm"]["groupingid"]
                     ];
                    //dd($filteredAssign);
                 }
@@ -306,7 +283,92 @@ class Course extends BaseController{
         }
 
     
-    }
+
+    // public function getQuizAssign()
+    // {
+    //     $token = $this->request->getVar('token');
+    //     $courseid = $this->request->getVar('courseid');
+    //     $instanceid = $this->request->getVar('instance');
+
+    //     //dapetin langung mod nya jadiin variabel
+    //     //gaperlu lagi dong, langsung aja panggil si kuis pake data id quiz
+    //     $param =[
+    //         "wstoken" =>$token,
+    //         "moodlewsrestformat"=>"json",
+    //         "wsfunction"=>"core_course_get_course_module",
+    //         "cmid"=>$cmid,
+    //     ];
+        
+    //     $data = http_build_query($param);
+    //     $curl = curl_init();
+    //     curl_setopt($curl, CURLOPT_URL,$this->main_url);
+    //     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    //     curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+    //     curl_setopt($curl, CURLOPT_POST, true);
+    //     //kalau gapake ini gabisa akses moodle, karena masalah ssl
+    //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+
+    //     $response = curl_exec($curl);
+    //     curl_close($curl);
+
+    //     $response = json_decode($response, true);
+    //     $arrayLength = count($response);
+
+        
+       
+            
+
+
+    //     } else if ($response["cm"]["modname"]== "assign"){
+    //        //mod_assign_get_assignments
+    //        $param =[
+    //         "wstoken" =>$token,
+    //         "moodlewsrestformat"=>"json",
+    //         "wsfunction"=>"mod_assign_get_assignments",
+    //         "courseids[0]"=>$courseid,
+    //         ];
+        
+    //         $data = http_build_query($param);
+    //         $curl = curl_init();
+    //         curl_setopt($curl, CURLOPT_URL,$this->main_url);
+    //         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    //         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+    //         curl_setopt($curl, CURLOPT_POST, true);
+    //         //kalau gapake ini gabisa akses moodle, karena masalah ssl
+    //         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+
+    //         $response_assign = curl_exec($curl);
+    //         curl_close($curl);
+
+    //         $response_assign = json_decode($response_assign, true);
+    //         $arrayLength = count($response_assign);
+
+    //         //dd($response_assign['courses'][0]['assignments']);
+
+    //         $filteredAssign = [];
+    //         foreach($response_assign['courses'][0]['assignments'] as $assign){
+    //             if ($assign['id']==$instanceid){
+    //                 $filteredAssign[] = [
+    //                     'mod'=> "assign",
+    //                     'cmId'=> $assign['cmid'],
+    //                     'assignId' => $assign['id'],
+    //                     'assignName'=> $assign['name'],
+    //                     'openedDate'=> $assign['allowsubmissionsfromdate'],
+    //                     'closedDate'=>$assign['duedate'],
+    //                     'groupId' => $response["cm"]["groupingid"]
+    //                 ];
+    //                //dd($filteredAssign);
+    //             }
+    //         }
+            
+
+    //         return $this->response->setJSON($filteredAssign);      
+    //     }
+
+    
+    // }
 
     public function getCourseParticipant()
     {
@@ -339,15 +401,21 @@ class Course extends BaseController{
         //dd($arrayLength);
 
         foreach($response_courseparticipant as $participant){
-            if($participant['roles'][0]['shortname'] == "student"){
-                $courseParticipant[] =[
-                    'id' => $participant['id'],
-                    'username'=> $participant["username"],
-                    'fullname'=> $participant["fullname"]
-                   ];
-            }
-          
+            $id =  $participant['id'];
+            $username = $participant["username"];
+            $fullname = $participant["fullname"];
+
+            foreach($participant['roles'] as $role){
+                if($role['shortname']== "student"){ //jika role adalh studen 
+                    $courseParticipant[] =[
+                        'id' => $participant['id'],
+                        'username'=> $participant["username"],
+                        'fullname'=> $participant["fullname"]
+                       ];
+                }
+            }          
         }
+    
         return $this->response->setJSON($courseParticipant);  
         
     }
@@ -357,15 +425,13 @@ class Course extends BaseController{
     {
         $token = $this->request->getVar('token');
         $assignid = $this->request->getVar('assignid');
-        $groupid = $this ->request->getVar('groupid');
 
         $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
-            "wsfunction"=>"mod_assign_list_participants",
-            "assignid"=>$assignid,
-            "groupid"=> $groupid,
-            "filter"=>"",  
+            "wsfunction"=>"mod_assign_get_submissions",
+            "assignmentids[0]"=>$assignid,
+            "status"=>'submitted'
         ];
 
         $data = http_build_query($param);
@@ -383,23 +449,9 @@ class Course extends BaseController{
 
         $response_submittedparticipant = json_decode($response_submittedparticipant, true);
         $arrayLength = count($response_submittedparticipant);
-        //dd($response_submittedparticipant);
+        
 
-        foreach($response_submittedparticipant as $participant){
-            if($participant['roles'][0]['shortname']=='student'){
-                if($participant['submissionstatus']=='submitted'){
-                $submittedParticipant[] = [
-                    'id' => $participant['id'],
-                    'username'=> $participant["username"],
-                    'fullname'=> $participant["fullname"],
-                    'roles'=>$participant['roles'][0]['shortname']
-                ];
-            }
-            }
-            
-        }
-
-
+        $submittedParticipant = $response_submittedparticipant['assignments'][0]['submissions'];
         return $this->response->setJSON($submittedParticipant);
 
         
