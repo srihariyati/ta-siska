@@ -611,6 +611,9 @@ class Course extends BaseController{
     {
         $quizid =$this->request->getVar('quizid');
 
+        //gunakan wsfunction
+
+
         $grade = [
             [
                 "fullname"=>"AI",
@@ -633,6 +636,30 @@ class Course extends BaseController{
         ];           
            
         return $this->response->setJSON($grade);
+    }
+
+    public function getQuizQues(){
+        $$quizques = [
+            [
+                "fullname"=>"Ed",
+                "grade"=>0,
+                "q1"=>true,
+                "q2"=>false,
+                "q3"=>true,
+                "q4"=>false,
+                "q5"=>true,
+            ],
+            [
+                "fullname"=>"Al",
+                "grade"=>0,
+                "q1"=>true,
+                "q2"=>false,
+                "q3"=>true,
+                "q4"=>false,
+                "q5"=>true,
+            ],
+        ];  
+        return $this->response->setJSON($quizques);
     }
     
 }

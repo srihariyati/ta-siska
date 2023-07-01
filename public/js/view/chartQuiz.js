@@ -1,4 +1,4 @@
-function chartQuizGrades() {
+function chartQuizGrades(data) {
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
@@ -7,16 +7,7 @@ function chartQuizGrades() {
     var height = document.getElementById("chartQuizGrades").clientWidth / 1.5 - margin.top - margin.bottom;
     console.log(width);
 
-    // Data nilai grade mahasiswa
-    var data = [
-        { grade: '100', jumlah: 10 },
-        { grade: '90', jumlah: 8 },
-        { grade: '80', jumlah: 15 },
-        { grade: '70', jumlah: 6 },
-        { grade: '60', jumlah: 14 },
-        { grade: '50', jumlah: 2 },
-        { grade: '0', jumlah: 5 }
-    ];
+    var data = data;
     // Membuat elemen SVG
     var svg = d3.select("#chartQuizGrades")
         .append("svg")
@@ -147,7 +138,7 @@ function chartQuizGrades() {
 
 }
 
-function chartQuizQues() {
+function chartQuizQues(data) {
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
@@ -156,19 +147,7 @@ function chartQuizQues() {
     var height = document.getElementById("chartQuizQues").clientWidth / 1.5 - margin.top - margin.bottom;
     console.log(width);
 
-    // tingkat kelulusan dalam %
-    var data = [
-        { q: 'Q1', t: 20, f: 13 },
-        { q: 'Q2', t: 10, f: 23 },
-        { q: 'Q3', t: 15, f: 17 },
-        { q: 'Q4', t: 10, f: 20 },
-        { q: 'Q5', t: 20, f: 24 },
-        { q: 'Q6', t: 20, f: 40 },
-        { q: 'Q7', t: 10, f: 30 },
-        { q: 'Q8', t: 33, f: 0 },
-        { q: 'Q9', t: 10, f: 30 },
-        { q: 'Q10', t: 35, f: 0 },
-    ];
+    var data = data;
 
     // Membuat elemen SVG
     var svg = d3.select("#chartQuizQues")

@@ -102,3 +102,4 @@
 
 </script>
 <?= $this->endSection('jshere') ?>
+<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td<tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr></tbody></table>

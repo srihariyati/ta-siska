@@ -86,7 +86,7 @@ function chartParticipant(courseParticipant, submittedParticipant, assignTitle) 
 }
 
 
-function chartAssign() {
+function chartAssign(data) {
     console.log("chart grade");
 
     // Kasih margin yang rapi
@@ -96,18 +96,7 @@ function chartAssign() {
     var width = document.getElementById("chartGradeAssignment").clientWidth - 100;
     var height = document.getElementById("chartGradeAssignment").clientWidth / 1.5 - margin.top - margin.bottom;
     console.log(width);
-
-    // Data nilai grade mahasiswa
-    var data = [
-        { grade: 'A', jumlah: 10 },
-        { grade: 'AB', jumlah: 8 },
-        { grade: 'B', jumlah: 20 },
-        { grade: 'BC', jumlah: 6 },
-        { grade: 'C', jumlah: 14 },
-        { grade: 'D', jumlah: 2 },
-        { grade: 'E', jumlah: 5 }
-    ];
-
+    var data = data;
     // Membuat elemen SVG
     var svg = d3.select("#chartGradeAssignment")
         .append("svg")

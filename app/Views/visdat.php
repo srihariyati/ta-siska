@@ -121,8 +121,6 @@
 
 <script>
     $(document).ready(function() {
-      
-
       handleCourseContentChange();
       
         $('#course_content').on('change', function() {
@@ -133,20 +131,18 @@
           handleModuleChange();
         });
 
-        // $('#table_grade').on('click', function(){
-        //   var modName = $('#mod').data('modname');
-        //   console.log("modname di html", modName);
+        $('#table_grade').on('click', function(){
+          var modName = $('#mod').data('modname');
+          console.log("modname di html", modName);
+          handleTable(modName);
+        });
+        $('#vis_grade').on('click', function(){
+          handleCourseContentChange();
+        });
 
-        //   //set mod=Quiz||Assign
-        //   handleTable(modName);
-        // });
-        // $('#vis_grade').on('click', function(){
-        //   handleCourseContentChange();
-        // });
-
-        // $('#btnMhs').on('click', function(){
-        //   handleMhsButton();
-        // });
+        $('#btnMhs').on('click', function(){
+          handleMhsButton();
+        });
 
     });
   </script>
