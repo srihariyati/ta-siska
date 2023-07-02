@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\RequestInterface;
+use App\Controllers\GenerateCurl;
 
 class Gradebook extends BaseController
 {   
@@ -27,9 +28,7 @@ class Gradebook extends BaseController
         // pada href visdat_tugas line 24
     }
 
-    // public function getGradebookView($token, $courseid)
-    public function getGradebookView()
-    {
+    public function getGradebookView(){
         $token = $this->token;
         $courseid = $this->courseid;
 
@@ -41,23 +40,8 @@ class Gradebook extends BaseController
             "value"=>$courseid,
         ];
         
-        $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $arrayLength = count($response["courses"]);
-        //dd($response);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
       
         $course_info[] =[
             $token,
@@ -76,8 +60,7 @@ class Gradebook extends BaseController
         return view('gradebook', $mydata);
     }
 
-    public function getGradebook()
-    {
+    public function getGradebook(){
         // $token = $this->request->getVar('token');
         // $courseid = $this->request->getVar('courseid');
         $mod = $this->request->getVar('mod');
@@ -92,22 +75,8 @@ class Gradebook extends BaseController
             "courseid"=>$courseid,
         ];
         
-        $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $arrayLength = count($response);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
 
         $response_gradebook = $response["usergrades"];
 
@@ -224,22 +193,8 @@ class Gradebook extends BaseController
             "courseid"=>$courseid,
         ];
         
-        $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $arrayLength = count($response);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
 
         $response_gradebook = $response["usergrades"];
 
@@ -355,22 +310,8 @@ class Gradebook extends BaseController
             "courseid"=>$courseid,
         ];
         
-        $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $arrayLength = count($response);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
 
         $response_gradebook = $response["usergrades"];
 
@@ -421,22 +362,8 @@ class Gradebook extends BaseController
 
         ];
         
-        $data = http_build_query($param);
-        $url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $arrayLength = count($response);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
 
         return $this->response->setJSON($response);
     
@@ -454,21 +381,8 @@ class Gradebook extends BaseController
             "courseid"=>$courseid,
         ];
         
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $arrayLength = count($response);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
 
         foreach ($response as $cm){
             $contentid = $cm['id'];
@@ -490,8 +404,6 @@ class Gradebook extends BaseController
                 
             }
         }
-
-        //dd($modules);
 
         return $this->response->setJSON($modules);
     }

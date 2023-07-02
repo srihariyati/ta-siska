@@ -5,6 +5,7 @@ use CodeIgniter\Controller;
 use CodeIgniter\API\ResponseTrait;
 use Illuminate\Http\Request;
 use Config\Services;
+use App\Controllers\GenerateCurl;
 
 
 class Course extends BaseController{
@@ -14,26 +15,6 @@ class Course extends BaseController{
 
     public function __construct(){
         $this->main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
-    }
-
-    public function curlGen($param){
-        $data = http_build_query($param);
-        $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response= curl_exec($curl);
-        curl_close($curl);
-
-        $responsee = json_decode($response, true);
-        return $responsee;
     }
 
     public function getCourseInfo($token, $courseid, $mod)
@@ -50,7 +31,8 @@ class Course extends BaseController{
             "value"=>$courseid,
         ];
 
-        $response = $this->curlGen($param);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
       
         $course_info =[
             'token'=>$token,
@@ -82,7 +64,8 @@ class Course extends BaseController{
             "courseid"=>$courseid,
         ];
         
-        $response = $this->curlGen($param);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
 
         $arrayLength = count($response);
         $i = 1; //skip index 0 yang berisi 'General'
@@ -117,7 +100,8 @@ class Course extends BaseController{
             "courseid"=>$courseid,
         ];
         
-        $response = $this->curlGen($param);
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
 
         $arrayLength = count($response);
         //dd($response);
@@ -169,7 +153,8 @@ class Course extends BaseController{
             "courseids[0]"=>$courseid,
             ];
         
-            $response_quiz = $this->curlGen($param);
+            $curlGen = new GenerateCurl();
+            $response_quiz =  $curlGen->curlGen($param);
 
             $filteredQuiz = [];
             foreach($response_quiz['quizzes'] as $quiz){
@@ -203,7 +188,8 @@ class Course extends BaseController{
             "courseids[0]"=>$courseid,
             ];
         
-            $response_assign = $this->curlGen($param);
+            $curlGen = new GenerateCurl();
+            $response_assign =  $curlGen->curlGen($param);
 
             $filteredAssign = [];
             foreach($response_assign['courses'][0]['assignments'] as $assign){
@@ -237,7 +223,8 @@ class Course extends BaseController{
             "courseid"=>$courseid,  
         ];
 
-        $response_courseparticipant = $this->curlGen($param);
+        $curlGen = new GenerateCurl();
+        $response_courseparticipant =  $curlGen->curlGen($param);
 
         foreach($response_courseparticipant as $participant){
             $id =  $participant['id'];
@@ -272,7 +259,8 @@ class Course extends BaseController{
             "status"=>'submitted'
         ];
 
-        $response_submittedparticipant = $this->curlGen($param);
+        $curlGen = new GenerateCurl();
+        $response_submittedparticipant =  $curlGen->curlGen($param);
         
         $submittedParticipant = $response_submittedparticipant['assignments'][0]['submissions'];
         return $this->response->setJSON($submittedParticipant);      
@@ -295,23 +283,8 @@ class Course extends BaseController{
             "assignmentids[0]"=>$assignid,  
         ];
 
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response_grade = curl_exec($curl);
-        curl_close($curl);
-
-        $response_grade = json_decode($response_grade, true);
-        $arrayLength = count($response_grade);
-
-        //dd($response_grade);
+        $curlGen = new GenerateCurl();
+        $response_grade =  $curlGen->curlGen($param);
        
         $grades = $response_grade["assignments"][0]["grades"];
         $response_grade= [];
@@ -321,15 +294,10 @@ class Course extends BaseController{
                 "gradeid"=>$g["id"],
                 "userid"=>$g["userid"],
                 "grade"=>$g["grade"],
-
-            ];
-            
+            ];         
         }
-        //dd($response_grade);
 
         if ( $response_grade!=null){
-
-          
            // "core_enrol_get_enrolled_users",
             // param"courseid"=>$courseid, 
 
@@ -348,21 +316,8 @@ class Course extends BaseController{
             ];
       
           
-            $data = http_build_query($param);
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL,$this->main_url);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            //kalau gapake ini gabisa akses moodle, karena masalah ssl
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-    
-            $response_participant = curl_exec($curl);
-            curl_close($curl);
-    
-            $response_participant = json_decode($response_participant, true);
-            $arrayLength = count($response_participant);
+            $curlGen = new GenerateCurl();
+            $response_participant =  $curlGen->curlGen($param);
     
             foreach($response_participant as $participant){
                 if($participant['roles'][0]['shortname'] == "student"){
@@ -442,8 +397,8 @@ class Course extends BaseController{
                 "userid"=>$userid
             ];
     
-            $as = $this->curlGen($param);
-            dd($as);
+            $curlGen = new GenerateCurl();
+            $response =  $curlGen->curlGen($param);
             
             $quizGrade=[
                 'quizid'=>$quizid,
@@ -512,6 +467,5 @@ class Course extends BaseController{
         ];  
         return $this->response->setJSON($quizques);
     }
-
     
 }

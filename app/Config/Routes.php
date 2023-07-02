@@ -31,20 +31,6 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('/login/token', 'Login::generatetoken');
-
-
-$routes->get('/visdat/(:num)', 'Visdat::showdata/$1');
-$routes->get('/tabel_kuis', 'Home::tabel_kuis');
-$routes->get('/tabel_tugas', 'Home::tabel_tugas');
-
-$routes->get('/edit_gradebook_all', 'Gradebook::edit_gradebook_all');
-$routes->get('/visdat_kuis', 'Home::visdat_kuis');
-
-$routes->get('/visdat_tugas', 'Home::visdat_tugas');
-
-$routes->get('/personal_gradebook', 'PersonalGradebook::getstudent');
-$routes->get('/edit_grade_personal', 'Home::edit_grade_personal');
-
 /*
  * --------------------------------------------------------------------
  * Additional Routing
