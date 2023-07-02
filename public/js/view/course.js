@@ -289,18 +289,49 @@ function getSubmittedParticipant(token, assignId, assignName) {
 }
 
 function getGradeAssignment() {
-    // Data nilai grade mahasiswa
-    var data = [
-        { grade: 'A', jumlah: 10 },
-        { grade: 'AB', jumlah: 8 },
-        { grade: 'B', jumlah: 20 },
-        { grade: 'BC', jumlah: 6 },
-        { grade: 'C', jumlah: 14 },
-        { grade: 'D', jumlah: 2 },
-        { grade: 'E', jumlah: 5 }
-    ];
+    var courseId = $('#courseTitle').data('courseid');
+    //instanceid==quizid/assignid
+    var instanceid = $('#content_module').val().split(',')[0];
+    var assignId = instanceid;
+    var counts = {};
+    //ajax here
+    $.ajax({
+        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
 
-    window.chartAssign(data);
+            //hitung jumlah nilai a b c
+            // Calculate the mean grade
+
+            for (var i = 0; i < response.length; i++) {
+                var lettergrade = response[i].lettergrade;
+                //console.log(lettergrade);
+
+                if (!counts.hasOwnProperty(lettergrade)) {
+                    counts[lettergrade] = 0;
+
+                }
+
+                // Increment the count for the letter
+                counts[lettergrade]++;
+
+            }
+            console.log(counts);
+            const dataArray = [];
+
+            // Iterate over the object keys
+            for (let grade in counts) {
+                // Create an object with grade and jumlah properties
+                const obj = { grade: grade, jumlah: counts[grade] };
+                dataArray.push(obj);
+            }
+
+            console.log(dataArray);
+            window.chartAssign(dataArray);
+        }
+    });
 }
 
 function handleTableQuiz(quizId) {
@@ -371,17 +402,18 @@ function handleTableAssign(courseId, assignId) {
 function handleTable(modName) {
     token = $('#courseTitle').data('token');
     var courseId = $('#courseTitle').data('courseid');
-    var assignId = 1;
-    var quizId = 1;
+
+    //instanceid==quizid/assignid
+    var instanceid = $('#content_module').val().split(',')[0];
 
     //hilangkn chart dan gantikan dengan table
     emptyPagetable();
 
     if (modName == 'quiz') {
-        handleTableQuiz(quizId);
+        handleTableQuiz(instanceid);
     } else
     if (modName == 'assign') {
-        handleTableQuiz(courseId, assignId);
+        handleTableAssign(courseId, instanceid);
     }
 
 }
@@ -437,16 +469,69 @@ function showTableGradeAssignment(responseData) {
 }
 
 function getGradeQuiz(quizId) {
+    console.log(quizId);
+    var courseId = $('#courseTitle').data('courseid');
 
-    //ambil data quiz mhs menggunakan function
+
+
+    //ambil list participant pada course
     $.ajax({
-        url: `${BASE_URL}course/getGradeQuiz?token=${token}&quizid=${quizId}`,
+        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
         metho: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log('getgradequiz', response);
+            var participant = response;
+            console.log(participant);
+
+            const dataUser = [];
+            for (var i = 0; i < response.length; i++) {
+                var userid = response[i].id;
+                dataUser.push(userid);
+            }
+
+            //kirim userid kedalam function
+
+            //ambil data userid participantnya
+            //lalu lakukan looping mengunakan funtion mod_quiz_get_user_attempts
+            $.ajax({
+                url: `${BASE_URL}course/getGradeQuiz`,
+                data: {
+                    token: token,
+                    quizid: quizId,
+                    datauser: dataUser,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+
+                    //cocokkan user id here
+                    //untuk mendapatkan data fullname, grade, username, lettergrade
+
+
+
+                }
+            });
+
         }
     });
+
+    //jika data sama generate format data here
+
+
+
+
+
+    //looping data untuk setiap data participant
+
+    //ambil data quiz mhs menggunakan function
+    // $.ajax({
+    //     url: `${BASE_URL}course/getGradeQuiz?token=${token}&quizid=${quizId}`,
+    //     metho: 'GET',
+    //     dataType: 'json',
+    //     success: function(response) {
+    //         console.log('getgradequiz', response);
+    //     }
+    // });
 
     //raw data response here
     //counting data here not in controller

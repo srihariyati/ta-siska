@@ -16,6 +16,26 @@ class Course extends BaseController{
         $this->main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
     }
 
+    public function curlGen($param){
+        $data = http_build_query($param);
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL,$this->main_url);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_POST, true);
+
+        //kalau gapake ini gabisa akses moodle, karena masalah ssl
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+
+        $response= curl_exec($curl);
+        curl_close($curl);
+
+        $responsee = json_decode($response, true);
+        return $responsee;
+    }
+
     public function getCourseInfo($token, $courseid, $mod)
     {
         $token = $token;
@@ -29,31 +49,14 @@ class Course extends BaseController{
             "field"=>"id",
             "value"=>$courseid,
         ];
-        
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        
-        //dd($response);
+        $response = $this->curlGen($param);
       
         $course_info =[
             'token'=>$token,
             'courseid'=>$response["courses"][0]["id"],
             'displayname'=>$response["courses"][0]["displayname"],
         ];
-
-        //dd($course_info);
 
        if ($mod=='gradebook'){ //jika gradebook.js yang akses
         return $this->response->setJSON($course_info);  
@@ -79,25 +82,10 @@ class Course extends BaseController{
             "courseid"=>$courseid,
         ];
         
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+        $response = $this->curlGen($param);
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
         $arrayLength = count($response);
-        
-        
         $i = 1; //skip index 0 yang berisi 'General'
-
         while( $i < $arrayLength){
                 $course_contents_list[] =[
                     'contentid'=>$response[$i]["id"],
@@ -116,7 +104,6 @@ class Course extends BaseController{
         return view ('visdat', $mydata);
     }
 
-    
     public function getCourseModule()
     {
         $token = $this->request->getVar('token');
@@ -130,20 +117,8 @@ class Course extends BaseController{
             "courseid"=>$courseid,
         ];
         
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+        $response = $this->curlGen($param);
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
         $arrayLength = count($response);
         //dd($response);
         //mengambil semua content pada course
@@ -194,25 +169,9 @@ class Course extends BaseController{
             "courseids[0]"=>$courseid,
             ];
         
-            $data = http_build_query($param);
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->main_url);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            //kalau gapake ini gabisa akses moodle, karena masalah ssl
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-            $response_quiz = curl_exec($curl);
-            curl_close($curl);
-
-            $response_quiz = json_decode($response_quiz, true);
-            $arrayLength = count($response_quiz);
-           //dd($response_quiz["quizzes"]);
+            $response_quiz = $this->curlGen($param);
 
             $filteredQuiz = [];
-           
             foreach($response_quiz['quizzes'] as $quiz){
                 if ($quiz['id']==$instanceid){ //bisa ni diganti pake instance
                 
@@ -244,23 +203,7 @@ class Course extends BaseController{
             "courseids[0]"=>$courseid,
             ];
         
-            $data = http_build_query($param);
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL,$this->main_url);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            //kalau gapake ini gabisa akses moodle, karena masalah ssl
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-            $response_assign = curl_exec($curl);
-            curl_close($curl);
-
-            $response_assign = json_decode($response_assign, true);
-            $arrayLength = count($response_assign);
-
-            //dd($response_assign['courses'][0]['assignments']);
+            $response_assign = $this->curlGen($param);
 
             $filteredAssign = [];
             foreach($response_assign['courses'][0]['assignments'] as $assign){
@@ -280,95 +223,7 @@ class Course extends BaseController{
             
 
             return $this->response->setJSON($filteredAssign);      
-        }
-
-    
-
-    // public function getQuizAssign()
-    // {
-    //     $token = $this->request->getVar('token');
-    //     $courseid = $this->request->getVar('courseid');
-    //     $instanceid = $this->request->getVar('instance');
-
-    //     //dapetin langung mod nya jadiin variabel
-    //     //gaperlu lagi dong, langsung aja panggil si kuis pake data id quiz
-    //     $param =[
-    //         "wstoken" =>$token,
-    //         "moodlewsrestformat"=>"json",
-    //         "wsfunction"=>"core_course_get_course_module",
-    //         "cmid"=>$cmid,
-    //     ];
-        
-    //     $data = http_build_query($param);
-    //     $curl = curl_init();
-    //     curl_setopt($curl, CURLOPT_URL,$this->main_url);
-    //     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    //     curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-    //     curl_setopt($curl, CURLOPT_POST, true);
-    //     //kalau gapake ini gabisa akses moodle, karena masalah ssl
-    //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    //     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-    //     $response = curl_exec($curl);
-    //     curl_close($curl);
-
-    //     $response = json_decode($response, true);
-    //     $arrayLength = count($response);
-
-        
-       
-            
-
-
-    //     } else if ($response["cm"]["modname"]== "assign"){
-    //        //mod_assign_get_assignments
-    //        $param =[
-    //         "wstoken" =>$token,
-    //         "moodlewsrestformat"=>"json",
-    //         "wsfunction"=>"mod_assign_get_assignments",
-    //         "courseids[0]"=>$courseid,
-    //         ];
-        
-    //         $data = http_build_query($param);
-    //         $curl = curl_init();
-    //         curl_setopt($curl, CURLOPT_URL,$this->main_url);
-    //         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    //         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-    //         curl_setopt($curl, CURLOPT_POST, true);
-    //         //kalau gapake ini gabisa akses moodle, karena masalah ssl
-    //         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    //         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-    //         $response_assign = curl_exec($curl);
-    //         curl_close($curl);
-
-    //         $response_assign = json_decode($response_assign, true);
-    //         $arrayLength = count($response_assign);
-
-    //         //dd($response_assign['courses'][0]['assignments']);
-
-    //         $filteredAssign = [];
-    //         foreach($response_assign['courses'][0]['assignments'] as $assign){
-    //             if ($assign['id']==$instanceid){
-    //                 $filteredAssign[] = [
-    //                     'mod'=> "assign",
-    //                     'cmId'=> $assign['cmid'],
-    //                     'assignId' => $assign['id'],
-    //                     'assignName'=> $assign['name'],
-    //                     'openedDate'=> $assign['allowsubmissionsfromdate'],
-    //                     'closedDate'=>$assign['duedate'],
-    //                     'groupId' => $response["cm"]["groupingid"]
-    //                 ];
-    //                //dd($filteredAssign);
-    //             }
-    //         }
-            
-
-    //         return $this->response->setJSON($filteredAssign);      
-    //     }
-
-    
-    // }
+    }
 
     public function getCourseParticipant()
     {
@@ -382,23 +237,7 @@ class Course extends BaseController{
             "courseid"=>$courseid,  
         ];
 
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response_courseparticipant = curl_exec($curl);
-        curl_close($curl);
-
-        $response_courseparticipant = json_decode($response_courseparticipant, true);
-        $arrayLength = count($response_courseparticipant);
-
-        //dd($arrayLength);
+        $response_courseparticipant = $this->curlGen($param);
 
         foreach($response_courseparticipant as $participant){
             $id =  $participant['id'];
@@ -420,7 +259,6 @@ class Course extends BaseController{
         
     }
 
-
     public function getSubmittedParticipant()
     {
         $token = $this->request->getVar('token');
@@ -434,31 +272,10 @@ class Course extends BaseController{
             "status"=>'submitted'
         ];
 
-        $data = http_build_query($param);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,$this->main_url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        //kalau gapake ini gabisa akses moodle, karena masalah ssl
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
-
-        $response_submittedparticipant = curl_exec($curl);
-        curl_close($curl);
-
-        $response_submittedparticipant = json_decode($response_submittedparticipant, true);
-        $arrayLength = count($response_submittedparticipant);
+        $response_submittedparticipant = $this->curlGen($param);
         
-
         $submittedParticipant = $response_submittedparticipant['assignments'][0]['submissions'];
-        return $this->response->setJSON($submittedParticipant);
-
-        
-
-            
-        
-
+        return $this->response->setJSON($submittedParticipant);      
     }
 
     public function getGradeAssignment()
@@ -493,6 +310,8 @@ class Course extends BaseController{
 
         $response_grade = json_decode($response_grade, true);
         $arrayLength = count($response_grade);
+
+        //dd($response_grade);
        
         $grades = $response_grade["assignments"][0]["grades"];
         $response_grade= [];
@@ -545,8 +364,6 @@ class Course extends BaseController{
             $response_participant = json_decode($response_participant, true);
             $arrayLength = count($response_participant);
     
-            
-    
             foreach($response_participant as $participant){
                 if($participant['roles'][0]['shortname'] == "student"){
                     $courseParticipant[] =[
@@ -561,7 +378,6 @@ class Course extends BaseController{
             //dd($response_grade, $courseParticipant);
             //dd($courseParticipant);
             
-        
             $gradeList = [];
             foreach ($courseParticipant as $cp){
                 foreach ($response_grade as $d){
@@ -609,31 +425,66 @@ class Course extends BaseController{
 
     public function getGradeQuiz()
     {
+        $token =$this->request->getVar('token');
         $quizid =$this->request->getVar('quizid');
+        $participant =$this->request->getVar('datauser');
+       
+        $quizGrade=[];
+        $quizGradeAll=[];
 
-        //gunakan wsfunction
+        foreach($participant as $userid){
+            //looping untuk wsfunction here
+            $param =[
+                "wstoken" =>$token,
+                "moodlewsrestformat"=>"json",
+                "wsfunction"=>"mod_quiz_get_user_attempts",
+                "quizid"=> $quizid,
+                "userid"=>$userid
+            ];
+    
+            $as = $this->curlGen($param);
+            dd($as);
+            
+            $quizGrade=[
+                'quizid'=>$quizid,
+                'userid'=>$userid,
+                'attemptsid'=>$attempsid['id']
+            ];
+            
+            array_push($quizGradeAll,  $quizGrade);
+            // dd( $quizGrade);
+            //ambil attemptid untuk ws function mod_quiz_get_attempt_review 
+            //untuk mendapatkan nilaigrade dan perpertanyaan
+        }
+        dd($quizGradeAll);
+            
 
 
-        $grade = [
-            [
-                "fullname"=>"AI",
-                "grade"=>100,
-                "q1"=>true,
-                "q2"=>false,
-                "q3"=>true,
-                "q4"=>false,
-                "q5"=>true,
-            ],
-            [
-                "fullname"=>"AI",
-                "grade"=>100,
-                "q1"=>true,
-                "q2"=>false,
-                "q3"=>true,
-                "q4"=>false,
-                "q5"=>true,
-            ],
-        ];           
+
+        //gunakan wsfunction untuk mendapatkan data
+        //data idgrade, userid, grade, username(optional)
+      
+
+        // $grade = [
+        //     [
+        //         "fullname"=>"AI",
+        //         "grade"=>100,
+        //         "q1"=>true,
+        //         "q2"=>false,
+        //         "q3"=>true,
+        //         "q4"=>false,
+        //         "q5"=>true,
+        //     ],
+        //     [
+        //         "fullname"=>"AI",
+        //         "grade"=>100,
+        //         "q1"=>true,
+        //         "q2"=>false,
+        //         "q3"=>true,
+        //         "q4"=>false,
+        //         "q5"=>true,
+        //     ],
+        // ];           
            
         return $this->response->setJSON($grade);
     }
@@ -661,5 +512,6 @@ class Course extends BaseController{
         ];  
         return $this->response->setJSON($quizques);
     }
+
     
 }
