@@ -384,8 +384,11 @@ class Course extends BaseController{
         $quizid =$this->request->getVar('quizid');
         $participant =$this->request->getVar('datauser');
        
+        $quizAttempt=[];
+        $quizAttemptAll=[];
         $quizGrade=[];
         $quizGradeAll=[];
+        $curlGen = new GenerateCurl();
 
         foreach($participant as $userid){
             //looping untuk wsfunction here
@@ -397,75 +400,62 @@ class Course extends BaseController{
                 "userid"=>$userid
             ];
     
-            $curlGen = new GenerateCurl();
+           
             $response =  $curlGen->curlGen($param);
-            
-            $quizGrade=[
-                'quizid'=>$quizid,
-                'userid'=>$userid,
-                'attemptsid'=>$attempsid['id']
-            ];
-            
-            array_push($quizGradeAll,  $quizGrade);
-            // dd( $quizGrade);
+            $attempsid = $response['attempts'];
+
+            $arrayLength = count($attempsid);
+            if($arrayLength>0){ //karena ada user yang gada attempt
+                $quizAttempt=[
+                    'quizid'=>$quizid,
+                    'userid'=>$userid,
+                    'attemptsid'=>$attempsid[0]['id']
+                ];
+            }     
+
+            array_push($quizAttemptAll,  $quizAttempt);
+            //dd( $quizAttempt);
             //ambil attemptid untuk ws function mod_quiz_get_attempt_review 
             //untuk mendapatkan nilaigrade dan perpertanyaan
         }
-        dd($quizGradeAll);
-            
 
+        foreach($quizAttemptAll as $attemps){
+            //looping untuk wsfunction here
+            $param =[
+                "wstoken" =>$token,
+                "moodlewsrestformat"=>"json",
+                "wsfunction"=>"mod_quiz_get_attempt_review",
+                "attemptid"=> $attemps['attemptsid'],
+            ];
 
+            $response =  $curlGen->curlGen($param);
+          
+            $questions=[];
+            foreach($response['questions'] as $ques){
+                $questions[]=[
+                    'slot'=>$ques['slot'],
+                    'status'=>$ques['status'],
+                ];
+            }
 
+            $quizGrade=[
+                'quizid'=>$response['attempt']['quiz'],
+                'attemptsid'=>$attemps['attemptsid'],
+                'userid'=>$response['attempt']['userid'],
+                'grade'=>$response['grade'],
+                'questions'=>$questions
+                
+            ];
+
+            array_push($quizGradeAll,  $quizGrade);
+        }
+        //dd($quizGradeAll);         
         //gunakan wsfunction untuk mendapatkan data
         //data idgrade, userid, grade, username(optional)
-      
-
-        // $grade = [
-        //     [
-        //         "fullname"=>"AI",
-        //         "grade"=>100,
-        //         "q1"=>true,
-        //         "q2"=>false,
-        //         "q3"=>true,
-        //         "q4"=>false,
-        //         "q5"=>true,
-        //     ],
-        //     [
-        //         "fullname"=>"AI",
-        //         "grade"=>100,
-        //         "q1"=>true,
-        //         "q2"=>false,
-        //         "q3"=>true,
-        //         "q4"=>false,
-        //         "q5"=>true,
-        //     ],
-        // ];           
-           
-        return $this->response->setJSON($grade);
+    
+        return $this->response->setJSON($quizGradeAll);
     }
 
-    public function getQuizQues(){
-        $$quizques = [
-            [
-                "fullname"=>"Ed",
-                "grade"=>0,
-                "q1"=>true,
-                "q2"=>false,
-                "q3"=>true,
-                "q4"=>false,
-                "q5"=>true,
-            ],
-            [
-                "fullname"=>"Al",
-                "grade"=>0,
-                "q1"=>true,
-                "q2"=>false,
-                "q3"=>true,
-                "q4"=>false,
-                "q5"=>true,
-            ],
-        ];  
-        return $this->response->setJSON($quizques);
-    }
+    
     
 }

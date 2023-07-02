@@ -11,8 +11,9 @@ class GenerateCurl extends BaseController
     public function __construct(){
         $this->main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
     }
-    
+
     public function curlGen($param){
+        set_time_limit(120); // Set maximum execution time to 120 seconds
         $data = http_build_query($param);
         $curl = curl_init();
 

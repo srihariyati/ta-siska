@@ -1,4 +1,5 @@
-var courseParticipant; // Declare a global variable
+// Declare a global variable
+var courseParticipant;
 var openedDate;
 var closedDate;
 var token;
@@ -471,9 +472,7 @@ function showTableGradeAssignment(responseData) {
 function getGradeQuiz(quizId) {
     console.log(quizId);
     var courseId = $('#courseTitle').data('courseid');
-
-
-
+    var counts = {};
     //ambil list participant pada course
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
@@ -503,69 +502,65 @@ function getGradeQuiz(quizId) {
                 dataType: 'json',
                 success: function(response) {
                     console.log(response);
+                    //start chart 1
+                    for (var i = 0; i < response.length; i++) {
+                        var grade = response[i].grade;
+                        //console.log(grade);
 
-                    //cocokkan user id here
-                    //untuk mendapatkan data fullname, grade, username, lettergrade
+                        if (!counts.hasOwnProperty(grade)) {
+                            counts[grade] = 0;
+
+                        }
+
+                        // Increment the count for the 
+                        counts[grade]++;
+
+                    }
+                    console.log(counts);
+                    const dataArray = [];
+
+                    // Iterate over the object keys
+                    for (let grade in counts) {
+                        // Create an object with grade and jumlah properties
+                        const obj = { grade: grade, jumlah: counts[grade] };
+                        dataArray.push(obj);
+                    }
+
+                    console.log(dataArray);
+                    // Data nilai grade mahasiswa
+                    var dataQuizGrade = dataArray;
+                    window.chartQuizGrades(dataQuizGrade);
+                    //end chart 1
 
 
+                    //chart quiz 2
+                    //get questions in all data response
+                    for (var i = 0; i < response.length; i++) {
+                        var ques = response[i].questions;
+                        for (var j = 0; j < ques.length; j++) {
+                            console.log(ques[j]);
 
+                        }
+
+                    }
                 }
             });
-
         }
     });
-
-    //jika data sama generate format data here
-
-
-
-
-
-    //looping data untuk setiap data participant
-
-    //ambil data quiz mhs menggunakan function
-    // $.ajax({
-    //     url: `${BASE_URL}course/getGradeQuiz?token=${token}&quizid=${quizId}`,
-    //     metho: 'GET',
-    //     dataType: 'json',
-    //     success: function(response) {
-    //         console.log('getgradequiz', response);
-    //     }
-    // });
-
-    //raw data response here
-    //counting data here not in controller
-
-
-    // Data nilai grade mahasiswa
-    var dataQuizGrade = [
-        { grade: '100', jumlah: 10 },
-        { grade: '90', jumlah: 8 },
-        { grade: '80', jumlah: 15 },
-        { grade: '70', jumlah: 6 },
-        { grade: '60', jumlah: 14 },
-        { grade: '50', jumlah: 2 },
-        { grade: '0', jumlah: 5 }
-    ];
-    window.chartQuizGrades(dataQuizGrade);
-
-
 }
 
 function getQuizQues(quizId) {
     console.log(quizId);
 
     //ambil data quiz mhs menggunakan function
-
     $.ajax({
-        url: `${BASE_URL}course/getQuizQues?token=${token}&quizid=${quizId}`,
+        url: `${BASE_URL}course/getQuizGrade?token=${token}&quizid=${quizId}`,
         metho: 'GET',
         dataType: 'json',
         success: function(response) {
             console.log('getgradequiz', response);
         }
     });
-
 
     // tingkat kelulusan dalam %
     var dataQuizQues = [
