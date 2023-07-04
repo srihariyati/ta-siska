@@ -67,9 +67,9 @@ function chartQuizGrades(data) {
         .attr("ry", 5) // Radius sudut vertikal
         .attr("rx", 5) // Radius sudut vertikal
         .attr("x", function(d) { return xScale(d.grade); })
-        .attr("y", function(d) { return yScale(d.jumlah); })
-        .attr("width", xScale.bandwidth())
-        .attr("height", function(d) { return height - yScale(d.jumlah); })
+        .attr('y', height) // Mulai dari posisi bawah chart
+        .attr('width', xScale.bandwidth())
+        .attr('height', 0) // Mulai dengan tinggi 0
         .attr("class", function(d) { //set fill in chart.css
             if (d.grade > 50) {
                 return "bar-green";
@@ -96,7 +96,13 @@ function chartQuizGrades(data) {
         .on("mouseout", function(d) {
             // Hide tooltip
             tooltip.style("opacity", 0);
-        });
+        })
+        .transition() // Menerapkan transisi
+        .duration(1000) // Durasi transisi dalam milidetik
+        .delay(function(_, i) { return i * 100; }) // Penundaan transisi untuk setiap elemen
+        .attr('y', function(d) { return yScale(d.jumlah); }) // Menggeser elemen ke posisi vertikal yang tepat
+        .attr('height', function(d) { return height - yScale(d.jumlah); }); // Mengubah tinggi elemen menjadi yang diinginkan
+
 
 
     // Membuat elemen tooltip
@@ -214,9 +220,9 @@ function chartQuizQues(data) {
         .attr("rx", 5) // Radius sudut vertikal
         .attr('class', 'bar-green') // chart.css
         .attr('x', function(d) { return xScale(d.slot); })
-        .attr('y', function(d) { return yScale(d.correct); })
+        .attr('y', height) // Mulai dari posisi bawah chart
         .attr('width', xScale.bandwidth() / 2) //per dua karena dalam satu q akan ada dua barchart
-        .attr('height', function(d) { return height - yScale(d.correct); })
+        .attr('height', 0) // Mulai dengan tinggi 0
         .on("mouseover", function(event, d) { // Pass the event object as the first argument
             // Show tooltip
             var mouseCoords = d3.pointer(event, this);
@@ -236,7 +242,12 @@ function chartQuizQues(data) {
         .on("mouseout", function(d) {
             // Hide tooltip
             tooltip.style("opacity", 0);
-        });
+        })
+        .transition() // Menerapkan transisi
+        .duration(3000) // Durasi transisi dalam milidetik
+        .delay(function(_, i) { return i * 100; }) // Penundaan transisi untuk setiap elemen
+        .attr('y', function(d) { return yScale(d.correct); }) // Menggeser elemen ke posisi vertikal yang tepat
+        .attr('height', function(d) { return height - yScale(d.correct); }); // Mengubah tinggi elemen menjadi yang diinginkan
 
 
     // Membuat barchart untuk f
@@ -248,9 +259,9 @@ function chartQuizQues(data) {
         .attr("rx", 5) // Radius sudut vertikal
         .attr('class', 'bar-red') //chart.css
         .attr('x', function(d) { return xScale(d.slot) + xScale.bandwidth() / 2; })
-        .attr('y', function(d) { return yScale(d.incorrect); })
-        .attr('width', xScale.bandwidth() / 2)
-        .attr('height', function(d) { return height - yScale(d.incorrect); })
+        .attr('y', height) // Mulai dari posisi bawah chart *untuk transisi
+        .attr('width', xScale.bandwidth() / 2) //per dua karena dalam satu q akan ada dua barchart *untuk transisi
+        .attr('height', 0) // Mulai dengan tinggi 0 *untuk transisi
         .on("mouseover", function(event, d) { // Pass the event object as the first argument
             // Show tooltip
             var mouseCoords = d3.pointer(event, this);
@@ -270,7 +281,13 @@ function chartQuizQues(data) {
         .on("mouseout", function(d) {
             // Hide tooltip
             tooltip.style("opacity", 0);
-        });
+        })
+        .transition() // Menerapkan transisi
+        .duration(3000) // Durasi transisi dalam milidetik
+        .delay(function(_, i) { return i * 100; }) // Penundaan transisi untuk setiap elemen
+        .attr('y', function(d) { return yScale(d.incorrect); }) // Menggeser elemen ke posisi vertikal yang tepat
+        .attr('height', function(d) { return height - yScale(d.incorrect); }); // Mengubah tinggi elemen menjadi yang diinginkan
+
 
     //membuat text x axis
     svg.append('text')
