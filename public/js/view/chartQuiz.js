@@ -139,6 +139,7 @@ function chartQuizGrades(data) {
 }
 
 function chartQuizQues(data) {
+    console.log(data);
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
@@ -160,13 +161,13 @@ function chartQuizQues(data) {
 
     // Skala x (nilai huruf)
     var xScale = d3.scaleBand()
-        .domain(data.map(function(d) { return d.q; }))
+        .domain(data.map(function(d) { return d.slot; }))
         .range([0, width])
         .padding(0.3);
 
     // Skala y (jumlah mahasiswa)
     var yScale = d3.scaleLinear()
-        .domain([0, (d3.max(data, function(d) { return Math.max(d.t, d.f); }) + 2)])
+        .domain([0, (d3.max(data, function(d) { return Math.max(d.correct, d.incorrect); }) + 2)])
         .range([height, 0]);
 
     //menampilkan yAxis
@@ -212,10 +213,10 @@ function chartQuizQues(data) {
         .attr("ry", 5) // Radius sudut vertikal
         .attr("rx", 5) // Radius sudut vertikal
         .attr('class', 'bar-green') // chart.css
-        .attr('x', function(d) { return xScale(d.q); })
-        .attr('y', function(d) { return yScale(d.t); })
+        .attr('x', function(d) { return xScale(d.slot); })
+        .attr('y', function(d) { return yScale(d.correct); })
         .attr('width', xScale.bandwidth() / 2) //per dua karena dalam satu q akan ada dua barchart
-        .attr('height', function(d) { return height - yScale(d.t); })
+        .attr('height', function(d) { return height - yScale(d.correct); })
         .on("mouseover", function(event, d) { // Pass the event object as the first argument
             // Show tooltip
             var mouseCoords = d3.pointer(event, this);
@@ -223,7 +224,7 @@ function chartQuizQues(data) {
             var mouseY = mouseCoords[1];
 
             tooltip.style("opacity", 1)
-                .html(`Pertanyaan : ${d.q}<br/><strong> ${d.t} Mahasiswa Benar </strong>`)
+                .html(`Pertanyaan : ${d.slot}<br/><strong> ${d.correct} Mahasiswa Benar </strong>`)
                 .style("left", (mouseX + 20) + "px") // Position tooltip relative to mouse X-coordinate
                 .style("top", (mouseY + 20) + "px") // Position tooltip relative to mouse Y-coordinate
                 .style("background-color", "rgba(255, 255, 255, 0.8)") // Set background color to 50% white
@@ -246,10 +247,10 @@ function chartQuizQues(data) {
         .attr("ry", 5) // Radius sudut horizontal
         .attr("rx", 5) // Radius sudut vertikal
         .attr('class', 'bar-red') //chart.css
-        .attr('x', function(d) { return xScale(d.q) + xScale.bandwidth() / 2; })
-        .attr('y', function(d) { return yScale(d.f); })
+        .attr('x', function(d) { return xScale(d.slot) + xScale.bandwidth() / 2; })
+        .attr('y', function(d) { return yScale(d.incorrect); })
         .attr('width', xScale.bandwidth() / 2)
-        .attr('height', function(d) { return height - yScale(d.f); })
+        .attr('height', function(d) { return height - yScale(d.incorrect); })
         .on("mouseover", function(event, d) { // Pass the event object as the first argument
             // Show tooltip
             var mouseCoords = d3.pointer(event, this);
@@ -257,7 +258,7 @@ function chartQuizQues(data) {
             var mouseY = mouseCoords[1];
 
             tooltip.style("opacity", 1)
-                .html(`Pertanyaan : ${d.q}<br/><strong> ${d.f} Mahasiswa Salah</strong>`)
+                .html(`Pertanyaan : ${d.slot}<br/><strong> ${d.incorrect} Mahasiswa Salah</strong>`)
                 .style("left", (mouseX + 20) + "px") // Position tooltip relative to mouse X-coordinate
                 .style("top", (mouseY + 20) + "px") // Position tooltip relative to mouse Y-coordinate
                 .style("background-color", "rgba(255, 255, 255, 0.8)") // Set background color to 50% white

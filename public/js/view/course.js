@@ -511,11 +511,11 @@ function getGradeQuiz(quizId) {
                             counts[grade] = 0;
 
                         }
-
                         // Increment the count for the 
                         counts[grade]++;
 
                     }
+
                     console.log(counts);
                     const dataArray = [];
 
@@ -535,47 +535,71 @@ function getGradeQuiz(quizId) {
 
                     //chart quiz 2
                     //get questions in all data response
+                    var questions = [];
                     for (var i = 0; i < response.length; i++) {
                         var ques = response[i].questions;
+
                         for (var j = 0; j < ques.length; j++) {
                             console.log(ques[j]);
+                            //couting jumlah slot corret dan incorret/no answered
+                            //hitung jumlah slot
+                            // {slot:jumlahslot}
+                            questions.push(ques[j]);
 
                         }
 
                     }
+                    getQuizQues(questions);
+
+
                 }
             });
         }
     });
 }
 
-function getQuizQues(quizId) {
-    console.log(quizId);
+function getQuizQues(questionsData) {
+    const countBySlot = {};
+    let output = [];
 
-    //ambil data quiz mhs menggunakan function
-    $.ajax({
-        url: `${BASE_URL}course/getQuizGrade?token=${token}&quizid=${quizId}`,
-        metho: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            console.log('getgradequiz', response);
+    questionsData.forEach(data => {
+        const { slot, status } = data;
+        if (!countBySlot[slot]) {
+            countBySlot[slot] = { slot: slot, correct: 0, incorrect: 0 };
+        }
+
+        if (status === 'Correct') {
+            countBySlot[slot].correct++;
+        } else {
+            countBySlot[slot].incorrect++; //data yan dihasilkan dmulai dari index 1(index sesuai nama slot), dan gabia dibaca oleh data.map, jadi harus dicobert dulu
         }
     });
 
-    // tingkat kelulusan dalam %
-    var dataQuizQues = [
-        { q: 'Q1', t: 20, f: 13 },
-        { q: 'Q2', t: 10, f: 23 },
-        { q: 'Q3', t: 15, f: 17 },
-        { q: 'Q4', t: 10, f: 20 },
-        { q: 'Q5', t: 20, f: 24 },
-        { q: 'Q6', t: 20, f: 40 },
-        { q: 'Q7', t: 10, f: 30 },
-        { q: 'Q8', t: 33, f: 0 },
-        { q: 'Q9', t: 10, f: 30 },
-        { q: 'Q10', t: 35, f: 0 },
-    ];
-    window.chartQuizQues(dataQuizQues);
+    const mappedData = Object.values(countBySlot).map(item => ({
+        slot: item.slot,
+        correct: item.correct,
+        incorrect: item.incorrect
+    }));
+    console.log(countBySlot);
+    console.log(mappedData);
+
+    window.chartQuizQues(mappedData);
+
+
+    // // // tingkat kelulusan dalam %
+    // var dataQuizQues = [
+    //     { q: 'Q1', t: 20, f: 13 },
+    //     { q: 'Q2', t: 10, f: 23 },
+    //     { q: 'Q3', t: 15, f: 17 },
+    //     { q: 'Q4', t: 10, f: 20 },
+    //     { q: 'Q5', t: 20, f: 24 },
+    //     { q: 'Q6', t: 20, f: 40 },
+    //     { q: 'Q7', t: 10, f: 30 },
+    //     { q: 'Q8', t: 33, f: 0 },
+    //     { q: 'Q9', t: 10, f: 30 },
+    //     { q: 'Q10', t: 35, f: 0 },
+    // ];
+    // window.chartQuizQues(dataQuizQues);
 }
 
 function showTableGradeQuiz() {
