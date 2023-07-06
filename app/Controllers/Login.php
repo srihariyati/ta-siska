@@ -40,80 +40,46 @@ class Login extends BaseController
         $response = json_decode($response, true);
         $count = count($response);
 
-        //dd($response);
-
         if($count==2){
+            //password dan username benar
             $status = 'success';
-            $token = $response['token'];
+            $token = $response['token'];           
         }else{
+            //password salah
             $status = 'invalid';
-        }
-      
-        if($status =='success'){
-            // Set session data
-            session()->set('token', $token);
+        }        
 
-            //redirect to controller
-            return redirect()->to('beranda/getSiteInfo');
-        }
-        else{
-            //kirim ke view untuk menampilkan sweet alert salah password
-            //sweet alert
-            // Redirect to Home controller's index method
-            //return redirect()->to('home/index');
-            return redirect()->back()->with('loginError', 'Login gagal! Username atau password salah!');
+        if($status=='success'){
+            //jika status success maka periksa apakah user site admin atau bukan
+            //jika status success dan bukan admin maka beri alert bahwa akun bukan admin
 
-        }
-    }
-
-
-    public function generatetoken()
-    {
-        //autententikasi beerhasil maka generate token
-        $status = true;
-        if ($status){
-            $username = "srihariyati";
-            $password =  "Abcde$12345";
-            $webservice = "moodle_mobile_app";
-            
-            $main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/login/token.php?';
+            //check user siteadmin or not
             $param =[
-                "username" =>$username,
-                "password"=>$password,
-                "service"=>$webservice,
-                ];
+                "wstoken"=>$token,
+                "moodlewsrestformat"=>'json',
+                "wsfunction"=>'core_webservice_get_site_info',
+            ]; 
 
+            $curlGen = new GenerateCurl();
+            $response_checkuser =  $curlGen->curlGen($param);
 
-            $data = http_build_query($param);
-            $url = $main_url;
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL,$url);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            //kalau gapake ini gabisa akses moodle, karena masalah ssl
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT,10);
+            //dd($response_checkuser);
+            if($response_checkuser['userissiteadmin']==true){
+              
+                // Set session data
+                session()->set('token', $token);
+                
+                //redirect to controller
+                return redirect()->to('beranda/getSiteInfo'); //jika akun memiliki akses
+            }else{
+               //bukan admin beri alert bukan admin
+                return redirect()->back()->with('loginError', 'Akun kamu tidak memiliki akses ke sistem!');
+            }
 
-            $response = curl_exec($curl);
-            curl_close($curl);
-
-            $response = json_decode($response, true);
-            $token[] =[
-                $response["token"],
-            ];
-            
-            //$mydata['token'] = $token;
-            //dd($token[0][0]);
-            
-            $token = $token[0][0];
-            //echo $token;
-
-            // Set session data
-            session()->set('token', $token);
-
-            //redirect to controller
-            return redirect()->to('Beranda/getSiteInfo');
-        }       
+        }else if($status=='invalid'){
+            //jika status invalid langsung bilang salah password
+            return redirect()->back()->with('loginError', 'Login gagal! Username atau password salah!');
+        }      
     }
+
 }
