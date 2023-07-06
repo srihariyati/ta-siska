@@ -9,9 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
   <div class="px-4 py-5 px-md-5 text-center" style="background-color: #227362">
@@ -19,12 +18,12 @@
       <div class="row gx-lg-5 align-items-center">
 
         <div class="col-lg-6 mb-5 mb-lg-5 ">
-          <img src="img/logo_siska_1.svg" width="150" height="150" class="d-inline-block align-top" alt="">
+          <img src="/img/logo_siska_1.svg" width="150" height="150" class="d-inline-block align-top" alt="">
           
           <h4 class="font-weight-bold mb-2 text-white">Sistem Informasi Kinerja Mahasiswa</h4>
           <p class="mt-2 mb-4 pl-5 pr-5 text-white">Sistem Informasi Visualisasi Data Kinerja Mahasiswa pada E-learning Universitas Syiah Kuala</p>
           
-          <img src="img/dec_3circle.svg" width="50" height="50" class="d-inline-block align-top" alt="">
+          <img src="/img/dec_3circle.svg" width="50" height="50" class="d-inline-block align-top" alt="">
         </div>
 
         <div class="col-lg-6 mb-5 mb-lg-0">
@@ -35,39 +34,49 @@
 
               <!-- Greetings Text -->
               <div class="text-center mb-12">
-                <img src="img/logo_siska.svg" width="60" height="60" class="d-inline-block align-top" alt="">
+                <img src="/img/logo_siska.svg" width="60" height="60" class="d-inline-block align-top" alt="">
                 <h1 class="font-weight-bold h3">
                   Selamat Datang!
                 </h1>
                 <p class="mt-2 mb-5 pl-4 pr-4">Silahkan login dengan menggunakan username dan password akun Moodle Anda</p>
               </div>
+
+              <?php if (session()->getFlashdata('loginError')) : ?>
+                <div class="mb-2 pr-5 pl-5 ">
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <b>Opps!</b> <?php echo session()->getFlashdata('loginError'); ?>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                </div>
+                  
+              <?php endif; ?>
               
-              <form>
+              <form action="login/login" method="post">
                 <div class="mb-2 pr-5 pl-5">
                   <!-- <label class="form-label" for="email">Email address</label> -->
-                  <input type="email" class="form-control" id="email" placeholder="Username">
+                  <input type="text" class="form-control" name="username" placeholder="Username">
                 </div>
                 <div class="mb-5 pr-5 pl-5">
                   <!-- <label class="form-label" for="password">Password</label> -->
-                  <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="current-password">
+                  <input type="password" class="form-control" name="password" placeholder="Password" autocomplete="current-password">
                 </div>
                 
                 <div class="mb-4 mt-2 pr-5 pl-5" >
                   
-                  <a href="" class="btn btn-primary btn-lg btn-block">
+                  <!-- <a href="#" class="btn btn-primary btn-lg btn-block" id="loginButton">
                     Login
-                  </a>
+                  </a> -->
+                  <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+            
                 </div>
+              </form>
 
                 <div class="text-center mb-5 mt-5 ">
                   <p class="pl-4 pr-4"><small> Copyright © 2023 Universitas Syiah Kuala. All Right Reserved.</small></p>
                 </div>
-              </form>
-
               
-
-
-
             </div>
           </div>
         </div>
@@ -75,8 +84,51 @@
       </div>
     </div>
   </div>
+  <script> const BASE_URL = "<?= base_url() ?>"</script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="js/bootstrap.bundle.min.js" >
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+  <script src="/js/bootstrap.bundle.min.js" ></script>
+  // <script>
+  //   $(document).ready(function() {
+  //     $('#loginButton').click(function(e) {
+  //       e.preventDefault(); // Prevent the default behavior of the <a> tag //galangsung hilang consolenya
 
-  </script></body>
+  //       //ketika login button diklik
+  //       //kirim value dari input id :username dan id:password
+  //       //kirim value ke controller untuk diporses
+
+  //       var username = $('#username').val();
+  //       var password = $('#password').val();
+  //       //harus declare base url dulu disini
+  //       console.log(username, password);
+
+  //       var url = BASE_URL + "login/login?username=" + encodeURIComponent(username)+'&password='+encodeURIComponent(password);
+
+  //       // // Redirect to the URL
+  //       window.location.href = url;
+        
+  //       // $.ajax({
+  //       //   url: `${BASE_URL}login/login`,
+  //       //   type: 'GET',
+  //       //   data:{
+  //       //     username: username,
+  //       //     password: password
+  //       //   },
+  //       //   success:function(response){
+  //       //     console.log(response);
+  //       //     //kalau gaberhasil login, reponsenya adalah 'invalid login'
+  //       //     //dan kalau invalid login maka kasih sweet alert
+
+  //       //     //jika suskses maka gada response //ini dilakukan di controller langsung
+
+  //       //   }
+  //       // });
+
+    
+  //     });
+  
+  //   });
+  //
+  </body>
 </html>
