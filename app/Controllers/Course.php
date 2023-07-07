@@ -18,8 +18,7 @@ class Course extends BaseController{
         $this->session = \Config\Services::session();
     }
 
-    public function getCourseInfo($courseid)
-    {
+    public function getCourseInfo($courseid){
         $token = $this->session->get('token');
        
         $courseid= $courseid;
@@ -41,14 +40,6 @@ class Course extends BaseController{
             'courseid'=>$response["courses"][0]["id"],
             'displayname'=>$response["courses"][0]["displayname"],
         ];
-
-    //    if ($mod=='gradebook'){ //jika gradebook.js yang akses
-    //     return $this->response->setJSON($course_info);  
-    //    }else if($mod == 'tugas'){ //jika beranda yang akses
-    //     $this->data['course_info'] = $course_info;
-    //     return $this->getcoursecontent();
-    //    }
-
         $this->data['course_info'] = $course_info;
         return $this->getcoursecontent();
         
@@ -386,7 +377,8 @@ class Course extends BaseController{
         $token =$this->request->getVar('token');
         $quizid =$this->request->getVar('quizid');
         $participant =$this->request->getVar('datauser');
-       
+        //dd($participant);
+     
         $quizAttempt=[];
         $quizAttemptAll=[];
         $quizGrade=[];
@@ -400,7 +392,7 @@ class Course extends BaseController{
                 "moodlewsrestformat"=>"json",
                 "wsfunction"=>"mod_quiz_get_user_attempts",
                 "quizid"=> $quizid,
-                "userid"=>$userid
+                "userid"=>$userid['userid']
             ];
     
             $response =  $curlGen->curlGen($param);
@@ -410,7 +402,8 @@ class Course extends BaseController{
             if($arrayLength>0){ //karena ada user yang gada attempt
                 $quizAttempt=[
                     'quizid'=>$quizid,
-                    'userid'=>$userid,
+                    'userid'=>$userid['userid'],
+                    'studentname'=>$userid['studentname'],
                     'attemptsid'=>$attempsid[0]['id']
                 ];
             }     
@@ -419,6 +412,7 @@ class Course extends BaseController{
             //dd( $quizAttempt);
             //ambil attemptid untuk ws function mod_quiz_get_attempt_review 
             //untuk mendapatkan nilaigrade dan perpertanyaan
+        
         }
 
         foreach($quizAttemptAll as $attemps){
@@ -444,6 +438,7 @@ class Course extends BaseController{
                 'quizid'=>$response['attempt']['quiz'],
                 'attemptsid'=>$attemps['attemptsid'],
                 'userid'=>$response['attempt']['userid'],
+                'studentname'=>$attemps['studentname'],
                 'grade'=>$response['grade'],
                 'questions'=>$questions
                 

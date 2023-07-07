@@ -219,7 +219,7 @@ function handleTableAssign(courseId, assignId) {
             console.log(response);
             //append table here
             //append table participant khusus assign
-            var tableGrade = '<table  id="table" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
+            var tableGrade = '<table  id="table_assign" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
             $('#tableGradeAssignment').append(tableGrade);
             showTableGradeAssignment(response);
             //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
@@ -233,7 +233,7 @@ function handleTableAssign(courseId, assignId) {
 function showTableGradeAssignment(responseData) {
 
     // Get the table element by its ID
-    var table = document.getElementById("table");
+    var table = document.getElementById("table_assign");
 
     // Remove all existing rows from the table when user force click
     while (table.rows.length > 1) {
@@ -397,7 +397,7 @@ function getGradeQuiz(quizId) {
     console.log(quizId);
     var courseId = $('#courseTitle').data('courseid');
     var counts = {};
-    //ambil list participant pada course
+    //ambil list participant pada course untuk proses looping pada function
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
         metho: 'GET',
@@ -408,8 +408,12 @@ function getGradeQuiz(quizId) {
 
             const dataUser = [];
             for (var i = 0; i < response.length; i++) {
+                //kirim userid dan studentname(fullname)
+                var studentname = response[i].fullname;
                 var userid = response[i].id;
-                dataUser.push(userid);
+
+                //list of studentid and studentname
+                dataUser.push({ userid: userid, studentname: studentname });
             }
 
             //kirim userid kedalam function
@@ -441,22 +445,18 @@ function getGradeQuiz(quizId) {
                     }
 
                     console.log(counts);
-                    const dataArray = [];
+                    const dataQuizGrades = [];
 
                     // Iterate over the object keys
                     for (let grade in counts) {
                         // Create an object with grade and jumlah properties
                         const obj = { grade: grade, jumlah: counts[grade] };
-                        dataArray.push(obj);
+                        dataQuizGrades.push(obj);
                     }
 
-                    // Sorting dataArray berdasarkan nilai grade dari terbesar ke terkecil
-                    dataArray.sort((a, b) => b.grade - a.grade);
-                    console.log(dataArray);
-
-                    // Data nilai grade mahasiswa
-                    var dataQuizGrade = dataArray;
-                    window.chartQuizGrades(dataQuizGrade);
+                    // Sorting dataQuizGrades berdasarkan nilai grade dari terbesar ke terkecil
+                    dataQuizGrades.sort((a, b) => b.grade - a.grade);
+                    window.chartQuizGrades(dataQuizGrades);
                     //end chart 1
 
 
@@ -517,49 +517,120 @@ function getQuizQues(questionsData) {
 function handleTableQuiz(quizId) {
     console.log('tble quiz');
     console.log(token);
+    //ambil data yang sama kayak data di gradequiz
+    var courseId = $('#courseTitle').data('courseid');
+    var counts = {};
+    //ambil list participant pada course
     $.ajax({
-        url: `${BASE_URL}course/getGradeQuiz?token=${token}&quizid=${quizId}`,
+        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
         metho: 'GET',
         dataType: 'json',
         success: function(response) {
-            // ++++++++++++++++++++++++++++++++++++++++++++++
-            // Menghitung jumlah kolom berdasarkan data respons
-            var jumlahKolom = Object.keys(response[0]).length;
+            var participant = response;
+            console.log(participant);
 
-            // Membuat string HTML untuk tabel
-            var tableGrade = '<table id="table" class="table table-sm table-striped"><thead><tr>';
+            const dataUser = [];
+            for (var i = 0; i < response.length; i++) {
 
-            // Menambahkan kolom-kolom pada kepala tabel
-            for (var i = 0; i < jumlahKolom; i++) {
-                tableGrade += '<th scope="col">' + Object.keys(response[0])[i] + '</th>';
+                //kirim userid dan studentname(fullname)
+                var studentname = response[i].fullname;
+                var userid = response[i].id;
+
+                //list of studentid and studentname
+                dataUser.push({ userid: userid, studentname: studentname });
             }
+            //studenid akan dilooping pada function  mod_quiz_get_user_attempts
+            console.log(dataUser);
 
-            tableGrade += '</tr></thead><tbody>';
+            $.ajax({
+                url: `${BASE_URL}course/getGradeQuiz`,
+                data: {
+                    token: token,
+                    quizid: quizId,
+                    datauser: dataUser,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    //kolom paling akhir sebanyak jumlah slot quiz
+                    var countingques = (response[0]['questions']).length;
+                    console.log(countingques);
+                    var tableGrade = '<table  id="table_quiz" class="table table-sm table-striped"><thead><tr><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th>';
+                    // Generate <th> elements for Q1, Q2, Q3, ..., Qn
+                    for (var i = 1; i <= countingques; i++) {
+                        tableGrade += '<th scope="col">Q' + i + '</th>';
+                    }
 
-            // Menambahkan baris-baris pada tubuh tabel
-            for (var j = 0; j < response.length; j++) {
-                tableGrade += '<tr>';
-                for (var k = 0; k < jumlahKolom; k++) {
-                    tableGrade += '<td>' + response[j][Object.keys(response[0])[k]] + '</td>';
+                    tableGrade += '</tr></thead><tbody></tbody></table>';
+
+                    $('#tableGradeQuiz').append(tableGrade);
+                    //bawa data untuk diproses kedalam tabel
+                    showTableGradeQuiz(response);
+
                 }
-                tableGrade += '</tr>';
-            }
-
-            tableGrade += '</tbody></table>';
-            // ++++++++++++++++++++++++++++++++++++++++++++++
-            console.log(response);
-            $('#tableGradeQuiz').append(tableGrade);
+            });
         }
-
-        //append to table
-        //kolom :usernanme/nim mhs, nama mhs,grade, pertanyaan (true or false)
-
-
     });
 }
 
-function showTableGradeQuiz() {
-    //append data into row and cell
+function showTableGradeQuiz(responseData) {
+    // Get the table element by its ID
+    var table = document.getElementById("table_quiz");
+
+    // Remove all existing rows from the table when user force click
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+    // Sort the responseData array by username
+    responseData.sort(function(a, b) {
+        var studentnameA = a.studentname.toUpperCase();
+        var studentnameB = b.studentname.toUpperCase();
+        if (studentnameA < studentnameB) {
+            return -1;
+        }
+        if (studentnameA > studentnameB) {
+            return 1;
+        }
+        return 0;
+    });
+
+    // Loop through the response data and create table rows
+    for (var i = 0; i < responseData.length; i++) {
+        var row = table.insertRow(i + 1); // Insert a new row at index 'i + 1'
+
+        var studentnameCell = row.insertCell(0);
+        studentnameCell.textContent = responseData[i].studentname;
+
+        var gradeCell = row.insertCell(1);
+        gradeCell.textContent = responseData[i].grade;
+
+        //lopping untuk semua question yang ada didalam responseData[i].question;
+        // Loop and populate the Q1, Q2, Q3, Q4, Q5 cells
+        var questions = responseData[i].questions;
+        for (var j = 0; j < questions.length; j++) {
+            var questionCell = row.insertCell(j + 2);
+            //questionCell.textContent = questions[j].status;
+            if (questions[j].status === 'Correct') {
+                questionCell.textContent = '✅';
+            } else {
+                questionCell.textContent = '❌';
+            }
+        }
+
+
+
+        // Add CSS class based on grade value
+        if (responseData[i].grade <= 50) {
+            gradeCell.classList.add("red-text");
+
+        } else {
+            gradeCell.classList.add("green-text");
+
+        }
+
+
+    }
+
 
 }
 
