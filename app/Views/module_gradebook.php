@@ -84,10 +84,8 @@
     $(document).ready(function() {
       var module_grade = <?= $module_grade ?>;
       var modmodule = $('#contentModule').data('mod');
-
-      console.log(modmodule);
      
-      getCourseInfo();    
+      getCourseName();
       getContentModuleInfo();
       getMeanGradeModule(module_grade);
 

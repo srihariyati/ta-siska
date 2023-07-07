@@ -15,13 +15,15 @@ class Course extends BaseController{
 
     public function __construct(){
         $this->main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
+        $this->session = \Config\Services::session();
     }
 
-    public function getCourseInfo($token, $courseid, $mod)
+    public function getCourseInfo($courseid)
     {
-        $token = $token;
+        $token = $this->session->get('token');
+       
         $courseid= $courseid;
-        $mod = $mod;
+      
     
         $param =[
             "wstoken" =>$token,
@@ -40,13 +42,16 @@ class Course extends BaseController{
             'displayname'=>$response["courses"][0]["displayname"],
         ];
 
-       if ($mod=='gradebook'){ //jika gradebook.js yang akses
-        return $this->response->setJSON($course_info);  
-       }else if($mod == 'beranda'){ //jika beranda yang akses
+    //    if ($mod=='gradebook'){ //jika gradebook.js yang akses
+    //     return $this->response->setJSON($course_info);  
+    //    }else if($mod == 'tugas'){ //jika beranda yang akses
+    //     $this->data['course_info'] = $course_info;
+    //     return $this->getcoursecontent();
+    //    }
+
         $this->data['course_info'] = $course_info;
         return $this->getcoursecontent();
-       }
-      
+        
     }
 
     public function getCourseContent()
@@ -120,7 +125,6 @@ class Course extends BaseController{
             }
         }
 
-
         //melakukan filter, memilih module yang ada didalam content yang dipilih
         //berdasarkan content id
         //hanya memilih module dalam mod kuis dan assign
@@ -158,7 +162,7 @@ class Course extends BaseController{
 
             $filteredQuiz = [];
             foreach($response_quiz['quizzes'] as $quiz){
-                if ($quiz['id']==$instanceid){ //bisa ni diganti pake instance
+                if ($quiz['id']==$instanceid){
                 
                     $filteredQuiz = [
                         'mod' => "quiz",
@@ -205,8 +209,7 @@ class Course extends BaseController{
                     ];
                    //dd($filteredAssign);
                 }
-            }
-            
+            }          
 
             return $this->response->setJSON($filteredAssign);      
     }
@@ -400,7 +403,6 @@ class Course extends BaseController{
                 "userid"=>$userid
             ];
     
-           
             $response =  $curlGen->curlGen($param);
             $attempsid = $response['attempts'];
 

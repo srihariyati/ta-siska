@@ -407,5 +407,27 @@ class Gradebook extends BaseController
 
         return $this->response->setJSON($modules);
     }
+
+    public function getCourseName(){
+        
+        $courseid = $this->request->getVar('courseid');
+        $token = $this->request->getVar('token');
+
+
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"core_course_get_courses_by_field",
+            "field"=>"id",
+            "value"=>$courseid,
+        ];
+
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
+        // /dd($response);
+
+        $coursename = $response["courses"][0];
+        return $this->response->setJSON($coursename);
+    }
     
 }

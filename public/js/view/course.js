@@ -4,6 +4,7 @@ var openedDate;
 var closedDate;
 var token;
 
+//////////////////////////////General/////////////////////////////////
 function handleCourseContentChange() {
     // mengambil content id untuk membuat dependent dropdown untuk module assign dan kuis
     // function dijalankan ketika user memilih content/topik mata kuliah pada dropdown menu pertama
@@ -91,44 +92,26 @@ function handleModuleChange() {
     }
 }
 
-function getQuiz(token, courseId, instanceid) {
-    console.log('quiz', token, courseId, instanceid);
-    emptyPage();
-    //ajax to get Quiz controller
-    $.ajax({
+function handleTable(modName) {
+    token = $('#courseTitle').data('token');
+    var courseId = $('#courseTitle').data('courseid');
 
-        url: `${BASE_URL}course/getQuiz`,
-        method: 'GET',
-        data: {
-            token: token,
-            courseid: courseId,
-            instanceid: instanceid,
-        },
-        dataType: 'json',
-        success: function(response) {
-            console.log(response.quizName);
+    //instanceid==quizid/assignid
+    var instanceid = $('#content_module').val().split(',')[0];
 
-            var modName = '<h3 class="font-weight-bolder pr-10 mb-0"  id="mod" data-modname="' + response.mod + '">' + response.quizName + '</h3>';
-            openedDate = response.openedDate;
-            closedDate = response.closedDate;
+    //hilangkn chart dan gantikan dengan table
+    emptyPagetable();
 
-            var formattedOpenedDate = formatUnixTimestamp(openedDate);
-            var formattedClosedDate = formatUnixTimestamp(closedDate);
-
-            var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
-            var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
-            $('#modTitle').append(modName);
-            $('#openedDate').append(showOpenedDate);
-            $('#closedDate').append(showClosedDate);
-
-            //ambil data grade
-            getGradeQuiz(response.quizId);
-            getQuizQues(response.quizId);
-        }
-    });
+    if (modName == 'quiz') {
+        handleTableQuiz(instanceid);
+    } else
+    if (modName == 'assign') {
+        handleTableAssign(courseId, instanceid);
+    }
 
 }
 
+//////////////////////////////Assign/////////////////////////////////
 function getAssign(token, courseId, instanceid) {
     console.log('getassign', token, courseId, instanceid);
     emptyPage();
@@ -179,40 +162,122 @@ function getAssign(token, courseId, instanceid) {
     });
 }
 
-function emptyPage() {
-    $('#modTitle').empty();
-    $('#openedDate').empty();
-    $('#closedDate').empty();
-    $('#tableParticipant').empty();
-    $('#chartParticipant').empty();
-    $('#chartGradeAssignment').empty();
-    $('#lagendGradeAssignment').empty();
-    $('#tableGradeAssignment').empty();
-    $('#chartQuizGrades').empty();
-    $('#chartQuizQues').empty();
-    $('#descQuizQues').empty();
-    $('#tableGradeQuiz').empty();
-}
+function getGradeAssignment() {
+    var courseId = $('#courseTitle').data('courseid');
+    //instanceid==quizid/assignid
+    var instanceid = $('#content_module').val().split(',')[0];
+    var assignId = instanceid;
+    var counts = {};
+    //ajax here
+    $.ajax({
+        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
 
-function emptyPagetable() {
-    $('#chartParticipant').empty();
-    $('#chartGradeAssignment').empty();
-    $('#lagendGradeAssignment').empty();
-    $('#tableGradeAssignment').empty();
-    $('#chartQuizQues').empty();
-    $('#descQuizQues').empty();
-    $('#chartQuizGrades').empty();
-}
+            //hitung jumlah nilai a b c
+            // Calculate the mean grade
 
-function formatUnixTimestamp(unixTimestamp) {
-    return new Date(unixTimestamp * 1000).toLocaleString('id-ID', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
+            for (var i = 0; i < response.length; i++) {
+                var lettergrade = response[i].lettergrade;
+                //console.log(lettergrade);
+
+                if (!counts.hasOwnProperty(lettergrade)) {
+                    counts[lettergrade] = 0;
+
+                }
+
+                // Increment the count for the letter
+                counts[lettergrade]++;
+
+            }
+            console.log(counts);
+            const dataArray = [];
+
+            // Iterate over the object keys
+            for (let grade in counts) {
+                // Create an object with grade and jumlah properties
+                const obj = { grade: grade, jumlah: counts[grade] };
+                dataArray.push(obj);
+            }
+
+            console.log(dataArray);
+            window.chartAssign(dataArray);
+        }
     });
+}
+
+function handleTableAssign(courseId, assignId) {
+    //ajax here
+    $.ajax({
+        // url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            //append table here
+            //append table participant khusus assign
+            var tableGrade = '<table  id="table" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
+            $('#tableGradeAssignment').append(tableGrade);
+            showTableGradeAssignment(response);
+            //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
+            //data ini yang akan ditampilkan dalam tabel
+
+
+        }
+    });
+}
+
+function showTableGradeAssignment(responseData) {
+
+    // Get the table element by its ID
+    var table = document.getElementById("table");
+
+    // Remove all existing rows from the table when user force click
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+    // Sort the responseData array by username
+    responseData.sort(function(a, b) {
+        var usernameA = a.username.toUpperCase();
+        var usernameB = b.username.toUpperCase();
+        if (usernameA < usernameB) {
+            return -1;
+        }
+        if (usernameA > usernameB) {
+            return 1;
+        }
+        return 0;
+    });
+
+    // Loop through the response data and create table rows
+    for (var i = 0; i < responseData.length; i++) {
+        var row = table.insertRow(i + 1); // Insert a new row at index 'i + 1'
+
+        var usernameCell = row.insertCell(0);
+        usernameCell.textContent = responseData[i].username;
+
+        var fullnameCell = row.insertCell(1);
+        fullnameCell.textContent = responseData[i].fullname;
+
+        var gradeCell = row.insertCell(2);
+        gradeCell.textContent = responseData[i].grade;
+
+        var letterGradeCell = row.insertCell(3);
+        letterGradeCell.textContent = responseData[i].lettergrade;
+
+        // Add CSS class based on grade value
+        if (responseData[i].grade <= 50) {
+            gradeCell.classList.add("red-text");
+            letterGradeCell.classList.add("red-text");
+        } else {
+            gradeCell.classList.add("green-text");
+            letterGradeCell.classList.add("green-text");
+        }
+    }
+
 }
 
 function getCourseParticipant(token, courseId) {
@@ -289,183 +354,42 @@ function getSubmittedParticipant(token, assignId, assignName) {
     });
 }
 
-function getGradeAssignment() {
-    var courseId = $('#courseTitle').data('courseid');
-    //instanceid==quizid/assignid
-    var instanceid = $('#content_module').val().split(',')[0];
-    var assignId = instanceid;
-    var counts = {};
-    //ajax here
+//////////////////////////////Quiz//////////////////////////////////
+function getQuiz(token, courseId, instanceid) {
+    console.log('quiz', token, courseId, instanceid);
+    emptyPage();
+    //ajax to get Quiz controller
     $.ajax({
-        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
+
+        url: `${BASE_URL}course/getQuiz`,
         method: 'GET',
+        data: {
+            token: token,
+            courseid: courseId,
+            instanceid: instanceid,
+        },
         dataType: 'json',
         success: function(response) {
-            console.log(response);
+            console.log(response.quizName);
 
-            //hitung jumlah nilai a b c
-            // Calculate the mean grade
+            var modName = '<h3 class="font-weight-bolder pr-10 mb-0"  id="mod" data-modname="' + response.mod + '">' + response.quizName + '</h3>';
+            openedDate = response.openedDate;
+            closedDate = response.closedDate;
 
-            for (var i = 0; i < response.length; i++) {
-                var lettergrade = response[i].lettergrade;
-                //console.log(lettergrade);
+            var formattedOpenedDate = formatUnixTimestamp(openedDate);
+            var formattedClosedDate = formatUnixTimestamp(closedDate);
 
-                if (!counts.hasOwnProperty(lettergrade)) {
-                    counts[lettergrade] = 0;
+            var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
+            var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+            $('#modTitle').append(modName);
+            $('#openedDate').append(showOpenedDate);
+            $('#closedDate').append(showClosedDate);
 
-                }
-
-                // Increment the count for the letter
-                counts[lettergrade]++;
-
-            }
-            console.log(counts);
-            const dataArray = [];
-
-            // Iterate over the object keys
-            for (let grade in counts) {
-                // Create an object with grade and jumlah properties
-                const obj = { grade: grade, jumlah: counts[grade] };
-                dataArray.push(obj);
-            }
-
-            console.log(dataArray);
-            window.chartAssign(dataArray);
+            //ambil data grade
+            getGradeQuiz(response.quizId);
+            getQuizQues(response.quizId);
         }
     });
-}
-
-function handleTableQuiz(quizId) {
-    console.log('tble quiz')
-    $.ajax({
-        url: `${BASE_URL}course/getGradeQuiz?token=${token}&quizid=${quizId}`,
-        metho: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            // ++++++++++++++++++++++++++++++++++++++++++++++
-            // Menghitung jumlah kolom berdasarkan data respons
-            var jumlahKolom = Object.keys(response[0]).length;
-
-            // Membuat string HTML untuk tabel
-            var tableGrade = '<table id="table" class="table table-sm table-striped"><thead><tr>';
-
-            // Menambahkan kolom-kolom pada kepala tabel
-            for (var i = 0; i < jumlahKolom; i++) {
-                tableGrade += '<th scope="col">' + Object.keys(response[0])[i] + '</th>';
-            }
-
-            tableGrade += '</tr></thead><tbody>';
-
-            // Menambahkan baris-baris pada tubuh tabel
-            for (var j = 0; j < response.length; j++) {
-                tableGrade += '<tr>';
-                for (var k = 0; k < jumlahKolom; k++) {
-                    tableGrade += '<td>' + response[j][Object.keys(response[0])[k]] + '</td>';
-                }
-                tableGrade += '</tr>';
-            }
-
-            tableGrade += '</tbody></table>';
-            // ++++++++++++++++++++++++++++++++++++++++++++++
-            console.log(response);
-            $('#tableGradeQuiz').append(tableGrade);
-        }
-
-        //append to table
-        //kolom :usernanme/nim mhs, nama mhs,grade, pertanyaan (true or false)
-
-
-    });
-}
-
-function handleTableAssign(courseId, assignId) {
-    //ajax here
-    $.ajax({
-        // url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
-        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
-        method: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            console.log(response);
-            //append table here
-            //append table participant khusus assign
-            var tableGrade = '<table  id="table" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
-            $('#tableGradeAssignment').append(tableGrade);
-            showTableGradeAssignment(response);
-            //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
-            //data ini yang akan ditampilkan dalam tabel
-
-
-        }
-    });
-}
-
-function handleTable(modName) {
-    token = $('#courseTitle').data('token');
-    var courseId = $('#courseTitle').data('courseid');
-
-    //instanceid==quizid/assignid
-    var instanceid = $('#content_module').val().split(',')[0];
-
-    //hilangkn chart dan gantikan dengan table
-    emptyPagetable();
-
-    if (modName == 'quiz') {
-        handleTableQuiz(instanceid);
-    } else
-    if (modName == 'assign') {
-        handleTableAssign(courseId, instanceid);
-    }
-
-}
-
-function showTableGradeAssignment(responseData) {
-
-    // Get the table element by its ID
-    var table = document.getElementById("table");
-
-    // Remove all existing rows from the table when user force click
-    while (table.rows.length > 1) {
-        table.deleteRow(1);
-    }
-    // Sort the responseData array by username
-    responseData.sort(function(a, b) {
-        var usernameA = a.username.toUpperCase();
-        var usernameB = b.username.toUpperCase();
-        if (usernameA < usernameB) {
-            return -1;
-        }
-        if (usernameA > usernameB) {
-            return 1;
-        }
-        return 0;
-    });
-
-    // Loop through the response data and create table rows
-    for (var i = 0; i < responseData.length; i++) {
-        var row = table.insertRow(i + 1); // Insert a new row at index 'i + 1'
-
-        var usernameCell = row.insertCell(0);
-        usernameCell.textContent = responseData[i].username;
-
-        var fullnameCell = row.insertCell(1);
-        fullnameCell.textContent = responseData[i].fullname;
-
-        var gradeCell = row.insertCell(2);
-        gradeCell.textContent = responseData[i].grade;
-
-        var letterGradeCell = row.insertCell(3);
-        letterGradeCell.textContent = responseData[i].lettergrade;
-
-        // Add CSS class based on grade value
-        if (responseData[i].grade <= 50) {
-            gradeCell.classList.add("red-text");
-            letterGradeCell.classList.add("red-text");
-        } else {
-            gradeCell.classList.add("green-text");
-            letterGradeCell.classList.add("green-text");
-        }
-    }
 
 }
 
@@ -590,7 +514,88 @@ function getQuizQues(questionsData) {
     window.chartQuizQues(mappedData);
 }
 
+function handleTableQuiz(quizId) {
+    console.log('tble quiz');
+    console.log(token);
+    $.ajax({
+        url: `${BASE_URL}course/getGradeQuiz?token=${token}&quizid=${quizId}`,
+        metho: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            // ++++++++++++++++++++++++++++++++++++++++++++++
+            // Menghitung jumlah kolom berdasarkan data respons
+            var jumlahKolom = Object.keys(response[0]).length;
+
+            // Membuat string HTML untuk tabel
+            var tableGrade = '<table id="table" class="table table-sm table-striped"><thead><tr>';
+
+            // Menambahkan kolom-kolom pada kepala tabel
+            for (var i = 0; i < jumlahKolom; i++) {
+                tableGrade += '<th scope="col">' + Object.keys(response[0])[i] + '</th>';
+            }
+
+            tableGrade += '</tr></thead><tbody>';
+
+            // Menambahkan baris-baris pada tubuh tabel
+            for (var j = 0; j < response.length; j++) {
+                tableGrade += '<tr>';
+                for (var k = 0; k < jumlahKolom; k++) {
+                    tableGrade += '<td>' + response[j][Object.keys(response[0])[k]] + '</td>';
+                }
+                tableGrade += '</tr>';
+            }
+
+            tableGrade += '</tbody></table>';
+            // ++++++++++++++++++++++++++++++++++++++++++++++
+            console.log(response);
+            $('#tableGradeQuiz').append(tableGrade);
+        }
+
+        //append to table
+        //kolom :usernanme/nim mhs, nama mhs,grade, pertanyaan (true or false)
+
+
+    });
+}
+
 function showTableGradeQuiz() {
     //append data into row and cell
 
+}
+
+//////////////////////////////General//////////////////////////////
+function emptyPage() {
+    $('#modTitle').empty();
+    $('#openedDate').empty();
+    $('#closedDate').empty();
+    $('#tableParticipant').empty();
+    $('#chartParticipant').empty();
+    $('#chartGradeAssignment').empty();
+    $('#lagendGradeAssignment').empty();
+    $('#tableGradeAssignment').empty();
+    $('#chartQuizGrades').empty();
+    $('#chartQuizQues').empty();
+    $('#descQuizQues').empty();
+    $('#tableGradeQuiz').empty();
+}
+
+function emptyPagetable() {
+    $('#chartParticipant').empty();
+    $('#chartGradeAssignment').empty();
+    $('#lagendGradeAssignment').empty();
+    $('#tableGradeAssignment').empty();
+    $('#chartQuizQues').empty();
+    $('#descQuizQues').empty();
+    $('#chartQuizGrades').empty();
+}
+
+function formatUnixTimestamp(unixTimestamp) {
+    return new Date(unixTimestamp * 1000).toLocaleString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    });
 }

@@ -84,51 +84,9 @@
       </div>
     </div>
   </div>
-  <script> const BASE_URL = "<?= base_url() ?>"</script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
   <script src="/js/bootstrap.bundle.min.js" ></script>
-  // <script>
-  //   $(document).ready(function() {
-  //     $('#loginButton').click(function(e) {
-  //       e.preventDefault(); // Prevent the default behavior of the <a> tag //galangsung hilang consolenya
-
-  //       //ketika login button diklik
-  //       //kirim value dari input id :username dan id:password
-  //       //kirim value ke controller untuk diporses
-
-  //       var username = $('#username').val();
-  //       var password = $('#password').val();
-  //       //harus declare base url dulu disini
-  //       console.log(username, password);
-
-  //       var url = BASE_URL + "login/login?username=" + encodeURIComponent(username)+'&password='+encodeURIComponent(password);
-
-  //       // // Redirect to the URL
-  //       window.location.href = url;
-        
-  //       // $.ajax({
-  //       //   url: `${BASE_URL}login/login`,
-  //       //   type: 'GET',
-  //       //   data:{
-  //       //     username: username,
-  //       //     password: password
-  //       //   },
-  //       //   success:function(response){
-  //       //     console.log(response);
-  //       //     //kalau gaberhasil login, reponsenya adalah 'invalid login'
-  //       //     //dan kalau invalid login maka kasih sweet alert
-
-  //       //     //jika suskses maka gada response //ini dilakukan di controller langsung
-
-  //       //   }
-  //       // });
-
-    
-  //     });
-  
-  //   });
-  //
   </body>
 </html>

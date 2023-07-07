@@ -95,7 +95,7 @@
     $(document).ready(function() {
       var personalGradeItems = <?= $personal_grade_items ?>;
 
-      getCourseInfo();  
+      getCourseName();  
       getStudentInfo();
       showPersonalGradeChart(personalGradeItems);
       //get course info diisni pake controller yang udah ada aja, gausah buat baru lagi dari id course yang direturn

@@ -41,8 +41,8 @@
       <div class="profile">
         <div class="icon_wrap">
           <img src="/img/profile.png" alt="profile_pic">
-          <span class="name">firstname</span>
-          <i class="fas fa-chevron-down"></i>
+          <span></span>
+          <i class="fas fa-chevron-down ml-2"></i>
         </div>
 
         <div class="profile_dd">
@@ -50,7 +50,7 @@
             <li class="profile_li"><a class="profile" href="#"><span class="picon"><i class="fas fa-user-alt"></i>
                 </span>Profile</a>
             </li>
-            <li><a class="logout" href="#"><span class="picon"><i class="fas fa-sign-out-alt"></i></span>Logout</a></li>
+            <li><a class="logout" href="/"><span class="picon"><i class="fas fa-sign-out-alt"></i></span>Logout</a></li>
           </ul>
         </div>
       </div>
@@ -65,27 +65,27 @@
   <script src="/js/bootstrap.bundle.min.js"></script>
 
 
-  <!-- navbar js -->
+ 
   <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
   <script>
-    $(".profile .icon_wrap").click(function(){
-  $(this).parent().toggleClass("active");
-  $(".notifications").removeClass("active");
-});
+      $(".profile .icon_wrap").click(function(){
+        $(this).parent().toggleClass("active");
+        $(".notifications").removeClass("active");
+      });
 
-$(".notifications .icon_wrap").click(function(){
-  $(this).parent().toggleClass("active");
-   $(".profile").removeClass("active");
-});
+      $(".notifications .icon_wrap").click(function(){
+        $(this).parent().toggleClass("active");
+        $(".profile").removeClass("active");
+      });
 
-$(".show_all .link").click(function(){
-  $(".notifications").removeClass("active");
-  $(".popup").show();
-});
+      $(".show_all .link").click(function(){
+        $(".notifications").removeClass("active");
+        $(".popup").show();
+      });
 
-$(".close, .shadow").click(function(){
-  $(".popup").hide();
-});
+      $(".close, .shadow").click(function(){
+        $(".popup").hide();
+      });
 </script>
 
 <?= $this->renderSection('jshere') ?>

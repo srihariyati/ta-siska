@@ -140,26 +140,33 @@ function showTableGradebook(responseData) {
     $('.dt-buttons').hide();
 }
 
-function getCourseInfo() {
+function getCourseName() {
     courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
-
-    var rute = 'gradebook';
 
     console.log(token);
     console.log(courseId);
 
     //ajax to controller yang punya course info 
     $.ajax({
-        url: `${BASE_URL}course/getCourseInfo/${token}/${courseId}/${rute}`,
+        url: `${BASE_URL}gradebook/getCourseName`,
+        data: {
+            token: token,
+            courseid: courseId,
+        },
         method: 'GET',
         dataType: 'json',
         success: function(response) {
+            console.log(1111);
             console.log('js:ocurseinfo', response.displayname);
             var courseName = response.displayname;
             $('#courseTitle').append(courseName);
 
 
+        },
+        error: function(xhr, status, error) {
+            // Handle the error
+            console.log(error);
         }
     });
 

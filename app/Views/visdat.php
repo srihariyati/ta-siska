@@ -93,8 +93,6 @@
     <div class="col"><span id="tableGradeQuiz"></span></div>   
   </div>
 
-
-
   <!-- QUIZ -->
   <div class="row mt-6">
     <div class="col-sm-4"><span id="descQuizQues"></span></div>
@@ -116,7 +114,6 @@
 <script src="/js/view/course.js"></script>
 <script src="/js/view/chartAssign.js" ></script>
 <script src="/js/view/chartQuiz.js" ></script>
-<script src="/js/view/handleButton.js" ></script>
 <script src = "/js/d3.v7.min.js"></script>
 
 <script>

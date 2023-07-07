@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use CodeIgniter\Controller;
+use App\Controllers\GenerateCurl;
 
 class Login extends BaseController
 {
@@ -53,24 +54,20 @@ class Login extends BaseController
             //jika status success maka periksa apakah user site admin atau bukan
             //jika status success dan bukan admin maka beri alert bahwa akun bukan admin
 
-            //check user siteadmin or not
-            $param =[
-                "wstoken"=>$token,
-                "moodlewsrestformat"=>'json',
-                "wsfunction"=>'core_webservice_get_site_info',
-            ]; 
+            //check user siteadmin or not menggunakan function yang mereturn response dari ws core_webservice_get_site_info
+            // Call the getUserInfo() function
+            $response_checkuser = $this->getUserInfo($token);
 
-            $curlGen = new GenerateCurl();
-            $response_checkuser =  $curlGen->curlGen($param);
-
-            //dd($response_checkuser);
+            //jika user adalah siteadmin maka boleh login
             if($response_checkuser['userissiteadmin']==true){
               
                 // Set session data
                 session()->set('token', $token);
+                session()->set('userid', $response_checkuser['userid']);
                 
-                //redirect to controller
-                return redirect()->to('beranda/getSiteInfo'); //jika akun memiliki akses
+                //redirect to controller untuk menampilkan daftar mata kuliah yang dimiliki oleh user
+                //return redirect()->to('beranda/getSiteInfo'); //jika akun memiliki akses
+                return redirect()->to('beranda/getEnrolledCourses');
             }else{
                //bukan admin beri alert bukan admin
                 return redirect()->back()->with('loginError', 'Akun kamu tidak memiliki akses ke sistem!');
@@ -80,6 +77,21 @@ class Login extends BaseController
             //jika status invalid langsung bilang salah password
             return redirect()->back()->with('loginError', 'Login gagal! Username atau password salah!');
         }      
+    }
+
+
+    //digunakan juga untuk menampilkan nama user pada header bar
+    public function getUserInfo($token){
+        $param =[
+            "wstoken"=>$token,
+            "moodlewsrestformat"=>'json',
+            "wsfunction"=>'core_webservice_get_site_info',
+        ]; 
+
+        $curlGen = new GenerateCurl();
+        $response_checkuser =  $curlGen->curlGen($param);
+
+        return $response_checkuser;
     }
 
 }
