@@ -38,10 +38,6 @@
      
     </div>
     <div class="col-md-4">
-      <p class="mb-0">Bobot penilaian:</p>
-      <h4 class="font-weight-bold">21.9% dari 35%</h4>
-    </div>
-    <div class="col-md-4">
       <p class="mb-0">Ketepatan waktu pengumpulan tugas:</p>
       <h4 class="font-weight-bold">91%</h4>
     </div>
@@ -51,7 +47,7 @@
 <!-- ini pake ajax aja nanti -->
 <div class="container mt-4">
   <div id="gradeCard">
-    
+
   </div>
  <!-- diisni berisi chart data -->
 </div>

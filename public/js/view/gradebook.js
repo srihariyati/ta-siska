@@ -315,29 +315,56 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
         dataType: 'json',
         success: function(response) {
             console.log(response);
+
             //append kedalam card untuk setiap data
             //yang di masukkan adalahh smeua, kalau bis jadikan
             // data- aja yang id id itu
-            for (var i = 0; i < response.length; i++) {
-                var module = response[i];
-                var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body">';
-                gradeCard += '<h6 class="card-title">' + module.userfullname + '</h6>';
-                gradeCard += '</div></div><div class="col-md-6"><div class="card-body"><p class="card-text">';
 
-                if (module.submissionstatus == 'submitted ontime') {
-                    var status = 'Mengumpulkan tugas tepat waktu';
-                } else if (module.submissionstatus == 'late submitted') {
-                    var status = 'Telat mengumpulkan tugas';
-                } else {
-                    var status = 'Tidak dapat menemukan tugas'
+            //cek mod
+            if (response[0]['itemmodule'] == 'assign') {
+                //mod assign
+                for (var i = 0; i < response.length; i++) {
+
+                    var module = response[i];
+                    var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body">';
+                    gradeCard += '<h6 class="card-title">' + module.userfullname + '</h6>';
+                    gradeCard += '</div></div><div class="col-md-6"><div class="card-body"><p class="card-text">';
+
+                    if (module.submissionstatus == 'submitted ontime') {
+                        var status = 'Mengumpulkan tugas tepat waktu';
+                    } else if (module.submissionstatus == 'late submitted') {
+                        var status = 'Telat mengumpulkan tugas';
+                    } else {
+                        var status = 'Tidak dapat menemukan tugas'
+                    }
+                    gradeCard += '<p class="card-text"><small class="text-muted">' + status + '</small></p>';
+                    gradeCard += '</div></div><div class="col-md-2"><div class="card-body">';
+                    gradeCard += '<h5 class="card-title">' + module.grade + '</h5>';
+                    gradeCard += '</div></div></div></div>';
+                    $('#gradeCard').append(gradeCard);
+
+                    //hitung ketepatan waktu pengumpulan tugas
+                    //append ke ke view
+
                 }
-                gradeCard += '<p class="card-text"><small class="text-muted">' + status + '</small></p>';
-                gradeCard += '</div></div><div class="col-md-2"><div class="card-body">';
-                gradeCard += '<h5 class="card-title">' + module.grade + '</h5>';
-                gradeCard += '</div></div></div></div>';
-                $('#gradeCard').append(gradeCard);
+
+            } else if (response[0]['itemmodule'] == 'quiz') {
+                for (var i = 0; i < response.length; i++) {
+
+                    var module = response[i];
+                    var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body">';
+                    gradeCard += '<h6 class="card-title">' + module.userfullname + '</h6>';
+                    gradeCard += '</div></div><div class="col-md-6"><div class="card-body"><p class="card-text">';
+                    gradeCard += '</div></div><div class="col-md-2"><div class="card-body">';
+                    gradeCard += '<h5 class="card-title">' + module.grade + '</h5>';
+                    gradeCard += '</div></div></div></div>';
+                    $('#gradeCard').append(gradeCard);
+
+                }
 
             }
+
+
             getMeanGradeModule(response);
         }
 

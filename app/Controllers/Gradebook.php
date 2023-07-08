@@ -377,6 +377,8 @@ class Gradebook extends BaseController
                 }
             }
             //dd($moduleGradeFix);
+        }else if($modmodule=='quiz'){
+            $moduleGradeFix=$moduleGrade;
         }
 
         // return to ajax
