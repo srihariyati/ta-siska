@@ -14,11 +14,8 @@ class Gradebook extends BaseController
     public function __construct(){
         //setting dynamic!!!!
 
-        $this->token = '774ccae9ca7328a2e4b977f5ebfa6770';
-        $this->courseid = 3;
-
         $this->main_url='https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
-
+        $this->session = \Config\Services::session();
         //kalau bisa ada global variabel untuk user username/nim, dan course name
 
         // $this->token = $token;
@@ -28,45 +25,25 @@ class Gradebook extends BaseController
         // pada href visdat_tugas line 24
     }
 
-    public function getGradebookView(){
-        $token = $this->token;
-        $courseid = $this->courseid;
+    public function getGradebookView($courseid){
+        $token = $this->session->get('token');
+        $courseid = $courseid;
 
-        $param =[
-            "wstoken" =>$token,
-            "moodlewsrestformat"=>"json",
-            "wsfunction"=>"core_course_get_courses_by_field",
-            "field"=>"id",
-            "value"=>$courseid,
+        //kirim ke view gradebook
+        $mydata=[
+            'courseid' => $courseid,
+            'token'=>$token,
         ];
-        
-        $curlGen = new GenerateCurl();
-        $response =  $curlGen->curlGen($param);
-      
-        $course_info[] =[
-            $token,
-            $response["courses"][0]["id"],
-            $response["courses"][0]["displayname"],
-        ];
-
-        $token = $course_info[0][0];
-        $courseid = $course_info[0][1];
-        $coursename = $course_info[0][2];
-
-        $mydata['course_info']= $course_info;
-        $mydata['coursename'] =  $coursename; 
-        $mydata['courseid'] = $courseid;
-        $mydata['token'] = $token;
         return view('gradebook', $mydata);
+
     }
 
     public function getGradebook(){
-        // $token = $this->request->getVar('token');
-        // $courseid = $this->request->getVar('courseid');
-        $mod = $this->request->getVar('mod');
 
-        $token = $this->token;
-        $courseid = $this->courseid;
+        $mod = $this->request->getVar('mod');
+        $token = $this->request->getVar('token');
+        $courseid = $this->request->getVar('courseId');
+        //dd($courseid, $token, $mod);
 
         $param =[
             "wstoken" =>$token,
@@ -77,7 +54,7 @@ class Gradebook extends BaseController
         
         $curlGen = new GenerateCurl();
         $response =  $curlGen->curlGen($param);
-
+        
         $response_gradebook = $response["usergrades"];
 
        //dd($response_gradebook);
@@ -181,10 +158,10 @@ class Gradebook extends BaseController
     public function getPersonalGrade(){
 
         $userid = $this->request->getVar('userid');
+        $courseid = $this->request->getVar('courseid');
+        $token = $this->request->getVar('token');
         
-        //harusnya token dan courseid adalah global variabel
-        $token = $this->token;
-        $courseid =  $this->courseid;
+
 
         $param =[
             "wstoken" =>$token,
@@ -195,6 +172,7 @@ class Gradebook extends BaseController
         
         $curlGen = new GenerateCurl();
         $response =  $curlGen->curlGen($param);
+        
 
         $response_gradebook = $response["usergrades"];
 
@@ -295,10 +273,8 @@ class Gradebook extends BaseController
 
     public function getModuleGrade(){
         $itemid = $this->request->getVar('itemid');
-
-        //harusnya token dan courseid adalah global variabel
-        $token = $this->token;
-        $courseid = $this->courseid;
+        $courseid = $this->request->getVar('courseid');
+        $token = $this->request->getVar('token');
 
         //get item id
         //plih data grade dari semua user yang item id nya ==$item id
@@ -314,6 +290,13 @@ class Gradebook extends BaseController
         $response =  $curlGen->curlGen($param);
 
         $response_gradebook = $response["usergrades"];
+
+        //ambil data telat mengumpulkan atau tidak??
+        //instance a te;at mengumpulkan
+        //ambil mod nya dulu
+        //jalankan
+
+        
 
        //dd($response_gradebook);
         $modulelGrade =[];
@@ -340,11 +323,18 @@ class Gradebook extends BaseController
             }
             
         }
+        $dataaa=$this->getSubmissionStatus();
+        dd($dataaa);
      
-        $mydata['token'] = $token;
-        $mydata['courseid'] = $courseid;
-        $mydata['cmid'] =$cmid;
-        $mydata['module_grade'] = $modulelGrade;
+        session()->set('token', $token);
+        $mydata=[
+            'token'=>session('token'),
+            'courseid'=>$courseid,
+            'cmid'=>$cmid,
+            'module_grade'=>$modulelGrade
+        ];
+ 
+        //kirim token jadi session
         return view('module_gradebook', $mydata);
         ///return halaman untuk show dan edit nilai 
     }
@@ -428,6 +418,79 @@ class Gradebook extends BaseController
 
         $coursename = $response["courses"][0];
         return $this->response->setJSON($coursename);
+    }
+
+    public function getSubmissionStatus(){
+        //untuk di module grade mod assign
+        $token ='774ccae9ca7328a2e4b977f5ebfa6770';
+        $assignid = 1; //instance id
+        $courseid = 3;
+
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"mod_assign_get_submissions",
+            "assignmentids[0]"=>$assignid,
+        ];
+
+        $curlGen = new GenerateCurl();
+        $response_submission =  $curlGen->curlGen($param);
+
+        //buat perhitungan kumpul tepat waktu atau kumpul telat
+        //nilai minus maka telat
+
+        $response_submission = $response_submission['assignments'][0];
+        $duedate=$this->getDueDate($token, $courseid, $assignid);
+
+        foreach($response_submission['submissions'] as $submission){
+            $status=$submission['status'];
+            $time=$duedate['duedate']-$submission['timemodified'];
+
+            if ($status=='submitted'){
+                if ($time<0){
+                    $status='late submitted';
+                }else{
+                    $status=$submission['status'].' ontime';
+                }
+            }else{
+                $status=$submission['status'];
+            }
+            
+            $submissionstatus[]=[
+                'assignid'=>$assignid,
+                'userid'=>$submission['userid'],
+                'status'=>$submission['status'],
+                'latestatus'=>$status
+            ];
+          
+
+        }
+        dd($submissionstatus);
+        return $response_submission['assignments'][0];
+    }
+
+    public function getDueDate($token, $courseid, $assignid){
+
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"mod_assign_get_assignments",
+            "courseids[0]"=>$courseid,
+        ];
+        
+        $curlGen = new GenerateCurl();
+        $response_assign =  $curlGen->curlGen($param);
+
+        foreach($response_assign['courses'][0]['assignments'] as $assign){
+            if($assign['id']==$assignid){
+                $dueDate=[
+                    'assignid'=>$assign['id'],
+                    'duedate'=>$assign['duedate']
+                ];
+            }
+            
+        }
+       return $dueDate;
     }
     
 }

@@ -617,8 +617,6 @@ function showTableGradeQuiz(responseData) {
             }
         }
 
-
-
         // Add CSS class based on grade value
         if (responseData[i].grade <= 50) {
             gradeCell.classList.add("red-text");

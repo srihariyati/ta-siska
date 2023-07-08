@@ -10,7 +10,8 @@
       <div class="row">
 
         <div class="col-md-6">
-        <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"> <?= $coursename; ?> </h2>
+        <!-- pake js aja? -->
+        <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"></h2>
         </div>
         <div class="col-md-6">
         </div>
@@ -86,7 +87,10 @@
 
 <script>
     $(document).ready(function() {
-
+    //$courseid
+    //$token
+    
+    getCourseName();
     handleTableGradebook();
 
     // Export as PDF button click event handler

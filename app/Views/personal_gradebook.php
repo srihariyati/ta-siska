@@ -90,6 +90,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src = "/js/d3.v7.min.js"></script>
 <script src= "/js/view/gradebook.js"></script>
+<script src= "/js/view/chartGradebook.js"></script>
 
 <script>
     $(document).ready(function() {
