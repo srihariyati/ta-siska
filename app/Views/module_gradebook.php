@@ -27,7 +27,7 @@
 <div class="container">
   <div class="row mt-4">
     <div class="col-md-6">
-      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>"></h3>
+     <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" data-itemid = "<?=$itemid?>"></h3>
       <p id="contentName"></p>
     </div>
   </div>    
@@ -48,31 +48,12 @@
   </div>
 </div>
 
+<!-- ini pake ajax aja nanti -->
 <div class="container mt-4">
-  <?php foreach($module_grade as $mg):?>
-  <div class="card mb-3">
-    <div class="row">
-      <div class="col-md-4">
-      <div class="card-body">
-          <h6 class="card-title"><?= $mg['userfullname']; ?></h6>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="card-body">
-          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-        </div>
-      </div>
-
-      <div class="col-md-2">
-        <div class="card-body">
-          <h5 class="card-title"><?= $mg['grade']; ?></h5>
-        </div>
-      </div> 
-    </div>
+  <div id="gradeCard">
+    
   </div>
-  <?php endforeach;?>
-  <?php $module_grade = json_encode($module_grade);?>
+ <!-- diisni berisi chart data -->
 </div>
 
 <?= $this->endSection('content') ?>
@@ -82,13 +63,11 @@
 
 <script>
     $(document).ready(function() {
-      var module_grade = <?= $module_grade ?>;
-      var modmodule = $('#contentModule').data('mod');
+   
+      var modmodule = $('#contentModule').data('mod');     
      
       getCourseName();
-      getContentModuleInfo();
-      getMeanGradeModule(module_grade);
-
+      getContentModuleInfo();    
 
       //if mod item is assign
       //get ketepatan waktu pengumpulan tugas

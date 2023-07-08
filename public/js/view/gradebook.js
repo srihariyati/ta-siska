@@ -62,17 +62,23 @@ function handleTableGradebookAssign() {
 }
 
 function showTableGradebook(responseData) {
+    //get instance id 
+    //var instanceid = 
+    //dapatkan courseId
     console.log(courseId, token);
+
     if (table) {
         table.destroy();
     }
 
     $('#tableGradebook').empty();
 
+    console.log(responseData);
+
     var dataTableData = [];
     var headerRow = [];
     responseData[0].grades.forEach(function(item) {
-        headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGrade?itemid=${item.itemid}&token=${token}&courseid=${courseId}" style="text-decoration:none;">${item.itemname}</a>`);
+        headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGradeView?itemid=${item.itemid}&token=${token}&courseid=${courseId}&cmid=${item.cmid}" style="text-decoration:none;">${item.itemname}</a>`);
     });
 
     responseData.forEach(function(user) {
@@ -208,9 +214,9 @@ function getStudentInfo() {
 
 function getContentModuleInfo() {
     var cmid = $('#contentModule').data('cmid');
+    var itemid = $('#contentModule').data('itemid');
     courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
-
 
     //ambil informasi contentmodule berdasarkan cmid
     //ajax get content module information
@@ -226,11 +232,18 @@ function getContentModuleInfo() {
         success: function(response) {
             console.log(response);
 
-            var modulename = response.cmname;
+            $('#contentModule').empty();
             var contentname = response.cname;
             var instanceid = response.instanceid;
+            var modulename = response.cmname;
             $('#contentModule').append(modulename);
             $('#contentName').append(contentname);
+
+            //untuk dapatjalan assignid
+            getModuleGrade(instanceid, cmid, courseId, token, itemid);
+
+            //append instance id ke dalam html
+            //lalu ambil untuk dapat submission status
 
 
         }
@@ -283,4 +296,50 @@ function getSubmissionTimeliness() {
 
 
 
+}
+
+function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
+    $('#gradeCard').empty();
+    //need itemid
+    console.log(instanceid, cmid, courseId, token);
+    $.ajax({
+        url: `${BASE_URL}gradebook/getModuleGrade`,
+        method: 'GET',
+        data: {
+            token: token,
+            courseid: courseId,
+            cmid: cmid,
+            instanceid: instanceid,
+            itemid: itemid
+        },
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            //append kedalam card untuk setiap data
+            //yang di masukkan adalahh smeua, kalau bis jadikan
+            // data- aja yang id id itu
+            for (var i = 0; i < response.length; i++) {
+                var module = response[i];
+                var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body">';
+                gradeCard += '<h6 class="card-title">' + module.userfullname + '</h6>';
+                gradeCard += '</div></div><div class="col-md-6"><div class="card-body"><p class="card-text">';
+
+                if (module.submissionstatus == 'submitted ontime') {
+                    var status = 'Mengumpulkan tugas tepat waktu';
+                } else if (module.submissionstatus == 'late submitted') {
+                    var status = 'Telat mengumpulkan tugas';
+                } else {
+                    var status = 'Tidak dapat menemukan tugas'
+                }
+                gradeCard += '<p class="card-text"><small class="text-muted">' + status + '</small></p>';
+                gradeCard += '</div></div><div class="col-md-2"><div class="card-body">';
+                gradeCard += '<h5 class="card-title">' + module.grade + '</h5>';
+                gradeCard += '</div></div></div></div>';
+                $('#gradeCard').append(gradeCard);
+
+            }
+            getMeanGradeModule(response);
+        }
+
+    });
 }

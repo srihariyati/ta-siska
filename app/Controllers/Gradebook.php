@@ -76,7 +76,8 @@ class Gradebook extends BaseController
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
                             'grade'=> $gbitems['graderaw'],
-                            'itemmodule'=>$gbitems['itemmodule']
+                            'itemmodule'=>$gbitems['itemmodule'],
+                            'cmid'=>$gbitems['cmid']
                         ];
                     }
                 }
@@ -95,6 +96,7 @@ class Gradebook extends BaseController
                 $userid = $gb['userid'];
                 $userfullname = $gb['userfullname'];
                 $grades = [];
+                
     
                 foreach($gb['gradeitems'] as $gbitems){
     
@@ -105,7 +107,8 @@ class Gradebook extends BaseController
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
                             'grade'=> $gbitems['graderaw'],
-                            'itemmodule'=>$gbitems['itemmodule']
+                            'itemmodule'=>$gbitems['itemmodule'],
+                            'cmid'=>$gbitems['cmid']
                         ];
                     }
                 }
@@ -120,7 +123,7 @@ class Gradebook extends BaseController
             return $this->response->setJSON($gradebook);
         } else {
 
-            //dd($gradebook);
+            //dd($response_gradebook);
             foreach($response_gradebook as $gb){
                 $userid = $gb['userid'];
                 $userfullname = $gb['userfullname'];
@@ -136,7 +139,8 @@ class Gradebook extends BaseController
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
                             'grade'=> $gbitems['graderaw'],
-                            'itemmodule'=>$gbitems['itemmodule']
+                            'itemmodule'=>$gbitems['itemmodule'],
+                            'cmid'=>$gbitems['cmid']
                         ];
                     }
                 }
@@ -153,6 +157,25 @@ class Gradebook extends BaseController
         }
 
         
+    }
+    ///sehaurusnya sending itemid aja ke view, baru diproses pake js pake ajax
+    //
+
+    public function getModuleGradeView(){
+        $itemid = $this->request->getVar('itemid');
+        $courseid = $this->request->getVar('courseid');
+        $token = $this->request->getVar('token');
+        $cmid = $this->request->getVar('cmid');
+       
+
+        $mydata=[
+            'token'=>session('token'),
+            'courseid'=>$courseid,
+            'cmid'=>$cmid,
+            'itemid'=>$itemid
+        ];
+
+        return view('module_gradebook', $mydata);
     }
 
     public function getPersonalGrade(){
@@ -272,9 +295,14 @@ class Gradebook extends BaseController
     }
 
     public function getModuleGrade(){
+        
         $itemid = $this->request->getVar('itemid');
         $courseid = $this->request->getVar('courseid');
         $token = $this->request->getVar('token');
+        $cmid=$this->request->getVar('cmid');
+        $instanceid=$this->request->getVar('instanceid');
+
+        //item id!=cmid
 
         //get item id
         //plih data grade dari semua user yang item id nya ==$item id
@@ -291,28 +319,24 @@ class Gradebook extends BaseController
 
         $response_gradebook = $response["usergrades"];
 
-        //ambil data telat mengumpulkan atau tidak??
-        //instance a te;at mengumpulkan
-        //ambil mod nya dulu
-        //jalankan
-
-        
-
        //dd($response_gradebook);
         $modulelGrade =[];
-
+        $modmodule='default';
         foreach($response_gradebook as $rg){
             $userfullname = $rg['userfullname'];
             $userid = $rg['userid'];
 
-
             foreach($rg['gradeitems'] as $gi){
                 if($gi['id']==$itemid){
+    
                     $cmid = $gi['cmid'];
-                    $modulelGrade[]=[
+                    $modmodule = $gi['itemmodule'];
+
+                    $moduleGrade[]=[
                         'userid'=>$userid,
-                        'gradeid'=>$gi['id'],
                         'userfullname'=>$userfullname,
+                        'itemid'=>$gi['id'],
+                        'instanceid'=>  $instanceid,
                         'itemname'=> $gi['itemname'],
                         'itemmodule'=> $gi['itemmodule'],
                         'cmid'=>$cmid,
@@ -323,20 +347,42 @@ class Gradebook extends BaseController
             }
             
         }
-        $dataaa=$this->getSubmissionStatus();
-        dd($dataaa);
-     
-        session()->set('token', $token);
-        $mydata=[
-            'token'=>session('token'),
-            'courseid'=>$courseid,
-            'cmid'=>$cmid,
-            'module_grade'=>$modulelGrade
-        ];
- 
-        //kirim token jadi session
-        return view('module_gradebook', $mydata);
+        // /dd($moduleGrade);
+        if($modmodule=='assign'){
+            //buat data status submission
+            $submissionstatus = $this->getSubmissionStatus($token, $instanceid, $courseid);
+            //dd($submissionstatus);  
+            
+            foreach($moduleGrade as $mg){
+                foreach($submissionstatus as $ss){
+                    if($mg['userid']==$ss['userid']){
+
+
+                        //perbaharui moduleGrade
+                        //tambahkan status submissionya kedalam moduleGrade
+                        //looping untuk setiap data userid di dalam moduleGrade,
+                        $moduleGradeFix[]=[
+                            'userid'=>$mg['userid'],
+                            'userfullname'=>$mg['userfullname'],
+                            'itemid'=>$mg['itemid'],
+                            'instanceid'=>$mg['instanceid'],
+                            'itemname'=>$mg['itemname'],
+                            'itemmodule'=> $mg['itemmodule'],
+                            'cmid'=>$mg['cmid'],
+                            'grade'=>$mg['grade'],
+                            'submissionstatus'=>$ss['submissionstatus']
+                        ];
+
+                    }
+                }
+            }
+            //dd($moduleGradeFix);
+        }
+
+        // return to ajax
+
         ///return halaman untuk show dan edit nilai 
+        return $this->response->setJSON($moduleGradeFix);
     }
 
     public function getStudentInfo(){ 
@@ -420,11 +466,7 @@ class Gradebook extends BaseController
         return $this->response->setJSON($coursename);
     }
 
-    public function getSubmissionStatus(){
-        //untuk di module grade mod assign
-        $token ='774ccae9ca7328a2e4b977f5ebfa6770';
-        $assignid = 1; //instance id
-        $courseid = 3;
+    public function getSubmissionStatus($token, $assignid, $courseid){
 
         $param =[
             "wstoken" =>$token,
@@ -460,13 +502,13 @@ class Gradebook extends BaseController
                 'assignid'=>$assignid,
                 'userid'=>$submission['userid'],
                 'status'=>$submission['status'],
-                'latestatus'=>$status
+                'submissionstatus'=>$status
             ];
           
 
         }
-        dd($submissionstatus);
-        return $response_submission['assignments'][0];
+        //dd($submissionstatus);
+        return $submissionstatus;
     }
 
     public function getDueDate($token, $courseid, $assignid){
