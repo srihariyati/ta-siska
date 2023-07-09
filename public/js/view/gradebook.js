@@ -261,8 +261,11 @@ function getMeanGradeModule(module_grade) {
 
     var mean = (sum / module_grade.length).toFixed(2);
 
+    var showMean = '<p class="mb-0">Rata-rata nilai mahasiswa:</p><h4 class="font-weight-bold" id="mean">' + mean + '</h4>';
+    var showSubmissionPercent = '<p class="mb-0">Ketepatan waktu pengumpulan tugas: </p><h4 class ="font-weight-bold">91 %</h4>';
     // console.log('Mean grade:', mean);
-    $('#meanGrade').append(mean);
+    $('#meanGrade').append(showMean);
+    $('#submissionPercent').append(showSubmissionPercent);
 }
 
 function getSubmissionTimeliness() {
@@ -293,9 +296,6 @@ function getSubmissionTimeliness() {
             console.log("submittedparticipant : " + submittedParticipant);
         }
     });
-
-
-
 }
 
 function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
@@ -326,9 +326,10 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                 for (var i = 0; i < response.length; i++) {
 
                     var module = response[i];
-                    var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body">';
-                    gradeCard += '<h6 class="card-title">' + module.userfullname + '</h6>';
-                    gradeCard += '</div></div><div class="col-md-6"><div class="card-body"><p class="card-text">';
+                    console.log(module.itemnumber);
+                    var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
+                    gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '">' + module.userfullname + '</h6>';
+                    gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
 
                     if (module.submissionstatus == 'submitted ontime') {
                         var status = 'Mengumpulkan tugas tepat waktu';
@@ -337,10 +338,15 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                     } else {
                         var status = 'Tidak dapat menemukan tugas'
                     }
-                    gradeCard += '<p class="card-text"><small class="text-muted">' + status + '</small></p>';
-                    gradeCard += '</div></div><div class="col-md-2"><div class="card-body">';
-                    gradeCard += '<h5 class="card-title">' + module.grade + '</h5>';
-                    gradeCard += '</div></div></div></div>';
+
+                    var gradeColor = module.grade >= 50 ? 'text-success' : 'text-danger'; // Set text color to green (success) if grade is greater than or equal to 50
+
+                    gradeCard += '<p class="card-text text-center" id="status-' + i + '"><small class="text-muted">' + status + '</small></p></div></div>';
+                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center">';
+                    gradeCard += '<h4 class="card-title text-center ' + gradeColor + '" id="grade-' + i + '" data-mod="' + module.itemmodule + '" data-itemnumber="' + module.itemnumber + '">' + module.grade + '</h4></div></div>';
+                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center"><button type="button" class="btn btn-outline-secondary btn-sm" id="btnEditGrade" data-index="' + i + '">Edit</button></div></div>';
+                    gradeCard += '</div></div>';
+                    console.log(gradeCard);
                     $('#gradeCard').append(gradeCard);
 
                     //hitung ketepatan waktu pengumpulan tugas
@@ -369,4 +375,75 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
         }
 
     });
+}
+
+function getEditGradeModule(courseid, activityid, token, studentId, studentName, grade, itemModule, itemNumber, mean, status) {
+
+    var studentInfo = '<h3 class="font-weight-bolder pr-10 mb-0">' + studentName + '</h3>';
+    studentInfo += '<p class="card-text text-left"><small class="text-muted">' + status + '</small></p>';
+    var meanGrade = '<p class="mb-0">Rata-rata nilai mahasiswa:</p><h4 class="font-weight-bold">' + mean + '</h4>';
+
+    // Append the input element and button to studentGrade
+    var studentGrade = '<div>';
+    studentGrade += '<label for="gradeInput">Nilai Mahasiswa</label>';
+    studentGrade += '<div class="input-group input-group-lg">';
+    studentGrade += '<input type="text" class="form-control"  id="gradeInput" value="' + grade + '">';
+    studentGrade += '<div class = "input-group-append">';
+    studentGrade += '<button class="btn btn-primary" type="button" id="updateButton">Ubah</button>';
+    studentGrade += '<button class = "btn btn-danger" type = "button" onclick="window.location.reload()">Batal</button>';
+    studentGrade += '</div></div></div>';
+
+    $('#studentInfo').append(studentInfo);
+    $('#submissionPercent').append(meanGrade);
+    $('#studentGrade').append(studentGrade);
+
+    //go to controller to return view data user to edit
+    //with url
+
+
+
+
+    // Menambahkan event listener pada tombol "Ubah"
+    var updateButton = document.getElementById('updateButton');
+    updateButton.addEventListener('click', function() {
+        // Mengambil nilai dari input
+        var gradeValue = document.getElementById('gradeInput').value;
+        console.log(courseid, activityid, token, studentId, itemModule, itemNumber, gradeValue);
+
+        // Mengirim data ke AJAX
+        // Gantilah dengan kode AJAX sesuai kebutuhan Anda
+        // Misalnya:
+        $.ajax({
+            url: `${BASE_URL}gradebook/updateModuleGrade`,
+            method: 'GET',
+            data: {
+                grade: gradeValue,
+                courseid: courseid,
+                activityid: activityid,
+                studentid: studentId,
+                itemModule: itemModule,
+                itemNumber: itemNumber,
+                token: token,
+            },
+            success: function(response) {
+
+                // Aksi setelah berhasil mengirim data
+                //jika respone == 0 
+                //reload page
+                if (response == 0) {
+                    console.log(response);
+
+                    Swal.fire('Berhasil!', 'Yey! Berhasil mempengaruhi data', 'success');
+                    //kasih delay
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000); // 2000 milliseconds = 2 seconds delay
+                }
+            },
+            error: function(xhr, status, error) {
+                // Aksi jika terjadi kesalahan saat mengirim data
+            }
+        });
+    });
+
 }

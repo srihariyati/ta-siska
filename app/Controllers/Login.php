@@ -21,7 +21,7 @@ class Login extends BaseController
         $param =[
             "username"=>$username,
             "password"=>$password,
-            "service"=>'moodle_mobile_app',
+            "service"=>'ws-siska',
         ];
         $data = http_build_query($param);
         $curl = curl_init();

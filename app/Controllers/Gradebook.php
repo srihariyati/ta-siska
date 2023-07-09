@@ -59,10 +59,12 @@ class Gradebook extends BaseController
 
        //dd($response_gradebook);
         $gradebook =[];
+        //dd($response_gradebook);
         
 
         if($mod =='quiz'){
             foreach($response_gradebook as $gb){
+                
                 $userid = $gb['userid'];
                 $userfullname = $gb['userfullname'];
                 $grades = [];
@@ -75,6 +77,7 @@ class Gradebook extends BaseController
                         $grades[] =[
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
+                            'itemnumber'=>$gbitems['itemnumber'],
                             'grade'=> $gbitems['graderaw'],
                             'itemmodule'=>$gbitems['itemmodule'],
                             'cmid'=>$gbitems['cmid']
@@ -106,6 +109,7 @@ class Gradebook extends BaseController
                         $grades[] =[
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
+                            'itemnumber'=>$gbitems['itemnumber'],
                             'grade'=> $gbitems['graderaw'],
                             'itemmodule'=>$gbitems['itemmodule'],
                             'cmid'=>$gbitems['cmid']
@@ -138,6 +142,7 @@ class Gradebook extends BaseController
                         $grades[] =[
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
+                            'itemnumber'=>$gbitems['itemnumber'],
                             'grade'=> $gbitems['graderaw'],
                             'itemmodule'=>$gbitems['itemmodule'],
                             'cmid'=>$gbitems['cmid']
@@ -322,6 +327,7 @@ class Gradebook extends BaseController
        //dd($response_gradebook);
         $modulelGrade =[];
         $modmodule='default';
+
         foreach($response_gradebook as $rg){
             $userfullname = $rg['userfullname'];
             $userid = $rg['userid'];
@@ -338,6 +344,7 @@ class Gradebook extends BaseController
                         'itemid'=>$gi['id'],
                         'instanceid'=>  $instanceid,
                         'itemname'=> $gi['itemname'],
+                        'itemnumber'=>$gi['itemnumber'],
                         'itemmodule'=> $gi['itemmodule'],
                         'cmid'=>$cmid,
                         'grade'=>$gi['graderaw'],
@@ -367,6 +374,7 @@ class Gradebook extends BaseController
                             'itemid'=>$mg['itemid'],
                             'instanceid'=>$mg['instanceid'],
                             'itemname'=>$mg['itemname'],
+                            'itemnumber'=>$mg['itemnumber'],
                             'itemmodule'=> $mg['itemmodule'],
                             'cmid'=>$mg['cmid'],
                             'grade'=>$mg['grade'],
@@ -535,6 +543,48 @@ class Gradebook extends BaseController
             
         }
        return $dueDate;
+    }
+
+
+    public function updateModuleGrade(){
+        $courseid = $this->request->getVar('courseid');
+        $token = $this->request->getVar('token');
+
+        $activityid = $this->request->getVar('activityid');
+        $studentid = $this->request->getVar('studentid');
+        $itemModule = $this->request->getVar('itemModule');
+        $itemNumber = $this->request->getVar('itemNumber');
+        $grade = $this->request->getVar('grade');
+
+        if($itemModule=='assign'){
+            $source='assignment';
+            $component='mod_assign';
+        }else if($itemModule =='quiz'){
+            $source='quiz';
+            $component='mod_quiz';
+        }
+
+        $param =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"core_grades_update_grades",
+            "courseid"=>$courseid,
+            "source"=>$source,
+            "component"=>$component,
+            "activityid"=>$activityid,
+            "itemnumber"=>  $itemNumber,
+            "grades[0][studentid]"=>$studentid,
+            "grades[0][grade]"=> $grade
+        ];
+        
+        $curlGen = new GenerateCurl();
+        $response =  $curlGen->curlGen($param);
+        
+        //kasih sweet alert
+        //jika status invalid langsung bilang salah password
+        //return redirect()->back()->with('updateStatus', 'Yeay! Nilai berhasil diubah');
+
+        return $this->response->setJSON($response);
     }
     
 }

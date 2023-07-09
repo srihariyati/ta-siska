@@ -32,23 +32,31 @@
     </div>
   </div>    
   <div class="row mt-4">
+
     <div class="col-md-4">
-      <p class="mb-0">Rata-rata nilai mahasiswa:</p>
-      <h4 class="font-weight-bold" id='meanGrade'></h4>
-     
+      <span id="meanGrade"></span>
+      <span id="studentInfo"><span>     
     </div>
+
     <div class="col-md-4">
-      <p class="mb-0">Ketepatan waktu pengumpulan tugas:</p>
-      <h4 class="font-weight-bold">91%</h4>
+      <span id="submissionPercent"></span> 
     </div>
+
   </div>
 </div>
 
 <!-- ini pake ajax aja nanti -->
 <div class="container mt-4">
-  <div id="gradeCard">
+  
+  <span id="gradeCard"></span>
 
+  <div class="row mt-4">
+  <div class="col-md-6">
+    <span id="studentGrade"></span>
+  <div>
+  <div class="col-md-6"></div>
   </div>
+  
  <!-- diisni berisi chart data -->
 </div>
 
@@ -60,16 +68,37 @@
 <script>
     $(document).ready(function() {
    
-      var modmodule = $('#contentModule').data('mod');     
+      // var modmodule = $('#contentModule').data('mod');  
+      // console.log(modmodule);   
      
       getCourseName();
       getContentModuleInfo();    
+      
+      // Add click event handler to the Edit button
+      $('#gradeCard').on('click', '#btnEditGrade', function() {
+        var token = $('#courseTitle').data('token');
+        var courseid = $('#courseTitle').data('courseid');
+        var activityid = $('#contentModule').data('cmid');
 
-      //if mod item is assign
-      //get ketepatan waktu pengumpulan tugas
-      //get subbimteed participant
-      //get all participant
-      //submmited participant % from all participant
+        // Retrieve the index and corresponding data
+        var index = $(this).data('index');
+        var studentName = $('#studentName-' + index).text();
+        var studentId = $('#studentName-' + index).data('userid');
+        var grade = $('#grade-' + index).text();
+        var itemModule = $('#grade-' + index).data('mod');
+        var itemNumber = $('#grade-' + index).data('itemnumber');
+        var mean = $('#mean').text();
+        var status = $('#status-' + index).text();
+        // console.log(studentName, grade, itemModule, itemNumber, mean, status);
+
+        $('#meanGrade').empty();
+        $('#submissionPercent').empty();
+        $('#gradeCard').empty();
+
+        // Add your desired functionality here
+        getEditGradeModule(courseid, activityid, token, studentId, studentName, grade, itemModule, itemNumber, mean, status);
+      });
+
     
     });
 
