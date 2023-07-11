@@ -67,6 +67,7 @@
  
   <div class="row mt-6">
     <div class="col-md-6">
+      <span id="load-1"></span>
       <!-- nama kuis, dan waktu kuis -->
       <span id="modTitle"></span>
       <span id="contentName"></span>
@@ -76,6 +77,7 @@
     </div>
 
     <div class="col-md-6">
+      <span id="load-2"></span>
       <!-- tabel participant dan loadchart partiicpant-->
       <span id=tableParticipant></span>
       <div id=chartQuizGrades></div>
@@ -91,11 +93,13 @@
 
   <div class="row mt-4">
     <!-- table disnii aktif jika user memlih view table -->
+    <span id="load-table"></span>
     <div class="col"><span id="tableGradeAssignment"></span></div>   
   </div>
 
   <div class="row mt-4">
     <!-- table disnii aktif jika user memlih view table -->
+    <span id="load-table"></span>
     <div class="col"><span id="tableGradeQuiz"></span></div>   
   </div>
 
@@ -117,6 +121,7 @@
 
 <?= $this->section('jshere') ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/view/loadAnimation.js" ></script>
 <script src="/js/view/course.js"></script>
 <script src="/js/view/chartAssign.js" ></script>
 <script src="/js/view/chartQuiz.js" ></script>
@@ -124,13 +129,15 @@
 
 <script>
     $(document).ready(function() {
+      loadAnimation_sm("load-1");
       handleCourseContentChange();
       
         $('#course_content').on('change', function() {
-            handleCourseContentChange(); //menampilkan dropdown 2 : topik/content
+          handleCourseContentChange(); //menampilkan dropdown 2 : topik/content
         });
         
         $('#content_module').on('change', function() {
+
           handleModuleChange();
         });
 

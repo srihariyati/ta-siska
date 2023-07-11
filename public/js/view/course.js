@@ -34,6 +34,7 @@ function handleCourseContentChange() {
 
             if (response.length == 0) {
                 emptyPage();
+
                 var option = '<option value="0"  style="font-style: italic;">Tidak Ada Tugas/Kuis</option>';
                 $('#content_module').append(option);
 
@@ -114,7 +115,14 @@ function handleTable(modName) {
 //////////////////////////////Assign/////////////////////////////////
 function getAssign(token, courseId, instanceid) {
     console.log('getassign', token, courseId, instanceid);
+
     emptyPage();
+    loadAnimation_sm("load-1");
+
+    //make loadanimation untuk id show yang dipakai oleh assign
+
+
+
     //ajax to get assign controller
     //ajax to get Quiz controller
     $.ajax({
@@ -145,6 +153,8 @@ function getAssign(token, courseId, instanceid) {
             //append table participant khusus assign
             var tableParticipant = '<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td></tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr><tr><td>Late Submitted</td><td><span id = "lateSubmittedParticipant"></span></td ></tr></tbody></table>';
 
+
+            window.removeAnimation("load-1");
             $('#modTitle').append(modName);
             $('#openedDate').append(showOpenedDate);
             $('#closedDate').append(showClosedDate);
@@ -209,6 +219,7 @@ function getGradeAssignment() {
 }
 
 function handleTableAssign(courseId, assignId) {
+    window.loadAnimation_lg("load-table");
     //ajax here
     $.ajax({
         // url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
@@ -221,6 +232,7 @@ function handleTableAssign(courseId, assignId) {
             //append table participant khusus assign
             var tableGrade = '<table  id="table_assign" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
             $('#tableGradeAssignment').append(tableGrade);
+            window.removeAnimation("load-table");
             showTableGradeAssignment(response);
             //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
             //data ini yang akan ditampilkan dalam tabel
@@ -289,7 +301,6 @@ function getCourseParticipant(token, courseId) {
     //kolom all participant
     //function core_enrol_get_enrolled_users
     //jumlah user yang enrol mata kuliah dengan role: student
-
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
         method: 'GET',
@@ -297,6 +308,8 @@ function getCourseParticipant(token, courseId) {
         success: function(response) {
             console.log(response);
             courseParticipant = response.length;
+
+
             $('#courseParticipant').append(courseParticipant);
 
             console.log("course participant : " + courseParticipant);
@@ -358,6 +371,8 @@ function getSubmittedParticipant(token, assignId, assignName) {
 function getQuiz(token, courseId, instanceid) {
     console.log('quiz', token, courseId, instanceid);
     emptyPage();
+    loadAnimation_lg("load-2");
+
     //ajax to get Quiz controller
     $.ajax({
 
@@ -381,6 +396,9 @@ function getQuiz(token, courseId, instanceid) {
 
             var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
             var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+
+            //hapus load animation setelah empty dan sebelum append
+            window.removeAnimation('load-1');
             $('#modTitle').append(modName);
             $('#openedDate').append(showOpenedDate);
             $('#closedDate').append(showClosedDate);
@@ -456,6 +474,9 @@ function getGradeQuiz(quizId) {
 
                     // Sorting dataQuizGrades berdasarkan nilai grade dari terbesar ke terkecil
                     dataQuizGrades.sort((a, b) => b.grade - a.grade);
+
+                    //remove load animation
+                    window.removeAnimation('load-2');
                     window.chartQuizGrades(dataQuizGrades);
                     //end chart 1
 
@@ -521,6 +542,8 @@ function handleTableQuiz(quizId) {
     var courseId = $('#courseTitle').data('courseid');
     var counts = {};
     //ambil list participant pada course
+
+    window.loadAnimation_sm("load-table");
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
         metho: 'GET',
@@ -565,6 +588,8 @@ function handleTableQuiz(quizId) {
 
                     $('#tableGradeQuiz').append(tableGrade);
                     //bawa data untuk diproses kedalam tabel
+
+                    window.removeAnimation("load-table");
                     showTableGradeQuiz(response);
 
                 }
