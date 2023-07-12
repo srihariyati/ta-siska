@@ -30,6 +30,12 @@
      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" data-itemid = "<?=$itemid?>"></h3>
       <p id="contentName"></p>
     </div>
+
+    <div class="col-md-6 d-flex justify-content-end">
+      <!-- nnananana -->
+      <span id="btnEditAll" class="pr-4"></span>
+      
+    </div>
   </div>    
   <div class="row mt-4">
 
@@ -93,7 +99,7 @@
 
         $('#meanGrade').empty();
         $('#submissionPercent').empty();
-        $('#gradeCard').empty();
+        $('#gradeCard').empty();  
 
         // Add your desired functionality here
         getEditGradeModule(courseid, activityid, token, studentId, studentName, grade, itemModule, itemNumber, mean, status);

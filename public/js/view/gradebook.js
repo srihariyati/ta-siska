@@ -316,6 +316,17 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
         success: function(response) {
             console.log(response);
 
+            var buttonEditAll = '<button type="button" id="editAll" class="btn btn-warning bnt-sm">Ubah Semua</button>';
+            $('#btnEditAll').append(buttonEditAll);
+
+
+            //btnEditAll on click
+            //kirim data response
+            $('#btnEditAll').on('click', '#editAll', function() {
+                getEditGradeModuleAll(response);
+            });
+            //
+
             //append kedalam card untuk setiap data
             //yang di masukkan adalahh smeua, kalau bis jadikan
             // data- aja yang id id itu
@@ -344,7 +355,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                     gradeCard += '<p class="card-text text-center" id="status-' + i + '"><small class="text-muted">' + status + '</small></p></div></div>';
                     gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center">';
                     gradeCard += '<h4 class="card-title text-center ' + gradeColor + '" id="grade-' + i + '" data-mod="' + module.itemmodule + '" data-itemnumber="' + module.itemnumber + '">' + module.grade + '</h4></div></div>';
-                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center"><button type="button" class="btn btn-outline-secondary btn-sm" id="btnEditGrade" data-index="' + i + '">Edit</button></div></div>';
+                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center"><button type="button" class="btn btn-outline-secondary btn-sm" id="btnEditGrade" data-index="' + i + '">Ubah</button></div></div>';
                     gradeCard += '</div></div>';
                     console.log(gradeCard);
                     $('#gradeCard').append(gradeCard);
@@ -369,8 +380,6 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                 }
 
             }
-
-
             getMeanGradeModule(response);
         }
 
@@ -445,5 +454,69 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
             }
         });
     });
+
+}
+
+
+function getEditGradeModuleAll(response) {
+    console.log(response);
+    $('#gradeCard').empty();
+    $('#submissionPercent').empty();
+    $('#meanGrade').empty();
+    $('#btnEditAll').empty();
+
+    if (response[0]['itemmodule'] == 'assign') {
+        //mod assign
+        for (var i = 0; i < response.length; i++) {
+
+            var module = response[i];
+            console.log(module.itemnumber);
+            var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
+            gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '">' + module.userfullname + '</h6>';
+            gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
+
+            if (module.submissionstatus == 'submitted ontime') {
+                var status = 'Mengumpulkan tugas tepat waktu';
+            } else if (module.submissionstatus == 'late submitted') {
+                var status = 'Telat mengumpulkan tugas';
+            } else {
+                var status = 'Tidak dapat menemukan tugas'
+            }
+
+            var gradeColor = module.grade >= 50 ? 'text-success' : 'text-danger'; // Set text color to green (success) if grade is greater than or equal to 50
+
+            gradeCard += '<p class="card-text text-center" id="status-' + i + '"><small class="text-muted">' + status + '</small></p></div></div>';
+            gradeCard += '<div class="col-md-2 d-flex justify-content-center"><div class="card-body ">';
+            // Append the input element and button to studentGrade
+
+            gradeCard += '<div class="input-group input-group-lg">';
+            gradeCard += '<input type="text" class="form-control"  id="gradeInput" value="' + module.grade + '"></div>';
+            gradeCard += '</div></div></div>';
+            console.log(gradeCard);
+            $('#gradeCard').append(gradeCard);
+
+            //hitung ketepatan waktu pengumpulan tugas
+            //append ke ke view
+
+        }
+
+    }
+
+    var buttonEditAll = '<button type="button" class="btn btn-success">Ubah Semua</button>';
+    buttonEditAll += '<button type ="button" class="btn btn-danger ml-2" > Batal </button>';
+    $('#btnEditAll').append(buttonEditAll);
+
+
+    //trigger btnEditAll on click
+    //ambil semua value, masukkan kedalam array
+
+
+
+    //append input untuk semua data
+    //get data asssignment mod
+
+
+    //get data quiz mod
+
 
 }
