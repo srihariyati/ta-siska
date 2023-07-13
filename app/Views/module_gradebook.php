@@ -82,6 +82,7 @@
       
       // Add click event handler to the Edit button
       $('#gradeCard').on('click', '#btnEditGrade', function() {
+        $('#btnEditAll').empty();
         var token = $('#courseTitle').data('token');
         var courseid = $('#courseTitle').data('courseid');
         var activityid = $('#contentModule').data('cmid');

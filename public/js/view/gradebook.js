@@ -8,6 +8,7 @@ function handleTableGradebook() {
     console.log(token);
     console.log(courseId);
 
+    sweetAlertLoad('Memuat tabel');
     $.ajax({
         url: `${BASE_URL}gradebook/getGradebook`,
         method: 'GET',
@@ -18,6 +19,7 @@ function handleTableGradebook() {
         dataType: 'json',
         success: function(response) {
             console.log(response);
+            swal.close();
             showTableGradebook(response);
         }
     });
@@ -25,6 +27,7 @@ function handleTableGradebook() {
 
 function handleTableGradebookQuiz() {
     var mod = 'quiz';
+    sweetAlertLoad('Memuat tabel');
     $.ajax({
         url: `${BASE_URL}gradebook/getGradebook`,
         method: 'GET',
@@ -35,6 +38,7 @@ function handleTableGradebookQuiz() {
         },
         dataType: 'json',
         success: function(response) {
+            Swal.close();
             console.log(response);
             showTableGradebook(response);
         }
@@ -43,6 +47,7 @@ function handleTableGradebookQuiz() {
 
 function handleTableGradebookAssign() {
     var mod = 'assign';
+    sweetAlertLoad('Memuat tabel');
 
     console.log("handleTableGradebookAssign", courseId);
     $.ajax({
@@ -56,6 +61,7 @@ function handleTableGradebookAssign() {
         dataType: 'json',
         success: function(response) {
             console.log(response);
+            Swal.close();
             showTableGradebook(response);
         }
     });
@@ -262,10 +268,10 @@ function getMeanGradeModule(module_grade) {
     var mean = (sum / module_grade.length).toFixed(2);
 
     var showMean = '<p class="mb-0">Rata-rata nilai mahasiswa:</p><h4 class="font-weight-bold" id="mean">' + mean + '</h4>';
-    var showSubmissionPercent = '<p class="mb-0">Ketepatan waktu pengumpulan tugas: </p><h4 class ="font-weight-bold">91 %</h4>';
+    //var showSubmissionPercent = '<p class="mb-0">Ketepatan waktu pengumpulan tugas: </p><h4 class ="font-weight-bold">91 %</h4>';
     // console.log('Mean grade:', mean);
     $('#meanGrade').append(showMean);
-    $('#submissionPercent').append(showSubmissionPercent);
+    //$('#submissionPercent').append(showSubmissionPercent);
 }
 
 function getSubmissionTimeliness() {
@@ -300,8 +306,8 @@ function getSubmissionTimeliness() {
 
 function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
     $('#gradeCard').empty();
-    //need itemid
-    console.log(instanceid, cmid, courseId, token);
+    sweetAlertLoad('Memuat data');
+
     $.ajax({
         url: `${BASE_URL}gradebook/getModuleGrade`,
         method: 'GET',
@@ -314,22 +320,17 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
         },
         dataType: 'json',
         success: function(response) {
+            Swal.close();
             console.log(response);
 
             var buttonEditAll = '<button type="button" id="editAll" class="btn btn-warning bnt-sm">Ubah Semua</button>';
             $('#btnEditAll').append(buttonEditAll);
-
 
             //btnEditAll on click
             //kirim data response
             $('#btnEditAll').on('click', '#editAll', function() {
                 getEditGradeModuleAll(response);
             });
-            //
-
-            //append kedalam card untuk setiap data
-            //yang di masukkan adalahh smeua, kalau bis jadikan
-            // data- aja yang id id itu
 
             //cek mod
             if (response[0]['itemmodule'] == 'assign') {
@@ -366,18 +367,27 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                 }
 
             } else if (response[0]['itemmodule'] == 'quiz') {
+
                 for (var i = 0; i < response.length; i++) {
 
                     var module = response[i];
-                    var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body">';
-                    gradeCard += '<h6 class="card-title">' + module.userfullname + '</h6>';
-                    gradeCard += '</div></div><div class="col-md-6"><div class="card-body"><p class="card-text">';
-                    gradeCard += '</div></div><div class="col-md-2"><div class="card-body">';
-                    gradeCard += '<h5 class="card-title">' + module.grade + '</h5>';
-                    gradeCard += '</div></div></div></div>';
+                    console.log(module.itemnumber);
+                    var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
+                    gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '">' + module.userfullname + '</h6>';
+                    gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
+
+                    var gradeColor = module.grade >= 50 ? 'text-success' : 'text-danger'; // Set text color to green (success) if grade is greater than or equal to 50
+
+                    gradeCard += '</div></div>';
+                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center">';
+                    gradeCard += '<h4 class="card-title text-center ' + gradeColor + '" id="grade-' + i + '" data-mod="' + module.itemmodule + '" data-itemnumber="' + module.itemnumber + '">' + module.grade + '</h4></div></div>';
+                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center"><button type="button" class="btn btn-outline-secondary btn-sm" id="btnEditGrade" data-index="' + i + '">Ubah</button></div></div>';
+                    gradeCard += '</div></div>';
+                    console.log(gradeCard);
                     $('#gradeCard').append(gradeCard);
 
                 }
+                //$('#submissionPercent').empty();
 
             }
             getMeanGradeModule(response);
@@ -435,8 +445,7 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
         var gradeValue = document.getElementById('gradeInput').value;
         //console.log(courseid, activityid, token, studentId, itemModule, itemNumber, gradeValue);
 
-        // Mengirim data ke AJAX
-        // Gantilah dengan kode AJAX sesuai kebutuhan Anda
+        sweetAlertLoad('Mengubah data');
         // Misalnya:
         $.ajax({
             url: `${BASE_URL}gradebook/updateModuleGrade`,
@@ -457,6 +466,7 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
                 //reload page
                 if (response == 0) {
                     console.log(response);
+                    Swal.close();
 
                     Swal.fire('Berhasil!', 'Yey! Berhasil mempengaruhi data', 'success');
                     //kasih delay
@@ -520,6 +530,32 @@ function getEditGradeModuleAll(response) {
 
         }
     }
+    if (response[0]['itemmodule'] == 'quiz') {
+        //mod assign
+        for (var i = 0; i < response.length; i++) {
+
+            var module = response[i];
+            var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
+            gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '"data-itemmodule="' + module.itemmodule + '" data-itemnumber="' + module.itemnumber + '">' + module.userfullname + '</h6>';
+            gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
+
+            gradeCard += '</div></div>';
+            gradeCard += '<div class="col-md-2 d-flex justify-content-center"><div class="card-body ">';
+            // Append the input element and button to studentGrade
+
+            gradeCard += '<div class="input-group input-group-lg">';
+            gradeCard += '<input type="number" class="form-control" min="0" max="100"  id="gradeInput-' + i + '" value="' + module.grade + '"></div>';
+            gradeCard += '</div></div></div>';
+            console.log(gradeCard);
+
+            $('#gradeCard').append(gradeCard);
+
+            //hitung ketepatan waktu pengumpulan tugas
+            //append ke ke view
+
+        }
+
+    }
 
     var buttonEditAll = '<button type="button" data-count="' + response.length + '" class="btn btn-success" id="updateButton">Ubah Semua</button>';
     buttonEditAll += '<button class = "btn btn-danger ml-2" type = "button" onclick="window.location.reload()">Batal</button>';
@@ -579,6 +615,9 @@ function updateModuleGradeAll(countData) {
         // Push the data object into the array
         dataGrade.push(dataObject);
     }
+    // Show loading alert before making the AJAX request
+    sweetAlertLoad('Mengubah nilai');
+
     console.log(dataGrade);
     $.ajax({
         url: `${BASE_URL}gradebook/updateModuleGradeAll`,
@@ -596,6 +635,8 @@ function updateModuleGradeAll(countData) {
             // Aksi setelah berhasil mengirim data
             //jika respone == 0 
             //reload page
+            // Close the loading alert
+            Swal.close();
             if (response == 0) {
                 console.log(response);
 
@@ -643,4 +684,16 @@ function updateModuleGradeAll(countData) {
 
     //get data quiz mod
 
+}
+
+function sweetAlertLoad(text) {
+    Swal.fire({
+        title: text,
+        html: 'Silahkan tunggu...',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
 }
