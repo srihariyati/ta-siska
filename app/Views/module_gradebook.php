@@ -105,6 +105,17 @@
         getEditGradeModule(courseid, activityid, token, studentId, studentName, grade, itemModule, itemNumber, mean, status);
       });
 
+
+      $('#btnEditAll').on('click', '#updateButton', function() {
+        var countData = $('#updateButton').data('count');
+        console.log(countData);
+
+        updateModuleGradeAll(countData);
+        //kirim panjang respone
+        // response.length
+      });
+      
+
     
     });
 

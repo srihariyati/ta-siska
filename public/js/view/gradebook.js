@@ -409,7 +409,23 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
     //go to controller to return view data user to edit
     //with url
 
+    //nilai yang dinput harus angka dan minimal 0 serta maksimal 100
+    $('#gradeInput').on('input', function() {
+        var value = $(this).val();
 
+        // Remove any non-numeric characters
+        value = value.replace(/[^0-9]/g, '');
+
+        // Limit the value to the range of 0 to 100
+        if (value < 0) {
+            value = 0;
+        } else if (value > 100) {
+            value = 100;
+        }
+
+        // Update the input value
+        $(this).val(value);
+    });
 
 
     // Menambahkan event listener pada tombol "Ubah"
@@ -417,7 +433,7 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
     updateButton.addEventListener('click', function() {
         // Mengambil nilai dari input
         var gradeValue = document.getElementById('gradeInput').value;
-        console.log(courseid, activityid, token, studentId, itemModule, itemNumber, gradeValue);
+        //console.log(courseid, activityid, token, studentId, itemModule, itemNumber, gradeValue);
 
         // Mengirim data ke AJAX
         // Gantilah dengan kode AJAX sesuai kebutuhan Anda
@@ -447,6 +463,13 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
                     setTimeout(function() {
                         window.location.reload();
                     }, 2000); // 2000 milliseconds = 2 seconds delay
+                } else {
+                    Swal.fire('Gagal!', 'Gagal memperbarui data', 'error');
+                    //kasih delay
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000); // 2000 milliseconds = 2 seconds delay
+
                 }
             },
             error: function(xhr, status, error) {
@@ -456,7 +479,6 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
     });
 
 }
-
 
 function getEditGradeModuleAll(response) {
     console.log(response);
@@ -470,9 +492,8 @@ function getEditGradeModuleAll(response) {
         for (var i = 0; i < response.length; i++) {
 
             var module = response[i];
-            console.log(module.itemnumber);
             var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
-            gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '">' + module.userfullname + '</h6>';
+            gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '"data-itemmodule="' + module.itemmodule + '" data-itemnumber="' + module.itemnumber + '">' + module.userfullname + '</h6>';
             gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
 
             if (module.submissionstatus == 'submitted ontime') {
@@ -480,43 +501,146 @@ function getEditGradeModuleAll(response) {
             } else if (module.submissionstatus == 'late submitted') {
                 var status = 'Telat mengumpulkan tugas';
             } else {
-                var status = 'Tidak dapat menemukan tugas'
+                var status = 'Tidak dapat menemukan tugas';
             }
-
-            var gradeColor = module.grade >= 50 ? 'text-success' : 'text-danger'; // Set text color to green (success) if grade is greater than or equal to 50
 
             gradeCard += '<p class="card-text text-center" id="status-' + i + '"><small class="text-muted">' + status + '</small></p></div></div>';
             gradeCard += '<div class="col-md-2 d-flex justify-content-center"><div class="card-body ">';
             // Append the input element and button to studentGrade
 
             gradeCard += '<div class="input-group input-group-lg">';
-            gradeCard += '<input type="text" class="form-control"  id="gradeInput" value="' + module.grade + '"></div>';
+            gradeCard += '<input type="number" class="form-control" min="0" max="100"  id="gradeInput-' + i + '" value="' + module.grade + '"></div>';
             gradeCard += '</div></div></div>';
             console.log(gradeCard);
+
             $('#gradeCard').append(gradeCard);
 
             //hitung ketepatan waktu pengumpulan tugas
             //append ke ke view
 
         }
-
     }
 
-    var buttonEditAll = '<button type="button" class="btn btn-success">Ubah Semua</button>';
-    buttonEditAll += '<button type ="button" class="btn btn-danger ml-2" > Batal </button>';
+    var buttonEditAll = '<button type="button" data-count="' + response.length + '" class="btn btn-success" id="updateButton">Ubah Semua</button>';
+    buttonEditAll += '<button class = "btn btn-danger ml-2" type = "button" onclick="window.location.reload()">Batal</button>';
     $('#btnEditAll').append(buttonEditAll);
+}
+
+function updateModuleGradeAll(countData) {
+    var token = $('#courseTitle').data('token');
+    var courseid = $('#courseTitle').data('courseid');
+    var activityid = $('#contentModule').data('cmid');
+    var itemModule = $('#studentName-0').data('itemmodule');
 
 
+    console.log(token, courseid, activityid, itemModule);
+    console.log(countData);
+
+    // console.log(studentName, grade, itemModule, itemNumber, mean, status);
     //trigger btnEditAll on click
     //ambil semua value, masukkan kedalam array
+    var dataGrade = [];
+    for (var index = 0; index < countData; index++) {
+        // Add an event listener to restrict input to numeric values
+        $('#gradeInput-' + index).on('input', function() {
+            var value = $(this).val();
 
+            // Remove any non-numeric characters
+            value = value.replace(/[^0-9]/g, '');
+
+            // Limit the value to the range of 0 to 100
+            if (value < 0) {
+                value = 0;
+            } else if (value > 100) {
+                value = 100;
+            }
+
+            // Update the input value
+            $(this).val(value);
+        });
+
+
+        //Retrieve the index and corresponding data
+
+        var studentName = $('#studentName-' + index).text();
+        var studentId = $('#studentName-' + index).data('userid');
+        var grade = $('#gradeInput-' + index).val();
+        var itemNumber = $('#studentName-' + index).data('itemnumber');
+
+        //masukkan kedalam array
+        // Create an object representing the data
+        var dataObject = {
+            studentName: studentName,
+            studentId: studentId,
+            grade: grade,
+            itemNumber: itemNumber
+        };
+
+        // Push the data object into the array
+        dataGrade.push(dataObject);
+    }
+    console.log(dataGrade);
+    $.ajax({
+        url: `${BASE_URL}gradebook/updateModuleGradeAll`,
+        method: 'GET',
+        data: {
+            token: token,
+            courseid: courseid,
+            activityid: activityid,
+            itemModule: itemModule,
+            dataGrade: dataGrade
+        },
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            // Aksi setelah berhasil mengirim data
+            //jika respone == 0 
+            //reload page
+            if (response == 0) {
+                console.log(response);
+
+                Swal.fire('Berhasil!', 'Yey! Berhasil memperbarui data', 'success');
+                //kasih delay
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000); // 2000 milliseconds = 2 seconds delay
+            } else {
+                Swal.fire('Gagal!', 'Gagal memperbarui data', 'error');
+                //kasih delay
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000); // 2000 milliseconds = 2 seconds delay
+
+            }
+        }
+    });
+    //kirim array grade ke ajax
+
+
+    //value didalam array 
+    // studentid: studentId,
+    // itemModule: itemModule,
+    // itemNumber: itemNumber,
+    //gradeValue
+    //{studentid, itemmodule, itemnumber, gradevalue}
+
+    // if($itemModule=='assign'){
+    //     $source='assignment';
+    //     $component='mod_assign';
+    // }else if($itemModule =='quiz'){
+    //     $source='quiz';
+    //     $component='mod_quiz';
+    // }
+
+    // ke controller loop untuk semua data
 
 
     //append input untuk semua data
     //get data asssignment mod
+    //Ajax here
+
 
 
     //get data quiz mod
-
 
 }

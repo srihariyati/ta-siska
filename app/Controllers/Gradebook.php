@@ -586,5 +586,46 @@ class Gradebook extends BaseController
 
         return $this->response->setJSON($response);
     }
+
+    public function updateModuleGradeAll(){
+        //loop for all data
+        //data grade
+        //data mod
+        //data token
+        $courseid = $this->request->getVar('courseid');
+        $token = $this->request->getVar('token');
+        $activityid = $this->request->getVar('activityid');
+        $itemModule = $this->request->getVar('itemModule');
+        $dataGrade = $this->request->getVar('dataGrade');
+        
+
+        //isi didalam array{}}
+        if($itemModule=='assign'){
+            $source='assignment';
+            $component='mod_assign';
+        }else if($itemModule =='quiz'){
+            $source='quiz';
+            $component='mod_quiz';
+        }
+        
+        foreach($dataGrade as $dg){
+            $param =[
+                "wstoken" =>$token,
+                "moodlewsrestformat"=>"json",
+                "wsfunction"=>"core_grades_update_grades",
+                "courseid"=>$courseid,
+                "source"=>$source,
+                "component"=>$component,
+                "activityid"=>$activityid,
+                "itemnumber"=>  $dg['itemNumber'],
+                "grades[0][studentid]"=>$dg['studentId'],
+                "grades[0][grade]"=> $dg['grade']
+            ];
+            
+            $curlGen = new GenerateCurl();
+            $response =  $curlGen->curlGen($param);
+        }
+        return $this->response->setJSON($response);
+    }
     
 }
