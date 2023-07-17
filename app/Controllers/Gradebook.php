@@ -34,7 +34,7 @@ class Gradebook extends BaseController
             'courseid' => $courseid,
             'token'=>$token,
         ];
-        return view('gradebook', $mydata);
+        return view('nilai', $mydata);
 
     }
 
@@ -180,7 +180,7 @@ class Gradebook extends BaseController
             'itemid'=>$itemid
         ];
 
-        return view('module_gradebook', $mydata);
+        return view('nilai_module', $mydata);
     }
 
     public function getPersonalGrade(){
@@ -294,7 +294,7 @@ class Gradebook extends BaseController
         //return kehalaman baru dengan $mydata dengan isi semua data
         $mydata['token'] = $token;
         $mydata['personal_grade'] = $personalGrade;
-        return view('personal_gradebook', $mydata);
+        return view('nilai_personal', $mydata);
 
         //set mod here to return response
     }

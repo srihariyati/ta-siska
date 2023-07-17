@@ -543,7 +543,7 @@ function handleTableQuiz(quizId) {
     var counts = {};
     //ambil list participant pada course
 
-    window.loadAnimation_sm("load-table");
+    window.loadAnimation_lg("load-table");
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
         metho: 'GET',

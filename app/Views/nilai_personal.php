@@ -19,8 +19,8 @@
       </div>
 
       <nav class="nav-menu mt-2">
-        <a href="#" class="nav-menu-link ">Tugas</a>
-        <a href="#" class="nav-menu-link active">Mahasiswa</a>
+        <a href="#" class="nav-menu-link ">Aktivitas</a>
+        <a href="#" class="nav-menu-link active">Nilai</a>
       </nav>
 </div>
 
@@ -28,7 +28,7 @@
   <div class="container">
   <div class="row">
     <div class="col col-lg-6">
-      <h3 class="font-weight-bolder pr-10 mb-0 mt-2">Gradebook Mahasiswa</h3>
+      <h3 class="font-weight-bolder pr-10 mb-0 mt-2">Nilai Mahasiswa (Gradebook)</h3>
     </div>
     <div class="col col-lg-2"></div>
     <div class="col col-lg-2">

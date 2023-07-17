@@ -146,6 +146,7 @@ function chartQuizGrades(data) {
 
 function chartQuizQues(data) {
     console.log(data);
+    var countQues = data.length;
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
@@ -330,7 +331,7 @@ function chartQuizQues(data) {
             transition: opacity 0.3s ease-in-out;
         }`);
     //append to #descQues
-    var descQues = '<p> <strong>10 Pertanyaan</strong></p><p class = "mb-0" > Rata - rata kelulusan per pertanyan: </p><p class = "mt-0"> <strong> 60.98 % </strong></p>';
+    var descQues = '<p> <strong>' + countQues + ' Pertanyaan</strong></p><p class = "mb-0" > Rata - rata kelulusan per pertanyan: </p><p class = "mt-0"> <strong> 60.98 % </strong></p>';
     $('#descQuizQues').append(descQues);
 
 }

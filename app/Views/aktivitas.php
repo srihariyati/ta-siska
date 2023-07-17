@@ -20,14 +20,14 @@
 
       </div>
       <nav class="nav-menu mt-2">
-        <a href="#"> <span id="btnCourse" class="nav-menu-link active">Tugas</span></a>
+        <a href="#"> <span id="btnCourse" class="nav-menu-link active">Aktivitas</span></a>
         <!-- kirim token dalam bentuk session -->
         <?php
           $session = session();
           $session->set('token', $token);
         ?>
         <!-- button on click ini dikirim ke  -->
-        <a href="<?=base_url('gradebook/getGradebookView/' . $courseid)?>"><span id="btnMhs" class="nav-menu-link">Mahasiswa</span></a>
+        <a href="<?=base_url('gradebook/getGradebookView/' . $courseid)?>"><span id="btnMhs" class="nav-menu-link">Nilai</span></a>
       </nav>
 </div>
 <div class="container">

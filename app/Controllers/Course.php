@@ -80,7 +80,7 @@ class Course extends BaseController{
         $mydata['courseid'] = $courseid;
         $mydata['token'] = $token;
 
-        return view ('visdat', $mydata);
+        return view ('aktivitas', $mydata);
     }
 
     public function getCourseModule()

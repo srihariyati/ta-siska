@@ -334,11 +334,27 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
 
             //cek mod
             if (response[0]['itemmodule'] == 'assign') {
+
+                //hitung persentase submission
+                var submittedontime = 0;
+                var count = response.length;
+                for (var i = 0; i < response.length; i++) {
+
+                    //hitung jumlah data dengan submittedontime
+                    if (response[i].submissionstatus == 'submitted ontime') {
+                        submittedontime++;
+                    }
+                }
+                var submissionPercent = ((submittedontime / count) * 100).toFixed(2);
+
+
                 //mod assign
+                var showSubmissionPercent = '<p class="mb-0">Ketepatan waktu pengumpulan tugas: </p><h4 class ="font-weight-bold">' + submissionPercent + '%  </h4>';
+                $('#submissionPercent').append(showSubmissionPercent);
                 for (var i = 0; i < response.length; i++) {
 
                     var module = response[i];
-                    console.log(module.itemnumber);
+                    //console.log(module.itemnumber);
                     var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
                     gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '">' + module.userfullname + '</h6>';
                     gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
@@ -527,7 +543,6 @@ function getEditGradeModuleAll(response) {
 
             //hitung ketepatan waktu pengumpulan tugas
             //append ke ke view
-
         }
     }
     if (response[0]['itemmodule'] == 'quiz') {
@@ -554,7 +569,6 @@ function getEditGradeModuleAll(response) {
             //append ke ke view
 
         }
-
     }
 
     var buttonEditAll = '<button type="button" data-count="' + response.length + '" class="btn btn-success" id="updateButton">Ubah Semua</button>';
