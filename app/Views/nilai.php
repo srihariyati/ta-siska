@@ -82,8 +82,8 @@
 <script src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
 <script src="https://cdn.datatables.net/fixedcolumns/3.3.3/js/dataTables.fixedColumns.min.js"></script>
 
-<script src = "/js/d3.v7.min.js"></script>
-<script src= "/js/view/gradebook.js"></script>
+<script src = "<?=base_url('/js/d3.v7.min.js')?>"></script>
+<script src= "<?=base_url('/js/view/gradebook.js')?>"></script>
 
 <script>
     $(document).ready(function() {

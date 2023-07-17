@@ -121,11 +121,11 @@
 
 <?= $this->section('jshere') ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/js/view/loadAnimation.js" ></script>
-<script src="/js/view/course.js"></script>
-<script src="/js/view/chartAssign.js" ></script>
-<script src="/js/view/chartQuiz.js" ></script>
-<script src = "/js/d3.v7.min.js"></script>
+<script src="<?=base_url('/js/view/loadAnimation.js')?>"></script>
+<script src="<?=base_url('/js/view/course.js')?>"></script>
+<script src="<?=base_url('/js/view/chartAssign.js')?>"></script>
+<script src="<?=base_url('/js/view/chartQuiz.js')?>"></script>
+<script src=<?=base_url('/js/d3.v7.min.js')?>"></script>
 
 <script>
     $(document).ready(function() {
