@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="<?=base_url('/css/bootstrap.min.css')?>">
+  <link rel="stylesheet" href="<?=str_replace('/index.php', '', base_url()) . 'css/bootstrap.min.css'?>" >
 </head>
 <body>
   <div class="px-4 py-5 px-md-5 text-center" style="background-color: #227362">
@@ -18,12 +18,12 @@
       <div class="row gx-lg-5 align-items-center">
 
         <div class="col-lg-6 mb-5 mb-lg-5 ">
-          <img src="<?=base_url('/img/logo_siska_1.svg')?>" width="150" height="150" class="d-inline-block align-top" alt="">
+          <img src="<?=str_replace('/index.php', '', base_url()) .'/img/logo_siska_1.svg'?>" width="150" height="150" class="d-inline-block align-top" alt="">
           
           <h4 class="font-weight-bold mb-2 text-white">Sistem Informasi Kinerja Mahasiswa</h4>
           <p class="mt-2 mb-4 pl-5 pr-5 text-white">Sistem Informasi Visualisasi Data Kinerja Mahasiswa pada E-learning Universitas Syiah Kuala</p>
           
-          <img src="<?=base_url('/img/dec_3circle.svg')?>" width="50" height="50" class="d-inline-block align-top" alt="">
+          <img src="<?=str_replace('/index.php', '', base_url()) .'/img/dec_3circle.svg'?>" width="50" height="50" class="d-inline-block align-top" alt="">
         </div>
 
         <div class="col-lg-6 mb-5 mb-lg-0">
@@ -34,7 +34,7 @@
 
               <!-- Greetings Text -->
               <div class="text-center mb-12">
-                <img src="<?=base_url('/img/logo_siska.svg')?>" width="60" height="60" class="d-inline-block align-top" alt="">
+                <img src="<?=str_replace('/index.php', '', base_url()) .'/img/logo_siska.svg'?>" width="60" height="60" class="d-inline-block align-top" alt="">
                 <h1 class="font-weight-bold h3">
                   Selamat Datang!
                 </h1>
@@ -53,7 +53,7 @@
                   
               <?php endif; ?>
               
-              <form action="login/login" method="post">
+              <form action="<?= base_url('login/login') ?>" method="post">
                 <div class="mb-2 pr-5 pl-5">
                   <!-- <label class="form-label" for="email">Email address</label> -->
                   <input type="text" class="form-control" name="username" placeholder="Username">
@@ -64,10 +64,6 @@
                 </div>
                 
                 <div class="mb-4 mt-2 pr-5 pl-5" >
-                  
-                  <!-- <a href="#" class="btn btn-primary btn-lg btn-block" id="loginButton">
-                    Login
-                  </a> -->
                   <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
             
                 </div>

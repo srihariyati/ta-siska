@@ -21,10 +21,10 @@
     <!-- Include Column Width plugin CSS -->    
     
     <!-- costum css -->
-    <link rel="stylesheet" href="<?=base_url('/css/bootstrap.min.css')?>">
-    <link rel="stylesheet" href="<?=base_url('/css/navbar.css')?>">
-    <link rel="stylesheet" href="<?=base_url('/css/chart.css')?>">
-    <link rel="stylesheet" href="<?=base_url('/css/table.css')?>">
+    <link rel="stylesheet" href="<?=str_replace('/index.php', '', base_url()) .'/css/bootstrap.min.css'?>">
+    <link rel="stylesheet" href="<?=str_replace('/index.php', '', base_url()) .'/css/navbar.css'?>">
+    <link rel="stylesheet" href="<?=str_replace('/index.php', '', base_url()) .'/css/chart.css'?>">
+    <link rel="stylesheet" href="<?=str_replace('/index.php', '', base_url()) .'/css/table.css'?>">
     
 </head>
 <body>
@@ -32,7 +32,7 @@
     <div class="navbar_left">
       <div class="logo">
         <a class="navbar-brand" href="#">
-          <img src="<?=base_url('/img/logo_siska_2.svg')?>" width="350" height="46" class="d-inline-block align-top" alt="">
+          <img src="<?=str_replace('/index.php', '', base_url()) .'/img/logo_siska_2.svg'?>" width="350" height="46" class="d-inline-block align-top" alt="">
         </a>
       </div>
     </div>
@@ -41,7 +41,7 @@
      
       <div class="profile">
         <div class="icon_wrap">
-          <img src="<?=base_url('/img/profile.png')?>" alt="profile_pic">
+          <img src="<?=str_replace('/index.php', '', base_url()) .'/img/profile.png'?>" alt="profile_pic">
           <span></span>
           <i class="fas fa-chevron-down ml-2"></i>
         </div>
@@ -64,7 +64,7 @@
   <script> const BASE_URL = "<?= base_url() ?>"</script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
-  <script src="<?=base_url('/js/bootstrap.bundle.min.js')?>"></script> 
+  <script src="<?=str_replace('/index.php', '', base_url()) .'/js/bootstrap.bundle.min.js'?>"></script> 
   <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
   <script>
       $(".profile .icon_wrap").click(function(){

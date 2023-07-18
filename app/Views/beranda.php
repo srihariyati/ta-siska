@@ -18,7 +18,7 @@
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
            
-            <img src="<?=base_url('/img/Bush Pattern.png')?>" class="bd-placeholder-img card-img-top"  width="100%" height="150">
+            <img src="<?=str_replace('/index.php', '', base_url()) .'/img/Bush Pattern.png'?>" class="bd-placeholder-img card-img-top"  width="100%" height="150">
             <!-- <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text> -->
 
             <div class="card-body">
