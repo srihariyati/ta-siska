@@ -80,6 +80,8 @@ class Course extends BaseController{
         $mydata['courseid'] = $courseid;
         $mydata['token'] = $token;
 
+        
+        //dd($mydata['course_contents_list']);
         return view ('aktivitas', $mydata);
     }
 
@@ -133,6 +135,7 @@ class Course extends BaseController{
             }
         }
 
+        //dd($filteredModules);
        return $this->response->setJSON($filteredModules);
     }
 
@@ -167,7 +170,7 @@ class Course extends BaseController{
                    
                 }
             }
-            // dd($filteredQuiz);
+            //dd($filteredQuiz);
             return $this->response->setJSON( $filteredQuiz);
     }
 
@@ -200,8 +203,8 @@ class Course extends BaseController{
                     ];
                    //dd($filteredAssign);
                 }
-            }          
-
+            }
+            //dd($filteredAssign);
             return $this->response->setJSON($filteredAssign);      
     }
 
@@ -407,13 +410,14 @@ class Course extends BaseController{
                     'attemptsid'=>$attempsid[0]['id']
                 ];
             }     
-
+            
             array_push($quizAttemptAll,  $quizAttempt);
-            //dd( $quizAttempt);
+            
             //ambil attemptid untuk ws function mod_quiz_get_attempt_review 
             //untuk mendapatkan nilaigrade dan perpertanyaan
         
         }
+        //dd($quizAttemptAll);
 
         foreach($quizAttemptAll as $attemps){
             //looping untuk wsfunction here
@@ -452,7 +456,4 @@ class Course extends BaseController{
     
         return $this->response->setJSON($quizGradeAll);
     }
-
-    
-    
 }

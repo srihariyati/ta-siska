@@ -87,7 +87,7 @@ function chartParticipant(courseParticipant, submittedParticipant, assignTitle) 
 
 
 function chartAssign(data) {
-    console.log("chart grade");
+    console.log(data);
 
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };

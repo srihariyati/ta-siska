@@ -34,11 +34,13 @@ function handleCourseContentChange() {
 
             if (response.length == 0) {
                 emptyPage();
-
+                //matikan load 
+                window.removeAnimation("load-1");
                 var option = '<option value="0"  style="font-style: italic;">Tidak Ada Tugas/Kuis</option>';
                 $('#content_module').append(option);
 
-                var contentName = '<p> Tidak ada Kuis/Tugas yang tersedia</p>';
+                var contentName = '<p> Tidak ada Kuis/Tugas yang tersedia';
+                contentName += ', silahkan pilih topik lainnya</p>'
                 $('#contentName').append(contentName);
 
             } else {
@@ -243,6 +245,7 @@ function handleTableAssign(courseId, assignId) {
 }
 
 function showTableGradeAssignment(responseData) {
+    console.log(responseData);
 
     // Get the table element by its ID
     var table = document.getElementById("table_assign");

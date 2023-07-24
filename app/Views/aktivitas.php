@@ -20,7 +20,7 @@
 
       </div>
       <nav class="nav-menu mt-2">
-        <a href="#"> <span id="btnCourse" class="nav-menu-link active">Aktivitas</span></a>
+        <a href="<?= base_url('course/getCourseInfo/' . $courseid) ?>"> <span id="btnCourse" class="nav-menu-link active">Aktivitas</span></a>
         <!-- kirim token dalam bentuk session -->
         <?php
           $session = session();
@@ -125,7 +125,7 @@
 <script src="<?=base_url('/js/view/course.js')?>"></script>
 <script src="<?=base_url('/js/view/chartAssign.js')?>"></script>
 <script src="<?=base_url('/js/view/chartQuiz.js')?>"></script>
-<script src=<?=base_url('/js/d3.v7.min.js')?>"></script>
+<script src="<?=base_url('/js/d3.v7.min.js')?>"></script>
 
 <script>
     $(document).ready(function() {

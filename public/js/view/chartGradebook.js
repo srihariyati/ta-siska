@@ -1,5 +1,6 @@
 function showPersonalGradeChart(gradeData) {
     data = gradeData;
+    console.log(data);
 
     //menentukan leabr dan tinggi svg
     var width = document.getElementById("PersonalGradeChart").clientWidth;

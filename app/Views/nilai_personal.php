@@ -19,8 +19,8 @@
       </div>
 
       <nav class="nav-menu mt-2">
-        <a href="#" class="nav-menu-link ">Aktivitas</a>
-        <a href="#" class="nav-menu-link active">Nilai</a>
+        <a href="<?=base_url('course/getCourseInfo/'.$personal_grade['courseid'] ) ?>" class="nav-menu-link ">Aktivitas</a>
+        <a href="<?=base_url('gradebook/getGradebookView/'.$personal_grade['courseid'] )?>" class="nav-menu-link active">Nilai</a>
       </nav>
 </div>
 
@@ -33,9 +33,9 @@
     <div class="col col-lg-2"></div>
     <div class="col col-lg-2">
       <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <!-- <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span>Export</span>
-        </button>   
+        </button>    -->
        
 
         <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton">
@@ -47,15 +47,15 @@
 
     <div class="col col-lg-2">
     <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButtonMod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span>Semua</span>
         </button>   
-       
-
-        <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Tugas</a>
-          <a class="dropdown-item" href="#">Kuis</a>
-        </div>
+      
+        <ul class="dropdown-menu w-100" aria-labelledby="modType">
+          <li><a id="modAll" class="dropdown-item" data-type="all" href="#">Semua</a></li>
+          <li><a id="modQuiz" class="dropdown-item" data-type="quiz" href="#">Kuis</a></li>
+          <li><a id="modAssign" class="dropdown-item" data-type="assign" href="#">Tugas</a></li>
+        </ul>
       </div>
     </div>
   </div>
@@ -70,11 +70,11 @@
     <div class="col-md-2">
       
       <p class="mb-2">Grade Mahasiswa</p>
-      <h5>🏆98.70</h5>
+      <h5>🏆0</h5>
     </div>
     <div class="col-md-6 mt-3">
       <p></p>
-      <p>Dengan Mean nilai mahasiswa : 87.65</p>
+      <p>Dengan Mean nilai mahasiswa : 0</p>
     </div>
   </div>
 
@@ -99,13 +99,48 @@
       getCourseName();  
       getStudentInfo();
       showPersonalGradeChart(personalGradeItems);
-      //get course info diisni pake controller yang udah ada aja, gausah buat baru lagi dari id course yang direturn
-      //get chart here
-      //nanti tinggal append
-      //data username disini jga
+      console.log(personalGradeItems);
 
-      //ambil course id -> untuk appen course name
-      //ambil user id untuk dapatin nim/username
+      $('#modAll').on('click', function(){
+        $('#dropdownMenuButtonMod').empty();
+        $('#dropdownMenuButtonMod').append('<span>Tugas</span>')
+        $('#PersonalGradeChart').empty();
+        showPersonalGradeChart(personalGradeItems);
+      });  
+
+      $('#modQuiz').on('click', function(){
+        var personalGradeQuiz = [];
+
+        personalGradeItems.forEach((gradeitems) => {
+        //select Assign from personalGradeItems
+        if(gradeitems.moditem == 'quiz'){
+        personalGradeQuiz.push(gradeitems);
+          }
+        });
+        $('#dropdownMenuButtonMod').empty();
+        $('#dropdownMenuButtonMod').append('<span>Kuis</span>');
+        $('#PersonalGradeChart').empty();
+        showPersonalGradeChart(personalGradeQuiz);
+     });    
+
+     $('#modAssign').on('click', function(){
+        var personalGradeAssign = [];
+
+        personalGradeItems.forEach((gradeitems) => {
+        //select Assign from personalGradeItems
+        if(gradeitems.moditem == 'assign'){
+          personalGradeAssign.push(gradeitems);
+          //console.log(personalGradeAssign);
+          }
+        });
+
+        $('#dropdownMenuButtonMod').empty();
+        $('#dropdownMenuButtonMod').append('<span>Tugas</span>')
+        $('#PersonalGradeChart').empty();
+      showPersonalGradeChart(personalGradeAssign);
+     });
+     
+      
       
     
     });

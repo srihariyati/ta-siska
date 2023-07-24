@@ -53,6 +53,7 @@ class Beranda extends BaseController
             'user_firstname'=>session('user_firstname')
         ];
        
+        //dd($mydata['enrolled_course']);
         return view ('beranda', $mydata);        
     }
 

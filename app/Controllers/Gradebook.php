@@ -84,7 +84,7 @@ class Gradebook extends BaseController
                         ];
                     }
                 }
-    
+
                 $gradebook[]=[
                     'userid'=>$userid,
                     'userfullname'=>$userfullname,
@@ -157,6 +157,8 @@ class Gradebook extends BaseController
                 ];
                 
             }
+
+            // dd($gradebook);
             return $this->response->setJSON($gradebook);
 
         }
@@ -180,7 +182,7 @@ class Gradebook extends BaseController
             'itemid'=>$itemid
         ];
 
-        return view('nilai_module', $mydata);
+        return view('nilai_aktivitas', $mydata);
     }
 
     public function getPersonalGrade(){
@@ -189,7 +191,6 @@ class Gradebook extends BaseController
         $courseid = $this->request->getVar('courseid');
         $token = $this->request->getVar('token');
         
-
 
         $param =[
             "wstoken" =>$token,
@@ -274,6 +275,7 @@ class Gradebook extends BaseController
                                     'itemname'=> $gi['itemname'],
                                     'graderaw' => $gi['graderaw'],
                                     'grademean'=> $gm['mean'],
+                                    'moditem'=> $gi['itemmodule']
                                   ];
                             }
                         }
@@ -290,10 +292,12 @@ class Gradebook extends BaseController
                 ];
             }
         }
+       
 
         //return kehalaman baru dengan $mydata dengan isi semua data
         $mydata['token'] = $token;
         $mydata['personal_grade'] = $personalGrade;
+        dd($personalGrade);
         return view('nilai_personal', $mydata);
 
         //set mod here to return response
@@ -390,7 +394,7 @@ class Gradebook extends BaseController
         }
 
         // return to ajax
-
+        //dd($moduleGradeFix);
         ///return halaman untuk show dan edit nilai 
         return $this->response->setJSON($moduleGradeFix);
     }
@@ -563,6 +567,7 @@ class Gradebook extends BaseController
             $source='quiz';
             $component='mod_quiz';
         }
+    
 
         $param =[
             "wstoken" =>$token,
@@ -596,7 +601,7 @@ class Gradebook extends BaseController
         $token = $this->request->getVar('token');
         $activityid = $this->request->getVar('activityid');
         $itemModule = $this->request->getVar('itemModule');
-        $dataGrade = $this->request->getVar('dataGrade');
+        $dataGrade = $this->request->getVar('dataGrade'); 
         
 
         //isi didalam array{}}
