@@ -88,7 +88,7 @@
 
 <?= $this->section('jshere') ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src = "<?=str_replace('/index.php', '', base_url()) .'/js/d3.v7.min.js'?>"></script>
+<script src ="<?=str_replace('/index.php', '', base_url()) .'/js/d3.v7.min.js'?>"></script>
 <script src= "<?=str_replace('/index.php', '', base_url()) .'/js/view/gradebook.js'?>"></script>
 <script src= "<?=str_replace('/index.php', '', base_url()) .'/js/view/chartGradebook.js'?>"></script>
 

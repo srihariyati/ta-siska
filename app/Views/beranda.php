@@ -5,7 +5,6 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-  
     <div class="container mt-7 mb-3 ">
       <h3 class="font-weight-bolder">Selamat Datang, <?php echo $user_firstname ?>🎉</h3>
       <p>Silahkan pilih mata kuliah yang tersedia dibawah ini.</p>
@@ -31,7 +30,7 @@
                     $session->set('token', $token);
                     ?>
                    <a class="navbar-brand" href="<?= base_url('course/getCourseInfo/' . $ec['courseid']) ?>">
-                    <button type="button"class="btn btn-sm btn-outline-secondary">show</button>
+                    <button type="button"class="btn btn-sm btn-outline-secondary">Lihat</button>
                   </a>
                 </div>
               </div>

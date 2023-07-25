@@ -297,7 +297,7 @@ class Gradebook extends BaseController
         //return kehalaman baru dengan $mydata dengan isi semua data
         $mydata['token'] = $token;
         $mydata['personal_grade'] = $personalGrade;
-        dd($personalGrade);
+        //dd($personalGrade);
         return view('nilai_personal', $mydata);
 
         //set mod here to return response

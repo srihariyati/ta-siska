@@ -39,7 +39,7 @@
           <?php foreach($course_contents_list as $cc):?>
           <option value="<?=$cc['contentid']; ?>"><?= $cc['contentname']; ?></option>
           <?php endforeach;?> 
-        </select>  
+        </select> 
       </div>
     </div>
 
@@ -53,12 +53,13 @@
     
     <div class="col-md-auto">
       <a href="#">
-        <span id="vis_grade" class="material-symbols-outlined fa-3x">bar_chart</span>
+        <span id="vis_grade" class="material-symbols-outlined fa-2x"><i class="bi bi-bar-chart-fill"></i></span>
+        
       </a>
     </div>
     <div class="col-md-auto">
       <a href="#">
-        <span id="table_grade" class="material-symbols-outlined fa-3x">table</span>
+        <span id="table_grade" class="material-symbols-outlined fa-2x"><i class="bi bi-table"></i></span>
       </a>
     </div>
   </div>
