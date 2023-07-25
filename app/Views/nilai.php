@@ -19,8 +19,8 @@
       </div>
 
       <nav class="nav-menu mt-2">
-        <a href="#" class="nav-menu-link ">Aktivitas</a>
-        <a href="#" class="nav-menu-link active">Nilai</a>
+        <a href="<?= base_url('course/getCourseInfo/' . $courseid) ?>" class="nav-menu-link ">Aktivitas</a> 
+        <a href="<?=base_url('gradebook/getGradebookView/' . $courseid)?>" class="nav-menu-link active">Nilai</a>
       </nav>
 </div>
 
@@ -28,7 +28,7 @@
   <div class="container">
   <div class="row">
     <div class="col col-lg-6">
-      <h3 class="font-weight-bolder pr-10 mb-0 mt-2">Gradebook</h3>
+      <h3 class="font-weight-bolder pr-10 mb-0 mt-2">Daftar Nilai (Gradebook)</h3>
     </div>
     <div class="col col-lg-2"></div>
     <div class="col col-lg-2">
@@ -45,11 +45,12 @@
 
     <div class="col col-lg-2">
     <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButtonMod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span>Semua</span>
         </button>   
       
         <ul class="dropdown-menu w-100" aria-labelledby="modType">
+          <li><a id="modAll" class="dropdown-item" data-type="all" href="#">Semua</a></li>
           <li><a id="modQuiz" class="dropdown-item" data-type="quiz" href="#">Kuis</a></li>
           <li><a id="modAssign" class="dropdown-item" data-type="assign" href="#">Tugas</a></li>
         </ul>
@@ -102,15 +103,25 @@
       $('#tableGradebook').DataTable().button('.buttons-excel').trigger();
      });    
 
+     $('#modAll').on('click', function(){
+        $('#dropdownMenuButtonMod').empty();
+        $('#dropdownMenuButtonMod').append('<span>Tugas</span>')
+        handleTableGradebook();
+      }); 
+
      $('#modQuiz').on('click', function(){
      //select quiz
+      $('#dropdownMenuButtonMod').empty();
+      $('#dropdownMenuButtonMod').append('<span>Kuis</span>');
      //handle table quiz
      handleTableGradebookQuiz();
      });    
 
      $('#modAssign').on('click', function(){
      //select Assign
-     handleTableGradebookAssign();
+      $('#dropdownMenuButtonMod').empty();
+      $('#dropdownMenuButtonMod').append('<span>Tugas</span>')
+      handleTableGradebookAssign();
      });  
 
     });

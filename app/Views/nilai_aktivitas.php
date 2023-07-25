@@ -19,8 +19,8 @@
   </div>
 
   <nav class="nav-menu mt-2">
-    <a href="#" class="nav-menu-link ">Aktivitas</a>
-    <a href="#" class="nav-menu-link active">Nilai</a>
+    <a href="<?= base_url('course/getCourseInfo/' . $courseid) ?>" class="nav-menu-link ">Aktivitas</a>
+    <a href="<?=base_url('gradebook/getGradebookView/' . $courseid)?>" class="nav-menu-link active">Nilai</a>
   </nav>
 </div>
 

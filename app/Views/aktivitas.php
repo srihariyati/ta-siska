@@ -20,7 +20,7 @@
 
       </div>
       <nav class="nav-menu mt-2">
-        <a href="#"> <span id="btnCourse" class="nav-menu-link active">Aktivitas</span></a>
+        <a href="<?= base_url('course/getCourseInfo/' . $courseid) ?>"> <span id="btnCourse" class="nav-menu-link active">Aktivitas</span></a>
         <!-- kirim token dalam bentuk session -->
         <?php
           $session = session();
