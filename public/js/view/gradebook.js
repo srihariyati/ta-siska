@@ -3,6 +3,7 @@ var token;
 var table;
 
 function handleTableGradebook() {
+    $('#guide').empty();
     courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
     console.log(token);
@@ -11,29 +12,32 @@ function handleTableGradebook() {
     sweetAlertLoad('Memuat tabel');
     $.ajax({
         url: `${BASE_URL}gradebook/getGradebook`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
-            courseId: courseId,
+            courseid: courseId,
         },
         dataType: 'json',
         success: function(response) {
             console.log(response);
             swal.close();
             showTableGradebook(response);
+            guideAlert('Tugas dan Kuis');
+          
         }
     });
 }
 
-function handleTableGradebookQuiz() {
+function handleTableGradebookQuiz() {   
+    $('#guide').empty();
     var mod = 'quiz';
-    sweetAlertLoad('Memuat tabel');
+   sweetAlertLoad('Memuat tabel');
     $.ajax({
         url: `${BASE_URL}gradebook/getGradebook`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
-            courseId: courseId,
+            courseid: courseId,
             mod: mod,
         },
         dataType: 'json',
@@ -41,21 +45,24 @@ function handleTableGradebookQuiz() {
             Swal.close();
             console.log(response);
             showTableGradebook(response);
+            guideAlert('Kuis');
+         
         }
     });
 }
 
 function handleTableGradebookAssign() {
+    $('#guide').empty();
     var mod = 'assign';
     sweetAlertLoad('Memuat tabel');
 
     console.log("handleTableGradebookAssign", courseId);
     $.ajax({
         url: `${BASE_URL}gradebook/getGradebook`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
-            courseId: courseId,
+            courseid: courseId,
             mod: mod,
         },
         dataType: 'json',
@@ -63,6 +70,8 @@ function handleTableGradebookAssign() {
             console.log(response);
             Swal.close();
             showTableGradebook(response);
+            guideAlert('Tugas');
+          
         }
     });
 }
@@ -84,14 +93,33 @@ function showTableGradebook(responseData) {
     var dataTableData = [];
     var headerRow = [];
     responseData[0].grades.forEach(function(item) {
-        headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGradeView?itemid=${item.itemid}&token=${token}&courseid=${courseId}&cmid=${item.cmid}" style="text-decoration:none;">${item.itemname}</a>`);
+        var headerData=[`
+            <form  method="POST" action="${BASE_URL}gradebook/getModuleGradeView">
+            <input type="hidden" name="itemid" value="${item.itemid}">
+            <input type="hidden" name="token" value="${token}">
+            <input type="hidden" name="courseid" value="${courseId}">
+            <input type="hidden" name="cmid" value="${item.cmid}">
+            <button type="submit" class="btn" style="text-align:left; padding-left:0px">${item.itemname}</button>            
+            </form> 
+        `];
+        headerRow.push(headerData);
+        // headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGradeView?itemid=${item.itemid}&token=${token}&courseid=${courseId}&cmid=${item.cmid}" style="text-decoration:none;">${item.itemname}</a>`);
     });
 
     responseData.forEach(function(user) {
-        var rowData = [`<a href='${BASE_URL}gradebook/getPersonalGrade?userid=${user.userid}&token=${token}&courseid=${courseId}' style="text-decoration:none;" method="GET">${user.userfullname}</a>`];
+        var rowData =[`
+            <form  method="POST" action="${BASE_URL}gradebook/getPersonalGrade">
+                <input type="hidden" name="userid" value="${user.userid}">
+                <input type="hidden" name="token" value="${token}">
+                <input type="hidden" name="courseid" value="${courseId}">
+                <button type="submit" class="btn" style="text-align:left; padding-left:6px">${user.userfullname}</button>
+            </form>       
+        `];
+
         user.grades.forEach(function(item) {
             rowData.push(item.grade);
         });
+
         dataTableData.push(rowData);
     });
 
@@ -100,9 +128,12 @@ function showTableGradebook(responseData) {
     table = $('#tableGradebook').DataTable({
         destroy: true,
         data: dataTableData,
+        scrollX: true,
         footer: true,
         autoWidth: false,
-        columnsDefs: [{ width: '100%', targets: 0 }],
+        columnsDefs: [
+            { width: '100%', targets: 0 },
+        ],
         columns: [
             { title: 'Nama Mahasiswa' }, // Set width for 'Nama Mahasiswa' column
             ...headerRow.map(function(item) {
@@ -113,6 +144,9 @@ function showTableGradebook(responseData) {
         searching: true,
         info: true,
         dom: 'lfrtip',
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/id.json',
+        },
         buttons: [{
                 extend: 'pdf',
                 orientation: 'landscape',
@@ -168,7 +202,7 @@ function getCourseName() {
             token: token,
             courseid: courseId,
         },
-        method: 'GET',
+        method: 'POST',
         dataType: 'json',
         success: function(response) {
             console.log(1111);
@@ -196,7 +230,7 @@ function getStudentInfo() {
     //ajax to controller yang punya course info 
     $.ajax({
         url: `${BASE_URL}gradebook/getStudentInfo`,
-        method: 'GET',
+        method: 'POST',
         data: {
             userid: userid,
             token: token,
@@ -228,7 +262,7 @@ function getContentModuleInfo() {
     //ajax get content module information
     $.ajax({
         url: `${BASE_URL}gradebook/getModuleInfo`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
             courseid: courseId,
@@ -283,8 +317,12 @@ function getSubmissionTimeliness() {
     //get all course participant
 
     $.ajax({
-        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
-        method: 'GET',
+        url: `${BASE_URL}course/getCourseParticipant`,
+        method: 'POST',
+        data:{
+            token:token,
+            courseid:courseId,
+        },
         dataType: 'json',
         success: function(response) {
             courseParticipant = response.length;
@@ -294,8 +332,13 @@ function getSubmissionTimeliness() {
 
     //get submission participant
     $.ajax({
-        url: `${BASE_URL}course/getSubmittedParticipant?token=${token}&assignid=${assignId}&groupid=${groupId}`,
-        method: 'GET',
+        url: `${BASE_URL}course/getSubmittedParticipant`,
+        method: 'POST',
+        data:{
+            courseid:courseId,
+            assignid:assignId,
+            groupid:groupId,
+        },
         dataType: 'json',
         success: function(response) {
             var submittedParticipant = response.length;
@@ -310,7 +353,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
 
     $.ajax({
         url: `${BASE_URL}gradebook/getModuleGrade`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
             courseid: courseId,
@@ -355,10 +398,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
 
                     var module = response[i];
                     //console.log(module.itemnumber);
-                    var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
-                    gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '">' + module.userfullname + '</h6>';
-                    gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
-
+                    
                     if (module.submissionstatus == 'submitted ontime') {
                         var status = 'Mengumpulkan tugas tepat waktu';
                     } else if (module.submissionstatus == 'late submitted') {
@@ -369,11 +409,38 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
 
                     var gradeColor = module.grade >= 50 ? 'text-success' : 'text-danger'; // Set text color to green (success) if grade is greater than or equal to 50
 
-                    gradeCard += '<p class="card-text text-center" id="status-' + i + '"><small class="text-muted">' + status + '</small></p></div></div>';
-                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center">';
-                    gradeCard += '<h4 class="card-title text-center ' + gradeColor + '" id="grade-' + i + '" data-mod="' + module.itemmodule + '" data-itemnumber="' + module.itemnumber + '">' + module.grade + '</h4></div></div>';
-                    gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center"><button type="button" class="btn btn-outline-secondary btn-sm" id="btnEditGrade" data-index="' + i + '">Ubah</button></div></div>';
-                    gradeCard += '</div></div>';
+                    var gradeCard = `
+                        <div class="card mb-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card-body d-flex align-items-center">
+                                        <h6 class="card-title" id="studentName-${i}" data-userid="${module.userid}">${module.userfullname}</h6>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="card-body d-flex align-items-center">
+                                        <p class="card-text text-center" id="status-${i}">
+                                            <small class="text-muted">${status}</small>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="card-body d-flex align-items-center">
+                                        <h4 class="card-title text-center ${gradeColor}" id="grade-${i}" data-mod="${module.itemmodule}" data-itemnumber="${module.itemnumber}">${module.grade}</h4>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="card-body d-flex align-items-center">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btnEditGrade" data-index="${i}">Ubah</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+
                     console.log(gradeCard);
                     $('#gradeCard').append(gradeCard);
 
@@ -419,14 +486,18 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
     var meanGrade = '<p class="mb-0">Rata-rata nilai mahasiswa:</p><h4 class="font-weight-bold">' + mean + '</h4>';
 
     // Append the input element and button to studentGrade
-    var studentGrade = '<div>';
-    studentGrade += '<label for="gradeInput">Nilai Mahasiswa</label>';
-    studentGrade += '<div class="input-group input-group-lg">';
-    studentGrade += '<input type="text" class="form-control"  id="gradeInput" value="' + grade + '">';
-    studentGrade += '<div class = "input-group-append">';
-    studentGrade += '<button class="btn btn-primary" type="button" id="updateButton">Ubah</button>';
-    studentGrade += '<button class = "btn btn-danger" type = "button" onclick="window.location.reload()">Batal</button>';
-    studentGrade += '</div></div></div>';
+    var studentGrade = `
+        <div>
+            <label for="gradeInput">Nilai Mahasiswa</label>
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control"  id="gradeInput" value="${grade}">
+                <div class = "input-group-append">
+                    <button class="btn btn-primary" type="button" id="updateButton">Ubah</button>
+                    <button class = "btn btn-danger" type = "button" onclick="window.location.reload()">Batal</button>
+                </div>
+            </div>
+        </div>
+    `
 
     $('#studentInfo').append(studentInfo);
     $('#submissionPercent').append(meanGrade);
@@ -461,11 +532,11 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
         var gradeValue = document.getElementById('gradeInput').value;
         //console.log(courseid, activityid, token, studentId, itemModule, itemNumber, gradeValue);
 
-        sweetAlertLoad('Mengubah data');
+       sweetAlertLoad('Mengubah data');
         // Misalnya:
         $.ajax({
             url: `${BASE_URL}gradebook/updateModuleGrade`,
-            method: 'GET',
+            method: 'POST',
             data: {
                 grade: gradeValue,
                 courseid: courseid,
@@ -635,7 +706,7 @@ function updateModuleGradeAll(countData) {
     console.log(dataGrade);
     $.ajax({
         url: `${BASE_URL}gradebook/updateModuleGradeAll`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
             courseid: courseid,
@@ -711,3 +782,17 @@ function sweetAlertLoad(text) {
         }
     });
 }
+
+function guideAlert(tipe){
+    var guide ='<div class="alert alert-success" role="alert">';
+    guide += '<h4 class="alert-heading">Panduan💡</h4>',
+    guide += '<ul style="list-style-type: disc !important; padding-left:px !important; margin-left:1em;">';
+    guide += '<li>Klik salah satu '+tipe+' untuk <b>mengubah nilai</b></li>';
+    guide += '<li>klik salah satu nama mahasiswa untuk melihat <b>visualisasi data nilai mahasiswa</b></li>';
+    guide += '</ul></div>';
+
+    $('#guide').append(guide);
+}
+
+
+

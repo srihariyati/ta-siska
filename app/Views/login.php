@@ -23,7 +23,6 @@
           <h4 class="font-weight-bold mb-2 text-white">Sistem Informasi Kinerja Mahasiswa</h4>
           <p class="mt-2 mb-4 pl-5 pr-5 text-white">Sistem Informasi Visualisasi Data Kinerja Mahasiswa pada E-learning Universitas Syiah Kuala</p>
           
-          <img src="<?=str_replace('/index.php', '', base_url()) .'/img/dec_3circle.svg'?>" width="50" height="50" class="d-inline-block align-top" alt="">
         </div>
 
         <div class="col-lg-6 mb-5 mb-lg-0">
@@ -38,18 +37,18 @@
                 <h1 class="font-weight-bold h3">
                   Selamat Datang!
                 </h1>
-                <p class="mt-2 mb-5 pl-4 pr-4">Silahkan login dengan menggunakan username dan password akun Moodle Anda</p>
+                <p class="mt-2 mb-5 pl-4 pr-4">Silahkan login dengan menggunakan username dan password akun Moodle anda</p>
               </div>
 
               <?php if (session()->getFlashdata('loginError')) : ?>
-                <div class="mb-2 pr-5 pl-5 ">
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                      <b>Opps!</b> <?php echo session()->getFlashdata('loginError'); ?>
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
+              <div class="mb-2 pr-5 pl-5 ">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <b>Gagal!</b> <?php echo session()->getFlashdata('loginError'); ?>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
+              </div>
                   
               <?php endif; ?>
               
@@ -83,6 +82,7 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
-  <script src="<?=base_url('/js/bootstrap.bundle.min.js')?>" ></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
   </body>
 </html>

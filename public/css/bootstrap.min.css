@@ -9321,3 +9321,5 @@ a.text-dark:hover {
     border: 1px #004085;
     box-shadow: none;
 }
+
+th.dt-center, td.dt-center { text-align: center; }

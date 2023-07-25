@@ -6,8 +6,7 @@ use App\Controllers\GenerateCurl;
 
 class Login extends BaseController
 {
-    public function __construct()
-    {
+    public function __construct(){
         $this->session = \Config\Services::session();
     }
 
@@ -70,12 +69,12 @@ class Login extends BaseController
                 return redirect()->to('beranda/getEnrolledCourses');
             }else{
                //bukan admin beri alert bukan admin
-                return redirect()->back()->with('loginError', 'Akun kamu tidak memiliki akses ke sistem!');
+                return redirect()->back()->with('loginError', 'Akun anda tidak memiliki akses ke sistem.');
             }
 
         }else if($status=='invalid'){
             //jika status invalid langsung bilang salah password
-            return redirect()->back()->with('loginError', 'Login gagal! Username atau password salah!');
+            return redirect()->back()->with('loginError', 'Username atau password salah.');
         }      
     }
 
@@ -92,6 +91,13 @@ class Login extends BaseController
         $response_checkuser =  $curlGen->curlGen($param);
 
         return $response_checkuser;
+    }
+
+
+    public function logout(){
+        //delete session
+        $this->session->destroy();
+        return view('login');
     }
 
 }

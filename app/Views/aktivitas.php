@@ -6,7 +6,7 @@
 
 <?= $this->section('content') ?>
 
-<div class="container mt-7 mb-3">
+<div class="container-lg mt-7 mb-3">
 
       <div class="row">
 
@@ -30,10 +30,10 @@
         <a href="<?=base_url('gradebook/getGradebookView/' . $courseid)?>"><span id="btnMhs" class="nav-menu-link">Nilai</span></a>
       </nav>
 </div>
-<div class="container">
+
+<div class="container-lg">
   <div class="row">
     <div class="col col-lg-6">
-
       <div class="dropdown">
         <select class="custom-select dropdown-toggle w-100 text-left btn-flex" id="course_content" >
           <?php foreach($course_contents_list as $cc):?>
@@ -44,7 +44,7 @@
     </div>
 
     <div class="col col-lg-4">
-    <div class="dropdown">
+      <div class="dropdown">
           <select class="custom-select dropdown-toggle w-100 text-left btn-flex" id="content_module" > 
         </select> 
       </div>
@@ -63,18 +63,23 @@
       </a>
     </div>
   </div>
+</div>
 
-<div class="container">
- 
-  <div class="row mt-6">
+<div class="container-lg">
+
+  
+   
+  <div class="row mt-3">
+    <div id="alert" class='w-100 ml-3 mr-3'></div>
+   
     <div class="col-md-6">
-      <span id="load-1"></span>
+      <div id="load-1"></div>
       <!-- nama kuis, dan waktu kuis -->
-      <span id="modTitle"></span>
-      <span id="contentName"></span>
+      <div id="modTitle"></div>
+      <div id="contentName"></div>
      
-      <span id="openedDate"></span>
-      <span id="closedDate"></span>
+      <div id="openedDate"></div>
+      <div id="closedDate"></div>
     </div>
 
     <div class="col-md-6">
@@ -118,6 +123,7 @@
   </div>
     
 </div>
+
 <?= $this->endSection('content') ?>
 
 <?= $this->section('jshere') ?>

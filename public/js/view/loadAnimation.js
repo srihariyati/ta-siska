@@ -14,3 +14,4 @@ function loadAnimation_lg(id) {
 function removeAnimation(id) {
     $('#' + id).empty();
 }
+

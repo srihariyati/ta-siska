@@ -40,9 +40,9 @@ class Gradebook extends BaseController
 
     public function getGradebook(){
 
-        $mod = $this->request->getVar('mod');
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseId');
+        $mod = $this->request->getPost('mod');
+        $token = $this->request->getPost('token');
+        $courseid = $this->request->getPost('courseid');
         //dd($courseid, $token, $mod);
 
         $param =[
@@ -169,10 +169,10 @@ class Gradebook extends BaseController
     //
 
     public function getModuleGradeView(){
-        $itemid = $this->request->getVar('itemid');
-        $courseid = $this->request->getVar('courseid');
-        $token = $this->request->getVar('token');
-        $cmid = $this->request->getVar('cmid');
+        $itemid = $this->request->getPost('itemid');
+        $courseid = $this->request->getPost('courseid');
+        $token = $this->request->getPost('token');
+        $cmid = $this->request->getPost('cmid');
        
 
         $mydata=[
@@ -187,9 +187,9 @@ class Gradebook extends BaseController
 
     public function getPersonalGrade(){
 
-        $userid = $this->request->getVar('userid');
-        $courseid = $this->request->getVar('courseid');
-        $token = $this->request->getVar('token');
+        $userid = $this->request->getPost('userid');
+        $courseid = $this->request->getPost('courseid');
+        $token = $this->request->getPost('token');
         
 
         $param =[
@@ -305,11 +305,11 @@ class Gradebook extends BaseController
 
     public function getModuleGrade(){
         
-        $itemid = $this->request->getVar('itemid');
-        $courseid = $this->request->getVar('courseid');
-        $token = $this->request->getVar('token');
-        $cmid=$this->request->getVar('cmid');
-        $instanceid=$this->request->getVar('instanceid');
+        $itemid = $this->request->getPost('itemid');
+        $courseid = $this->request->getPost('courseid');
+        $token = $this->request->getPost('token');
+        $cmid=$this->request->getPost('cmid');
+        $instanceid=$this->request->getPost('instanceid');
 
         //item id!=cmid
 
@@ -401,8 +401,8 @@ class Gradebook extends BaseController
 
     public function getStudentInfo(){ 
 
-        $userid = $this->request->getVar('userid');
-        $token = $this->request->getVar('token');
+        $userid = $this->request->getPost('userid');
+        $token = $this->request->getPost('token');
         $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -420,9 +420,9 @@ class Gradebook extends BaseController
     }
 
     public function getModuleInfo(){
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseid');
-        $cmid = $this->request->getVar('cmid');
+        $token = $this->request->getPost('token');
+        $courseid = $this->request->getPost('courseid');
+        $cmid = $this->request->getPost('cmid');
 
         $param =[
             "wstoken" =>$token,
@@ -460,8 +460,8 @@ class Gradebook extends BaseController
 
     public function getCourseName(){
         
-        $courseid = $this->request->getVar('courseid');
-        $token = $this->request->getVar('token');
+        $courseid = $this->request->getPost('courseid');
+        $token = $this->request->getPost('token');
 
 
         $param =[
@@ -474,7 +474,6 @@ class Gradebook extends BaseController
 
         $curlGen = new GenerateCurl();
         $response =  $curlGen->curlGen($param);
-        // /dd($response);
 
         $coursename = $response["courses"][0];
         return $this->response->setJSON($coursename);
@@ -551,14 +550,14 @@ class Gradebook extends BaseController
 
 
     public function updateModuleGrade(){
-        $courseid = $this->request->getVar('courseid');
-        $token = $this->request->getVar('token');
+        $courseid = $this->request->getPost('courseid');
+        $token = $this->request->getPost('token');
 
-        $activityid = $this->request->getVar('activityid');
-        $studentid = $this->request->getVar('studentid');
-        $itemModule = $this->request->getVar('itemModule');
-        $itemNumber = $this->request->getVar('itemNumber');
-        $grade = $this->request->getVar('grade');
+        $activityid = $this->request->getPost('activityid');
+        $studentid = $this->request->getPost('studentid');
+        $itemModule = $this->request->getPost('itemModule');
+        $itemNumber = $this->request->getPost('itemNumber');
+        $grade = $this->request->getPost('grade');
 
         if($itemModule=='assign'){
             $source='assignment';
@@ -597,11 +596,11 @@ class Gradebook extends BaseController
         //data grade
         //data mod
         //data token
-        $courseid = $this->request->getVar('courseid');
-        $token = $this->request->getVar('token');
-        $activityid = $this->request->getVar('activityid');
-        $itemModule = $this->request->getVar('itemModule');
-        $dataGrade = $this->request->getVar('dataGrade'); 
+        $courseid = $this->request->getPost('courseid');
+        $token = $this->request->getPost('token');
+        $activityid = $this->request->getPost('activityid');
+        $itemModule = $this->request->getPost('itemModule');
+        $dataGrade = $this->request->getPost('dataGrade'); 
         
 
         //isi didalam array{}}

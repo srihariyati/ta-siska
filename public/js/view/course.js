@@ -6,6 +6,7 @@ var token;
 
 //////////////////////////////General/////////////////////////////////
 function handleCourseContentChange() {
+    $('#alert').empty();
     // mengambil content id untuk membuat dependent dropdown untuk module assign dan kuis
     // function dijalankan ketika user memilih content/topik mata kuliah pada dropdown menu pertama
     var contentId = $('#course_content').val();
@@ -19,7 +20,7 @@ function handleCourseContentChange() {
     $.ajax({
 
         url: `${BASE_URL}course/getCourseModule`,
-        method: 'GET',
+        method: 'POST',
         data: {
             courseid: courseId,
             contentid: contentId,
@@ -38,10 +39,11 @@ function handleCourseContentChange() {
                 window.removeAnimation("load-1");
                 var option = '<option value="0"  style="font-style: italic;">Tidak Ada Tugas/Kuis</option>';
                 $('#content_module').append(option);
+                
+                //append sweet alert
+                sweetAlertFail();
+                
 
-                var contentName = '<p> Tidak ada Kuis/Tugas yang tersedia';
-                contentName += ', silahkan pilih topik lainnya</p>'
-                $('#contentName').append(contentName);
 
             } else {
                 for (var i = 0; i < response.length; i++) {
@@ -50,11 +52,6 @@ function handleCourseContentChange() {
                     // var option = '<option value=' + module.moduleId + '>' + module.moduleName + '</option>';
                     var option = '<option value=' + module.instance + ',' + module.modulemod + '>' + module.moduleName + '</option>';
                     $('#content_module').append(option);
-
-
-
-                    //langsung append nama module nya disini aja gak sih? sekalian nama id dan mod nya
-
 
                     var instanceid = module.instance;
                     var modulemod = module.modulemod;
@@ -129,7 +126,7 @@ function getAssign(token, courseId, instanceid) {
     //ajax to get Quiz controller
     $.ajax({
         url: `${BASE_URL}course/getAssign`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
             courseid: courseId,
@@ -182,8 +179,13 @@ function getGradeAssignment() {
     var counts = {};
     //ajax here
     $.ajax({
-        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
-        method: 'GET',
+        url: `${BASE_URL}course/getGradeAssignment`,
+        method: 'POST',
+        data:{
+            token:token,
+            assignid:assignId,
+            courseid:courseId,
+        },
         dataType: 'json',
         success: function(response) {
             console.log(response);
@@ -224,9 +226,13 @@ function handleTableAssign(courseId, assignId) {
     window.loadAnimation_lg("load-table");
     //ajax here
     $.ajax({
-        // url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
-        url: `${BASE_URL}course/getGradeAssignment?token=${token}&assignid=${assignId}&courseid=${courseId}`,
-        method: 'GET',
+        url: `${BASE_URL}course/getGradeAssignment`,
+        method: 'POST',
+        data:{
+            token:token,
+            assignid:assignId,
+            courseid:courseId,
+        },
         dataType: 'json',
         success: function(response) {
             console.log(response);
@@ -305,8 +311,12 @@ function getCourseParticipant(token, courseId) {
     //function core_enrol_get_enrolled_users
     //jumlah user yang enrol mata kuliah dengan role: student
     $.ajax({
-        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
-        method: 'GET',
+        url: `${BASE_URL}course/getCourseParticipant`,
+        method: 'POST',
+        data :{
+            token:token,
+            courseid:courseId,
+        },
         dataType: 'json',
         success: function(response) {
             console.log(response);
@@ -331,8 +341,12 @@ function getSubmittedParticipant(token, assignId, assignName) {
     //function mod_assign_list_participants :mendapatkan user dengan
     //ketentuan role:student dan submited:true
     $.ajax({
-        url: `${BASE_URL}course/getSubmittedParticipant?token=${token}&assignid=${assignId}`,
-        method: 'GET',
+        url: `${BASE_URL}course/getSubmittedParticipant`,
+        method: 'POST',
+        data:{
+            token:token,
+            assignid:assignId,
+        },
         dataType: 'json',
         success: function(response) {
 
@@ -380,7 +394,7 @@ function getQuiz(token, courseId, instanceid) {
     $.ajax({
 
         url: `${BASE_URL}course/getQuiz`,
-        method: 'GET',
+        method: 'POST',
         data: {
             token: token,
             courseid: courseId,
@@ -420,8 +434,12 @@ function getGradeQuiz(quizId) {
     var counts = {};
     //ambil list participant pada course untuk proses looping pada function
     $.ajax({
-        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
-        metho: 'GET',
+        url: `${BASE_URL}course/getCourseParticipant`,
+        method: 'POST',
+        data :{
+            token: token,
+            courseid: courseId,
+        },
         dataType: 'json',
         success: function(response) {
             var participant = response;
@@ -443,6 +461,7 @@ function getGradeQuiz(quizId) {
             //lalu lakukan looping mengunakan funtion mod_quiz_get_user_attempts
             $.ajax({
                 url: `${BASE_URL}course/getGradeQuiz`,
+                method:'POST',
                 data: {
                     token: token,
                     quizid: quizId,
@@ -548,8 +567,12 @@ function handleTableQuiz(quizId) {
 
     window.loadAnimation_lg("load-table");
     $.ajax({
-        url: `${BASE_URL}course/getCourseParticipant?token=${token}&courseid=${courseId}`,
-        metho: 'GET',
+        url: `${BASE_URL}course/getCourseParticipant`,
+        metho: 'POST',
+        data:{
+            token:token,
+            courseid:courseId,
+        },
         dataType: 'json',
         success: function(response) {
             var participant = response;
@@ -695,4 +718,15 @@ function formatUnixTimestamp(unixTimestamp) {
         hour: 'numeric',
         minute: 'numeric'
     });
+}
+
+function sweetAlertFail(){
+    var alert = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <b>Tidak ada Kuis/Tugas yang tersedia</b>, silahkan pilih topik lainnya
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>`;
+    $('#alert').append(alert);
 }

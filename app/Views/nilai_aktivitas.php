@@ -5,12 +5,13 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-<div class="container mt-7 mb-3">
+
+<div class="container-lg mt-7 mb-3">
 
   <div class="row">
 
     <div class="col-md-6">
-          <h2 class="font-weight-bolder pr-10" id="courseTitle" data-token = "<?=$token?>" data-courseid="<?=$courseid?>"></h2>
+      <h2 class="font-weight-bolder pr-10" id="courseTitle" data-token = "<?=$token?>" data-courseid="<?=$courseid?>"></h2>
     </div>
 
     <div class="col-md-6">
@@ -22,12 +23,13 @@
     <a href="<?= base_url('course/getCourseInfo/' . $courseid) ?>" class="nav-menu-link ">Aktivitas</a>
     <a href="<?=base_url('gradebook/getGradebookView/' . $courseid)?>" class="nav-menu-link active">Nilai</a>
   </nav>
+
 </div>
 
-<div class="container">
+<div class="container-lg">
   <div class="row mt-4">
     <div class="col-md-6">
-     <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" data-itemid = "<?=$itemid?>"></h3>
+      <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" data-itemid = "<?=$itemid?>"></h3>
       <p id="contentName"></p>
     </div>
 
@@ -51,22 +53,34 @@
   </div>
 </div>
 
-<!-- ini pake ajax aja nanti -->
-<div class="container mt-4">
+<div class="container-lg mt-4 mb-4">
   
-  <span id="gradeCard"></span>
-
-  <div class="row mt-4">
-  <div class="col-md-6">
-    <span id="studentGrade"></span>
-  <div>
-  <div class="col-md-6"></div>
+  <div id="gradeCard">
+    <!--  -->
   </div>
+
+<!--   
+  tambah div baru untuk update all grade
+  <div id="gradeCardEdit" class="hidden">
+  </div>
+   -->
+</div>
+
+<div class="container-lg">
+  <div class="row mt-4">
+
+    <div class="col-md-6">
+      <span id="studentGrade"></span>
+    </div>
+
+    <div class="col-md-6">
+    </div>
   
- <!-- diisni berisi chart data -->
+  </div>
 </div>
 
 <?= $this->endSection('content') ?>
+
 <?= $this->section('jshere') ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src= "<?=str_replace('/index.php', '', base_url()) .'/js/view/gradebook.js'?>"></script>

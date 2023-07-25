@@ -5,17 +5,18 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-    <div class="container mt-7 mb-3 ">
-      <h3 class="font-weight-bolder">Selamat Datang, <?php echo $user_firstname ?>🎉</h3>
-      <p>Silahkan pilih mata kuliah yang tersedia dibawah ini.</p>
-      <hr class="mt-2 mb-3"/>
+    <div class="container-lg mt-7 mb-3 ">
+        <h3 class="font-weight-bolder">Selamat Datang, <?php echo $user_firstname ?>🎉</h3>
+        <p>Silahkan pilih mata kuliah yang tersedia dibawah ini.</p>
+        <hr class="mt-2 mb-3"/>
     </div>
 
-    <div class="container">
+    <div class="container-lg">
+        
       <div class="row">
         <?php foreach($enrolled_course as $ec):?>
         <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
+            <div class="card mb-4 shadow-sm">
            
             <img src="<?=str_replace('/index.php', '', base_url()) .'/img/Bush Pattern.png'?>" class="bd-placeholder-img card-img-top"  width="100%" height="150">
             <!-- <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text> -->
@@ -35,10 +36,12 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
         <?php endforeach;?>
       </div>
+
     </div>
        
   <?= $this->endSection('content') ?>

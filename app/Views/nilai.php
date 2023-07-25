@@ -5,17 +5,15 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-<div class="container mt-7 mb-3">
 
+<div class="container-lg mt-7 mb-3">
       <div class="row">
-
         <div class="col-md-6">
-        <!-- pake js aja? -->
-        <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"></h2>
+          <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"></h2>
         </div>
         <div class="col-md-6">
+          <!--  -->
         </div>
-
       </div>
 
       <nav class="nav-menu mt-2">
@@ -24,13 +22,15 @@
       </nav>
 </div>
 
+<div class="container-lg">
 
-  <div class="container">
   <div class="row">
     <div class="col col-lg-6">
       <h3 class="font-weight-bolder pr-10 mb-0 mt-2">Daftar Nilai (Gradebook)</h3>
     </div>
-    <div class="col col-lg-2"></div>
+    <div class="col col-lg-2">
+      <!--  -->
+    </div>
     <div class="col col-lg-2">
       <div class="dropdown">
         <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,29 +42,31 @@
         </ul>
       </div>
     </div>
-
     <div class="col col-lg-2">
-    <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButtonMod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span>Semua</span>
-        </button>   
-      
-        <ul class="dropdown-menu w-100" aria-labelledby="modType">
-          <li><a id="modAll" class="dropdown-item" data-type="all" href="#">Semua</a></li>
-          <li><a id="modQuiz" class="dropdown-item" data-type="quiz" href="#">Kuis</a></li>
-          <li><a id="modAssign" class="dropdown-item" data-type="assign" href="#">Tugas</a></li>
-        </ul>
+      <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle w-100 text-left btn-flex" type="button" id="dropdownMenuButtonMod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>Semua</span>
+          </button>   
+        
+          <ul class="dropdown-menu w-100" aria-labelledby="modType">
+            <li><a id="modAll" class="dropdown-item" data-type="all" href="#">Semua</a></li>
+            <li><a id="modQuiz" class="dropdown-item" data-type="quiz" href="#">Kuis</a></li>
+            <li><a id="modAssign" class="dropdown-item" data-type="assign" href="#">Tugas</a></li>
+          </ul>
       </div>
     </div>
   </div>
 
-  <!-- tabel  nilai kuis -->
   <div class="row mt-4">
-    <div class="table-container">
-      <table class="table table-sm table-hover" style="width:100%" id="tableGradebook"></table>
-    </div>   
+    <div id="guide" class='w-100'></div>
   </div>
 
+  <!-- tabel  nilai kuis -->
+  <div class="row mt-4">
+    <div class="container-lg mb-5">
+      <table class="table table-sm table-hover " style="width:100%" id="tableGradebook"></table>
+    </div>   
+  </div>
 
 </div>
 
@@ -92,7 +94,7 @@
     //$token
     
     getCourseName();
-    handleTableGradebook();
+    handleTableGradebook();  
 
     // Export as PDF button click event handler
     $(document).on('click', '#exportPdf', function() {
@@ -123,8 +125,7 @@
       $('#dropdownMenuButtonMod').append('<span>Tugas</span>')
       handleTableGradebookAssign();
      });  
-
     });
-
+    
   </script>
 <?= $this->endSection('jshere') ?>

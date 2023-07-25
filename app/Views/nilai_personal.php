@@ -5,7 +5,7 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-<div class="container mt-7 mb-3">
+<div class="container-lg mt-7 mb-3">
 
       <div class="row">
 
@@ -25,7 +25,7 @@
 </div>
 
 
-  <div class="container">
+  <div class="container-lg">
   <div class="row">
     <div class="col col-lg-6">
       <h3 class="font-weight-bolder pr-10 mb-0 mt-2">Nilai Mahasiswa (Gradebook)</h3>

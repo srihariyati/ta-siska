@@ -87,9 +87,11 @@ class Course extends BaseController{
 
     public function getCourseModule()
     {
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseid');
-        $contentid =  $this->request->getVar('contentid');
+        // Get data from POST request
+        $token = $this->request->getPost('token');
+        $courseid = $this->request->getPost('courseid');
+        $contentid = $this->request->getPost('contentid');
+
 
         $param =[
             "wstoken" =>$token,
@@ -140,9 +142,9 @@ class Course extends BaseController{
     }
 
     public function getQuiz(){
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseid');
-        $instanceid = $this->request->getVar('instanceid');
+        $token = $this->request->getPost('token');
+        $courseid = $this->request->getPost('courseid');
+        $instanceid = $this->request->getPost('instanceid');
        
         $param =[
             "wstoken" =>$token,
@@ -175,9 +177,9 @@ class Course extends BaseController{
     }
 
     public function getAssign(){
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseid');
-        $instanceid = $this->request->getVar('instanceid');
+        $token = $this->request->getPost('token');
+        $courseid = $this->request->getPost('courseid');
+        $instanceid = $this->request->getPost('instanceid');
 
         $param =[
             "wstoken" =>$token,
@@ -210,8 +212,8 @@ class Course extends BaseController{
 
     public function getCourseParticipant()
     {
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseid');
+        $token = $this->request->getPost('token');
+        $courseid = $this->request->getPost('courseid');
 
         $param =[
             "wstoken" =>$token,
@@ -245,8 +247,8 @@ class Course extends BaseController{
 
     public function getSubmittedParticipant()
     {
-        $token = $this->request->getVar('token');
-        $assignid = $this->request->getVar('assignid');
+        $token = $this->request->getPost('token');
+        $assignid = $this->request->getPost('assignid');
 
         $param =[
             "wstoken" =>$token,
@@ -268,9 +270,9 @@ class Course extends BaseController{
 
         //mod_assign_get_grades
         // param : assignmentids[0]
-        $token = $this->request->getVar('token');
-        $courseid = $this->request->getVar('courseid');
-        $assignid = $this->request->getVar('assignid');
+        $token = $this->request->getPost('token');
+        $courseid = $this->request->getPost('courseid');
+        $assignid = $this->request->getPost('assignid');
        
 
         $param =[
@@ -377,9 +379,9 @@ class Course extends BaseController{
 
     public function getGradeQuiz()
     {
-        $token =$this->request->getVar('token');
-        $quizid =$this->request->getVar('quizid');
-        $participant =$this->request->getVar('datauser');
+        $token =$this->request->getPost('token');
+        $quizid =$this->request->getPost('quizid');
+        $participant =$this->request->getPost('datauser');
         //dd($participant);
      
         $quizAttempt=[];

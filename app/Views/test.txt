@@ -1,0 +1,4 @@
+<ul class="profile_ul">
+    <!-- remove session  -->
+    <li><a class="logout" href="<?=base_url()?>"><span class="picon"><i class="fas fa-sign-out-alt"></i></span>Logout</a></li>
+  </ul>
