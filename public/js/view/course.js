@@ -149,15 +149,34 @@ function getAssign(token, courseId, instanceid) {
             var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Dibuka</strong>  : ' + formattedOpenedDate + ' </p>';
             var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Ditutup</strong> : ' + formattedClosedDate + ' </p>';
 
-            //append table participant khusus assign
-            var tableParticipant = '<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td></tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr><tr><td>Late Submitted</td><td><span id = "lateSubmittedParticipant"></span></td ></tr></tbody></table>';
-
+            var tableParticipant = `
+            <table class="table table-bordered">
+                <body>
+                    <tr>
+                        <td>Peserta Mata Kuliah</td>
+                        <td><span id = "courseParticipant"><span></td>
+                    </tr>
+                    <tr>
+                        <td>Mengumpulkan Tugas</td>
+                        <td><span id = "submittedParticipant"></span></td >
+                    </tr>
+                    <tr>
+                        <td>Telat Mengumpulkan Tugas</td>
+                        <td><span id = "lateSubmittedParticipant"></span></td >
+                    </tr>
+                    <tr>
+                        <td>Mengumpulkan Tugas Tepat Waktu</td>
+                        <td><span id = "ontimeSubmittedParticipant"></span></td >
+                    </tr>
+                </tbody>
+            </table>`;
 
             window.removeAnimation("load-1");
             $('#modTitle').append(modName);
             $('#openedDate').append(showOpenedDate);
             $('#closedDate').append(showClosedDate);
             $('#tableParticipant').append(tableParticipant);
+
 
             //ambil data participant tugas
             getCourseParticipant(token, courseId);
@@ -386,6 +405,7 @@ function getSubmittedParticipant(token, assignId, assignName) {
 
 //////////////////////////////Quiz//////////////////////////////////
 function getQuiz(token, courseId, instanceid) {
+    
     console.log('quiz', token, courseId, instanceid);
     emptyPage();
     loadAnimation_lg("load-2");
@@ -418,7 +438,7 @@ function getQuiz(token, courseId, instanceid) {
             window.removeAnimation('load-1');
             $('#modTitle').append(modName);
             $('#openedDate').append(showOpenedDate);
-            $('#closedDate').append(showClosedDate);
+            $('#closedDate').append(showClosedDate);         
 
             //ambil data grade
             getGradeQuiz(response.quizId);
@@ -428,6 +448,7 @@ function getQuiz(token, courseId, instanceid) {
 }
 
 function getGradeQuiz(quizId) {
+    blockiconVis();
     console.log(quizId);
     var courseId = $('#courseTitle').data('courseid');
     var counts = {};
@@ -444,7 +465,8 @@ function getGradeQuiz(quizId) {
         dataType: 'json',
         success: function(response) {
             var participant = response;
-            console.log(participant);    
+            console.log(participant); 
+
             $.ajax({               
                 url: `${BASE_URL}course/getGradeQuiz`,
                 method: 'POST',
@@ -493,7 +515,7 @@ function getGradeQuiz(quizId) {
                         var ques = response[i].questions;
         
                         for (var j = 0; j < ques.length; j++) {
-                            console.log(ques[j]);
+                            //console.log(ques[j]);
                             //couting jumlah slot corret dan incorret/no answered
                             //hitung jumlah slot
                             // {slot:jumlahslot}
@@ -558,6 +580,7 @@ function getQuizQues(questionsData) {
 }
 
 function handleTableQuiz(quizId) {
+    blockiconTable();
     console.log('tble quiz');
     console.log(token);
     //ambil data yang sama kayak data di gradequiz
@@ -568,7 +591,7 @@ function handleTableQuiz(quizId) {
     window.loadAnimation_lg("load-table");
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant`,
-        metho: 'POST',
+        method: 'POST',
         data:{
             token:token,
             courseid:courseId,
@@ -576,20 +599,7 @@ function handleTableQuiz(quizId) {
         dataType: 'json',
         success: function(response) {
             var participant = response;
-            console.log(participant);
-
-            const dataUser = [];
-            for (var i = 0; i < response.length; i++) {
-
-                //kirim userid dan studentname(fullname)
-                var studentname = response[i].fullname;
-                var userid = response[i].id;
-
-                //list of studentid and studentname
-                dataUser.push({ userid: userid, studentname: studentname });
-            }
-            //studenid akan dilooping pada function  mod_quiz_get_user_attempts
-            console.log(dataUser);
+            console.log(participant); 
 
             $.ajax({
                 url: `${BASE_URL}course/getGradeQuiz`,
@@ -597,7 +607,7 @@ function handleTableQuiz(quizId) {
                 data: {
                     token: token,
                     quizid: quizId,
-                    datauser: dataUser,
+                    participant: participant,
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -605,7 +615,7 @@ function handleTableQuiz(quizId) {
                     //kolom paling akhir sebanyak jumlah slot quiz
                     var countingques = (response[0]['questions']).length;
                     console.log(countingques);
-                    var tableGrade = '<table  id="table_quiz" class="table table-sm table-striped"><thead><tr><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th>';
+                    var tableGrade = '<table  id="table_quiz" class="table table-sm table-striped"><thead><tr><th scope="col">#</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th>';
                     // Generate <th> elements for Q1, Q2, Q3, ..., Qn
                     for (var i = 1; i <= countingques; i++) {
                         tableGrade += '<th scope="col">Q' + i + '</th>';
@@ -633,6 +643,7 @@ function showTableGradeQuiz(responseData) {
     while (table.rows.length > 1) {
         table.deleteRow(1);
     }
+
     // Sort the responseData array by username
     responseData.sort(function(a, b) {
         var studentnameA = a.studentname.toUpperCase();
@@ -650,39 +661,38 @@ function showTableGradeQuiz(responseData) {
     for (var i = 0; i < responseData.length; i++) {
         var row = table.insertRow(i + 1); // Insert a new row at index 'i + 1'
 
-        var studentnameCell = row.insertCell(0);
+        // Add a cell for serial number (nomor urut)
+        var serialNumberCell = row.insertCell(0);
+        serialNumberCell.textContent = i + 1; // The serial number is the row index + 1
+
+        var studentnameCell = row.insertCell(1);
         studentnameCell.textContent = responseData[i].studentname;
 
-        var gradeCell = row.insertCell(1);
+        var gradeCell = row.insertCell(2);
         gradeCell.textContent = responseData[i].grade;
 
         //lopping untuk semua question yang ada didalam responseData[i].question;
         // Loop and populate the Q1, Q2, Q3, Q4, Q5 cells
         var questions = responseData[i].questions;
         for (var j = 0; j < questions.length; j++) {
-            var questionCell = row.insertCell(j + 2);
+            var questionCell = row.insertCell(j + 3);
             //questionCell.textContent = questions[j].status;
             if (questions[j].status === 'Correct') {
-                questionCell.textContent = '✅';
+                questionCell.innerHTML = '<i class="bi bi-check-square-fill text-success"></i>'; // Bootstrap check icon
             } else {
-                questionCell.textContent = '❌';
+                questionCell.innerHTML = '<i class="bi bi-x-square-fill text-danger"></i>'; // Bootstrap x icon
             }
         }
 
         // Add CSS class based on grade value
         if (responseData[i].grade <= 50) {
             gradeCell.classList.add("red-text");
-
         } else {
             gradeCell.classList.add("green-text");
-
         }
-
-
     }
-
-
 }
+
 
 //////////////////////////////General//////////////////////////////
 function emptyPage() {
@@ -735,4 +745,15 @@ function sweetAlertFail(){
             </button>
         </div>`;
     $('#alert').append(alert);
+}
+
+function blockiconVis(){
+    // Disable pointer events to prevent further clicks on the icon
+    $('#vis_grade_icon').css('pointer-events', 'none');
+}
+
+function blockiconTable(){
+    // Disable pointer events to prevent further clicks on the icon
+    $('#table_grade_icon').css('pointer-events', 'none');
+
 }

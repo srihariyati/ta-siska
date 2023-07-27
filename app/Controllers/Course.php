@@ -289,10 +289,16 @@ class Course extends BaseController{
         $response_grade= [];
 
         foreach( $grades as $g){
+            //jika respongrade['grade']==null atau <0
+            //maka jadikan 0
+            $grade = $g["grade"];
+            if ($grade === null || $grade < 0) {
+                $grade = 0;
+            }
             $response_grade[] = [
                 "gradeid"=>$g["id"],
                 "userid"=>$g["userid"],
-                "grade"=>$g["grade"],
+                "grade"=> $grade,
             ];         
         }
 
@@ -337,6 +343,10 @@ class Course extends BaseController{
                 foreach ($response_grade as $d){
                     if($cp['userid']==$d['userid']){
                         $grade = $d['grade'];
+                       
+                        if ($grade === null || $grade < 0) {
+                            $grade = 0;
+                        }
                         $letterGrade = '';
 
                         if ($grade >= 87) {
@@ -360,7 +370,7 @@ class Course extends BaseController{
                             'userid'=>$d['userid'],
                             'fullname'=>$cp['fullname'],
                             'username'=>$cp['username'],
-                            'grade'=>intval($d['grade']),
+                            'grade'=>intval($grade),
                             'lettergrade' => $letterGrade
                         ];
                     }
@@ -381,7 +391,7 @@ class Course extends BaseController{
         $token =  $this->request->getPost('token');       
         $quizid = $this->request->getPost('quizid');
         $participant = $this->request->getPost('participant');
-        //dd($participant[0]['id']);
+        //dd($participant);
 
         $quizAttempt=[];
         $quizAttemptAll=[];
@@ -463,13 +473,20 @@ class Course extends BaseController{
                 ];
             }
 
+            //jika respongrade['grade']==null atau <0
+            //maka jadikan 0
+            $grade = $response_grade['grade'];
+            if ($grade === null || $grade < 0) {
+                $grade = 0;
+            }
+
             $quizGrade=[
                 'quizid'=>$response_grade['attempt']['quiz'],
                 'attemptsid'=>$att['attemptsid'],
                 'userid'=>$response_grade['attempt']['userid'],
                 'studentname'=>$att['studentname'],
                 'username'=>$att['username'],
-                'grade'=>$response_grade['grade'],
+                'grade'=>$grade,
                 'questions'=>$questions
                 
             ];

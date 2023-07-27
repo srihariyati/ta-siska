@@ -32,11 +32,19 @@ class Beranda extends BaseController
         $response =  $curlGen->curlGen($param);
 
         foreach($response as $ec){
+            $displayname = ucwords($ec["displayname"]);
             $enrolled_course[] =[
                 'courseid'=>$ec["id"],
-                'coursedisplayname'=>$ec["displayname"],
+                'coursedisplayname'=>$displayname,
             ];
         }
+        //urutkan berdasarakan abjad pada coursediplayname
+        // Sort the array using an anonymous comparison function
+        usort($enrolled_course, function ($a, $b) {
+            return strcmp($a['coursedisplayname'], $b['coursedisplayname']);
+        });
+        //print_r($enrolled_course);
+        
         
         //kirim session token ke beranda
         //kirim session firstname ke beranda

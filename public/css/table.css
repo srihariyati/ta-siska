@@ -8,11 +8,11 @@
 }
 
 table th:nth-child(1) {
-    width: 500px;
+    width: 100px;
     max-width: 500px;
 }
 
 table td:nth-child(1) {
-    width: 500px;
+    width: 100px;
     max-width: 500px;
 }

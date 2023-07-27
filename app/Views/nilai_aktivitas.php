@@ -28,7 +28,11 @@
 
 <div class="container-lg">
   <div class="row mt-4">
-    <div class="col-md-6">
+    <div class="col-md-0">
+      <!-- button back -->
+      <span id="backButton" class="btn material-icon fa-2x p-2""><i class="bi bi-arrow-left-square-fill"></i></span>
+    </div>
+    <div class="col-md-4">
       <h3 class="font-weight-bolder pr-10 mb-0"  id="contentModule" data-cmid = "<?=$cmid?>" data-itemid = "<?=$itemid?>"></h3>
       <p id="contentName"></p>
     </div>

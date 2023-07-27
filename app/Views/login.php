@@ -57,7 +57,7 @@
                   <!-- <label class="form-label" for="email">Email address</label> -->
                   <input type="text" class="form-control" name="username" placeholder="Username">
                 </div>
-                <div class="mb-5 pr-5 pl-5">
+                <div class="pr-5 pl-5">
                   <!-- <label class="form-label" for="password">Password</label> -->
                   <input type="password" class="form-control" name="password" placeholder="Password" autocomplete="current-password">
                 </div>
@@ -68,7 +68,7 @@
                 </div>
               </form>
 
-                <div class="text-center mb-5 mt-5 ">
+                <div class="text-center mb-3 mt-5 ">
                   <p class="pl-4 pr-4"><small> Copyright © 2023 Universitas Syiah Kuala. All Right Reserved.</small></p>
                 </div>
               

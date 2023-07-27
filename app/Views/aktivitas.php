@@ -6,7 +6,7 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-lg mt-5 mb-3">
+<div class="container-lg mt-7 mb-3">
 
       <div class="row">
 
@@ -51,10 +51,10 @@
     </div>
 
     <div class="col col-lg-2 d-flex gap-4">
-      <span id="vis_grade_icon" class="btn ml-1 material-icon fa-2x pb-2 p-0">
+      <span id="vis_grade_icon" class="btn material-icon fa-2x pb-4 p-0">
         <i class="bi bi-bar-chart-fill active"></i>
       </span>
-      <span id="table_grade_icon" class="btn ml-1 material-icon fa-2x pl-4 pb-2 p-0">
+      <span id="table_grade_icon" class="btn ml-1 material-icon fa-2x pl-3 pr-2 pb-4 p-0">
         <i class="bi bi-table"></i>
       </span>
     </div>
@@ -87,7 +87,7 @@
     </div>  
   </div>
 
-  <div class="row mt-6">
+  <div class="row mt-4">
     <div class="col-md-6"></div>
 
     <!-- tabel participant dan loadchart partiicpant-->
@@ -106,17 +106,16 @@
     <div class="col"><span id="tableGradeQuiz"></span></div>   
   </div>
 
-  <!-- QUIZ -->
-  <div class="row mt-4 mb-5">
+  
+  <div class="row mt-4 mb-5 mr-4">
+    <!-- QUIZ -->
     <div class="col-sm-4"><span id="descQuizQues"></span></div>
     <div class="col-sm-8"><div id="chartQuizQues"></div></div>
-  </div>
 
+    <!-- ASSIGN -->
+    <div class="col-md-8"><div id="chartGradeAssignment"></div></div>
+    <div class="col-md-4"><div id="lagendGradeAssignment"></div></div>
 
-  <!-- ASSIGN -->
-  <div class="row mt-6">
-    <div class="col-md-6"><div id="chartGradeAssignment"></div></div>
-    <div class="col-md-6"><div id="lagendGradeAssignment"></div></div>
   </div>
     
 </div>
@@ -134,6 +133,8 @@
 <script>
     $(document).ready(function() {
       loadAnimation_sm("load-1");
+      //block button visdat pada saat lock halaman
+      //ketika halaman masi dalam visdat
       handleCourseContentChange();
       
         $('#course_content').on('change', function() {
@@ -144,8 +145,40 @@
 
           handleModuleChange();
         });
+        
+
+        $('#btnMhs').on('click', function(){
+          handleMhsButton();
+        });
+        $('#vis_grade_icon').on('click', function(){
+          //block button #vis_grade_icon
+          blockiconVis();
+
+          //jika diklik batalkan semua tindakan yang ada pada halaman tabel
+          //handling error ketika user klik menu visdat ketika tabel data belum selesai diload
+
+          handleCourseContentChange();
+
+          // Ganti ikon #table_grade_icon menjadi aktif
+          $('#vis_grade_icon i').removeClass('bi-bar-chart-fill').addClass('bi-bar-chart-fill active');
+
+          // Ganti ikon #vis_grade_icon menjadi nonaktif
+          $('#table_grade_icon i').removeClass('bi-table active').addClass('bi-table');
+          
+          //aktifkan kembali icon tabel
+          $('#table_grade_icon').css('pointer-events', 'auto');          
+        });
+
 
         $('#table_grade_icon').on('click', function(){
+          //block icon table
+          blockiconVis();
+
+          //jika diklik batalkan semua tindakan yang ada pada halaman visdat
+          //handling error ketika user klik menu tabel ketika visualisasi data belum selesai diload
+          //$('#chartQuizGrades').empty();
+
+          //ambil mode untuk jenis aktivitas
           var modName = $('#mod').data('modname');
           console.log("modname di html", modName);
           handleTable(modName);
@@ -155,32 +188,15 @@
 
           // Ganti ikon #vis_grade_icon menjadi nonaktif
           $('#vis_grade_icon i').removeClass('bi-bar-chart-fill active').addClass('bi-bar-chart');
+          
+          //aktifkan kembali icon visdat yang sudah diblock pada halaman awal load
+          // To make the pointer active again (enable pointer events):
+          $('#vis_grade_icon').css('pointer-events', 'auto');
 
-          //block button table
           
 
         });
-        $('#vis_grade_icon').on('click', function(){
-          handleCourseContentChange();
-
-          //ganti ganti icon vis jadi active
-          var iconvis =`<i class="bi bi-bar-chart-fill active"></i>`;
-          $('#vis_grade_icon').empty();
-          $('#vis_grade_icon').append(iconvis);
-
-          //ganti icon table jadi nonactive
-          var icontable =`<i class="bi bi-table"></i>`;
-          $('#table_grade_icon').empty();
-          $('#table_grade_icon').append(icontable);
-
-          //block button vis
-          
-        });
-
-        $('#btnMhs').on('click', function(){
-          handleMhsButton();
-        });
-
+        
     });
   </script>
 <?= $this->endSection('jshere') ?>

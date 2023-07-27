@@ -5,7 +5,7 @@
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
-    <div class="container-lg mt-5 mb-5 ">
+    <div class="container-lg mt-7 mb-5 ">
         <h3 class="font-weight-bolder">Selamat Datang, <?php echo $user_firstname ?>🎉</h3>
         <p>Silahkan pilih mata kuliah yang tersedia dibawah ini.</p>
         <hr class="mt-2 mb-3"/>

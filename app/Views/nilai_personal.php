@@ -61,6 +61,11 @@
   </div>
 
   <div class="row mt-5">
+  <div class="col-md-0">
+      <!-- button back --> 
+      <!-- on click kembali ke halaman nilai -->
+      <span id="backButton" class="btn material-icon fa-2x p-2""><i class="bi bi-arrow-left-square-fill"></i></span>
+    </div>
     <div class="col-md-4">
       <h4 id="StudentName" data-userid="<?=$personal_grade['userid']?>"><?=$personal_grade['userfullname']?></h4>
       <p id="StudentNIM"></p>
@@ -69,12 +74,12 @@
     </div>
     <div class="col-md-2">
       
-      <p class="mb-2">Grade Mahasiswa</p>
+      <p class="mb-2">Nilai Mahasiswa</p>
       <h5>🏆0</h5>
     </div>
-    <div class="col-md-6 mt-3">
+    <div class="col-md-4 mt-3">
       <p></p>
-      <p>Dengan Mean nilai mahasiswa : 0</p>
+      <p>Nilai rata-rata mahasiswa : 0</p>
     </div>
   </div>
 

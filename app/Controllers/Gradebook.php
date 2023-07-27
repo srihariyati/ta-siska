@@ -73,12 +73,13 @@ class Gradebook extends BaseController
     
                     //hanya mengambil quiz dan tugas
                     if($gbitems['itemmodule']=='quiz'){
+                        $graderaw = $this->handleNull($gbitems['graderaw']);
     
                         $grades[] =[
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
                             'itemnumber'=>$gbitems['itemnumber'],
-                            'grade'=> $gbitems['graderaw'],
+                            'grade'=> $graderaw,
                             'itemmodule'=>$gbitems['itemmodule'],
                             'cmid'=>$gbitems['cmid']
                         ];
@@ -105,12 +106,13 @@ class Gradebook extends BaseController
     
                     //hanya mengambil quiz dan tugas
                     if($gbitems['itemmodule']=='assign'){
+                        $graderaw = $this->handleNull($gbitems['graderaw']);
     
                         $grades[] =[
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
                             'itemnumber'=>$gbitems['itemnumber'],
-                            'grade'=> $gbitems['graderaw'],
+                            'grade'=> $graderaw,
                             'itemmodule'=>$gbitems['itemmodule'],
                             'cmid'=>$gbitems['cmid']
                         ];
@@ -138,12 +140,13 @@ class Gradebook extends BaseController
     
                     //hanya mengambil quiz dan tugas
                     if($gbitems['itemmodule']=='quiz' || $gbitems['itemmodule']=='assign'){
+                        $graderaw = $this->handleNull($gbitems['graderaw']);
     
                         $grades[] =[
                             'itemid'=>$gbitems['id'],
                             'itemname'=> $gbitems['itemname'],
                             'itemnumber'=>$gbitems['itemnumber'],
-                            'grade'=> $gbitems['graderaw'],
+                            'grade'=> $graderaw,
                             'itemmodule'=>$gbitems['itemmodule'],
                             'cmid'=>$gbitems['cmid']
                         ];
@@ -218,9 +221,12 @@ class Gradebook extends BaseController
             //ambil semua data iditem/grade dan graderaw
             foreach($rg['gradeitems'] as $rgi){
                 if($rgi['itemmodule']=='assign'||$rgi['itemmodule']=='quiz'){
+
+                    $graderaw = $this->handleNull($rgi['graderaw']);
+
                     $gradeRawAll[]=[
                         'idgrade'=>$rgi['id'],
-                        'graderaw'=>$rgi['graderaw']
+                        'graderaw'=> $graderaw,
                     ];
                 }
             }
@@ -341,6 +347,10 @@ class Gradebook extends BaseController
     
                     $cmid = $gi['cmid'];
                     $modmodule = $gi['itemmodule'];
+                    
+                    //kalau nilai null dan lebih keci dari 0
+                    $grade = $this->handleNull($gi['graderaw']);
+                  
 
                     $moduleGrade[]=[
                         'userid'=>$userid,
@@ -351,7 +361,7 @@ class Gradebook extends BaseController
                         'itemnumber'=>$gi['itemnumber'],
                         'itemmodule'=> $gi['itemmodule'],
                         'cmid'=>$cmid,
-                        'grade'=>$gi['graderaw'],
+                        'grade'=>$grade,
                     ];
                 }
                 
@@ -392,6 +402,12 @@ class Gradebook extends BaseController
         }else if($modmodule=='quiz'){
             $moduleGradeFix=$moduleGrade;
         }
+
+        //sorting modulegradefix berdasarkan userfullname(studentfullname)
+        usort($moduleGradeFix, function ($a, $b) {
+            return strcmp($a['userfullname'], $b['userfullname']);
+        });
+
 
         // return to ajax
         //dd($moduleGradeFix);
@@ -630,6 +646,15 @@ class Gradebook extends BaseController
             $response =  $curlGen->curlGen($param);
         }
         return $this->response->setJSON($response);
+    }
+
+    public function handleNull($grade_raw){
+        $grade = $grade_raw;
+        if ($grade === null || $grade < 0) {
+            $grade = 0;
+        }
+
+        return $grade;
     }
     
 }
