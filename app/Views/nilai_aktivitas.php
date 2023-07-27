@@ -6,7 +6,7 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-lg mt-7 mb-3">
+<div class="container-lg mt-5 mb-3">
 
   <div class="row">
 
@@ -67,7 +67,7 @@
 </div>
 
 <div class="container-lg">
-  <div class="row mt-4">
+  <div class="row mt-4 mb-5">
 
     <div class="col-md-6">
       <span id="studentGrade"></span>

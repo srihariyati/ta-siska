@@ -146,8 +146,8 @@ function getAssign(token, courseId, instanceid) {
             var formattedClosedDate = formatUnixTimestamp(closedDate);
 
             //append opened date dan closed date
-            var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
-            var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+            var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Dibuka</strong>  : ' + formattedOpenedDate + ' </p>';
+            var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Ditutup</strong> : ' + formattedClosedDate + ' </p>';
 
             //append table participant khusus assign
             var tableParticipant = '<table class="table table-bordered"><body><tr><td>Participants</td><td><span id = "courseParticipant"><span></td></tr><tr><td>Submitted</td><td><span id = "submittedParticipant"></span></td ></tr><tr><td>Late Submitted</td><td><span id = "lateSubmittedParticipant"></span></td ></tr></tbody></table>';
@@ -411,8 +411,8 @@ function getQuiz(token, courseId, instanceid) {
             var formattedOpenedDate = formatUnixTimestamp(openedDate);
             var formattedClosedDate = formatUnixTimestamp(closedDate);
 
-            var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Opened Date</strong> : ' + formattedOpenedDate + '</p>';
-            var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Closed Date</strong> : ' + formattedClosedDate + '</p>';
+            var showOpenedDate = '<p class="mt-2 mb-0" id="openedDate"><strong>Dibuka</strong>  : ' + formattedOpenedDate + '</p>';
+            var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Ditutup</strong> : ' + formattedClosedDate + '</p>';
 
             //hapus load animation setelah empty dan sebelum append
             window.removeAnimation('load-1');
@@ -422,7 +422,6 @@ function getQuiz(token, courseId, instanceid) {
 
             //ambil data grade
             getGradeQuiz(response.quizId);
-            getQuizQues(response.quizId);
         }
     });
 
@@ -432,6 +431,8 @@ function getGradeQuiz(quizId) {
     console.log(quizId);
     var courseId = $('#courseTitle').data('courseid');
     var counts = {};
+    //var dataUser=[];
+    // var participant;
     //ambil list participant pada course untuk proses looping pada function
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant`,
@@ -443,29 +444,14 @@ function getGradeQuiz(quizId) {
         dataType: 'json',
         success: function(response) {
             var participant = response;
-            console.log(participant);
-
-            const dataUser = [];
-            for (var i = 0; i < response.length; i++) {
-                //kirim userid dan studentname(fullname)
-                var studentname = response[i].fullname;
-                var userid = response[i].id;
-
-                //list of studentid and studentname
-                dataUser.push({ userid: userid, studentname: studentname });
-            }
-
-            //kirim userid kedalam function
-
-            //ambil data userid participantnya
-            //lalu lakukan looping mengunakan funtion mod_quiz_get_user_attempts
-            $.ajax({
+            console.log(participant);    
+            $.ajax({               
                 url: `${BASE_URL}course/getGradeQuiz`,
-                method:'POST',
-                data: {
-                    token: token,
-                    quizid: quizId,
-                    datauser: dataUser,
+                method: 'POST',
+                data:{
+                    token:token,
+                    quizid:quizId,
+                    participant:participant,
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -474,61 +460,74 @@ function getGradeQuiz(quizId) {
                     for (var i = 0; i < response.length; i++) {
                         var grade = response[i].grade;
                         //console.log(grade);
-
+        
                         if (!counts.hasOwnProperty(grade)) {
                             counts[grade] = 0;
-
+        
                         }
                         // Increment the count for the 
                         counts[grade]++;
-
+        
                     }
-
+        
                     console.log(counts);
                     const dataQuizGrades = [];
-
+        
                     // Iterate over the object keys
                     for (let grade in counts) {
                         // Create an object with grade and jumlah properties
                         const obj = { grade: grade, jumlah: counts[grade] };
                         dataQuizGrades.push(obj);
                     }
-
-                    // Sorting dataQuizGrades berdasarkan nilai grade dari terbesar ke terkecil
-                    dataQuizGrades.sort((a, b) => b.grade - a.grade);
-
+        
                     //remove load animation
                     window.removeAnimation('load-2');
                     window.chartQuizGrades(dataQuizGrades);
                     //end chart 1
-
-
+        
+        
                     //chart quiz 2
                     //get questions in all data response
                     var questions = [];
                     for (var i = 0; i < response.length; i++) {
                         var ques = response[i].questions;
-
+        
                         for (var j = 0; j < ques.length; j++) {
                             console.log(ques[j]);
                             //couting jumlah slot corret dan incorret/no answered
                             //hitung jumlah slot
                             // {slot:jumlahslot}
                             questions.push(ques[j]);
-
+        
                         }
-
+        
                     }
                     getQuizQues(questions);
-
-
                 }
-            });
+            });      
+            // for (var i = 0; i < response.length; i++) {
+            //     //kirim userid dan studentname(fullname)
+            //     var studentname = response[i].fullname;
+            //     var userid = response[i].id;
+
+            //     //list of studentid and studentname
+            //     dataUser.push({ userid: userid, studentname: studentname });
+            // }    
+
+            //kirim userid kedalam function
+
+            //ambil data userid participantnya
+            //lalu lakukan looping mengunakan funtion mod_quiz_get_user_attempts
+           
         }
     });
+
+
+    
 }
 
 function getQuizQues(questionsData) {
+    console.log(questionsData);
     const countBySlot = {};
     let output = [];
 
@@ -544,6 +543,7 @@ function getQuizQues(questionsData) {
             countBySlot[slot].incorrect++; //data yan dihasilkan dmulai dari index 1(index sesuai nama slot), dan gabia dibaca oleh data.map, jadi harus dicobert dulu
         }
     });
+    
 
     //convert dalam format tanpa nomor index (mengahpus nomor index)
     const mappedData = Object.values(countBySlot).map(item => ({
@@ -593,6 +593,7 @@ function handleTableQuiz(quizId) {
 
             $.ajax({
                 url: `${BASE_URL}course/getGradeQuiz`,
+                method :'POST',
                 data: {
                     token: token,
                     quizid: quizId,
@@ -709,15 +710,20 @@ function emptyPagetable() {
     $('#chartQuizGrades').empty();
 }
 
+
 function formatUnixTimestamp(unixTimestamp) {
-    return new Date(unixTimestamp * 1000).toLocaleString('id-ID', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-    });
+        const options = {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            timeZoneName: 'short'
+        };
+    
+        const locale = 'id-ID';
+        return new Date(unixTimestamp * 1000).toLocaleString(locale, options);
 }
 
 function sweetAlertFail(){

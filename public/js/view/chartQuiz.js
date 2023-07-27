@@ -85,7 +85,7 @@ function chartQuizGrades(data) {
             var mouseY = mouseCoords[1];
 
             tooltip.style("opacity", 1)
-                .html(`<strong>Grade: ${d.grade}</strong><br/>${d.jumlah} Mahasiswa`)
+                .html(`<strong>Nilai: ${d.grade}</strong><br/>${d.jumlah} Mahasiswa`)
                 .style("left", (mouseX + 20) + "px") // Position tooltip relative to mouse X-coordinate
                 .style("top", (mouseY + 20) + "px") // Position tooltip relative to mouse Y-coordinate
                 .style("background-color", "rgba(255, 255, 255, 0.8)") // Set background color to 50% white
@@ -114,20 +114,20 @@ function chartQuizGrades(data) {
 
     //membuat text axis
     svg.append('text')
-        .attr('x', -((height - margin.left) / 2))
+        .attr('x', -(height - margin.bottom-margin.top) / 2-(3*margin.top))
         .attr('y', margin.left + 10)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
         .text('Jumlah Mahasiswa')
-        .style("font-size", "12px");
+        .style("font-size", "15px");
 
     chart.append('text')
         .attr('x', (width - margin.left - margin.right) / 2 + margin.left)
         .attr('y', height + margin.bottom - 20)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
-        .text('Nilai (Grades)')
-        .style("font-size", "12px");
+        .text('Nilai')
+        .style("font-size", "15px");
 
     chart.append('style').text(`
     .grid line {
@@ -293,12 +293,12 @@ function chartQuizQues(data) {
 
     //membuat text x axis
     svg.append('text')
-        .attr('x', -((height - margin.left) / 2))
+        .attr('x', -(height - margin.bottom-margin.top) / 2-(3*margin.top))
         .attr('y', margin.left + 10)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
         .text('Jumlah Mahasiswa')
-        .style("font-size", "12px");
+        .style("font-size", "15px");
 
     //membuat text y axis
     chart.append('text')
@@ -307,7 +307,7 @@ function chartQuizQues(data) {
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
         .text('Pertanyaan')
-        .style("font-size", "12px");
+        .style("font-size", "15px");
 
     //tooltip while hovering
 

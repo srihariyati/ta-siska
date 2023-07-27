@@ -377,13 +377,12 @@ class Course extends BaseController{
     
     }
 
-    public function getGradeQuiz()
-    {
-        $token =$this->request->getPost('token');
-        $quizid =$this->request->getPost('quizid');
-        $participant =$this->request->getPost('datauser');
-        //dd($participant);
-     
+    public function getGradeQuiz(){
+        $token =  $this->request->getPost('token');       
+        $quizid = $this->request->getPost('quizid');
+        $participant = $this->request->getPost('participant');
+        //dd($participant[0]['id']);
+
         $quizAttempt=[];
         $quizAttemptAll=[];
         $quizGrade=[];
@@ -397,7 +396,7 @@ class Course extends BaseController{
                 "moodlewsrestformat"=>"json",
                 "wsfunction"=>"mod_quiz_get_user_attempts",
                 "quizid"=> $quizid,
-                "userid"=>$userid['userid']
+                "userid"=>$userid['id']
             ];
     
             $response =  $curlGen->curlGen($param);
@@ -407,8 +406,9 @@ class Course extends BaseController{
             if($arrayLength>0){ //karena ada user yang gada attempt
                 $quizAttempt=[
                     'quizid'=>$quizid,
-                    'userid'=>$userid['userid'],
-                    'studentname'=>$userid['studentname'],
+                    'userid'=>$userid['id'],
+                    'studentname'=>$userid['fullname'],
+                    'username'=>$userid['username'],
                     'attemptsid'=>$attempsid[0]['id']
                 ];
             }     
@@ -419,21 +419,44 @@ class Course extends BaseController{
             //untuk mendapatkan nilaigrade dan perpertanyaan
         
         }
-        //dd($quizAttemptAll);
+        
 
-        foreach($quizAttemptAll as $attemps){
+        //ada yang attemptsid nya sama
+        //handling error attempts id sama
+        // $type = gettype($quizAttemptAll);
+        // echo "Tipe data dari \$data adalah: $type";
+        // die();
+        // //ubah json->array
+        // $arrayQuizAttempt =json_decode($quizAttemptAll);
+    
+        // //hapus duplikasi data 
+        $quizAttemptUniqe = array_unique($quizAttemptAll, SORT_REGULAR);
+
+
+        // Menghapus elemen array yang kosong (array dengan jumlah elemen 0)
+        $quiz_Attempts_fix = array_filter($quizAttemptUniqe, function ($value) {
+            return !empty($value);
+        });
+
+        //indexing ulang
+        $quiz_Attempts = array_values( $quiz_Attempts_fix);
+
+        // var_dump( $quiz_Attemptsss);
+        // die();
+
+        foreach($quiz_Attempts as $att){
             //looping untuk wsfunction here
             $param =[
                 "wstoken" =>$token,
                 "moodlewsrestformat"=>"json",
                 "wsfunction"=>"mod_quiz_get_attempt_review",
-                "attemptid"=> $attemps['attemptsid'],
+                "attemptid"=> $att['attemptsid'],
             ];
 
-            $response =  $curlGen->curlGen($param);
+            $response_grade =  $curlGen->curlGen($param);
           
             $questions=[];
-            foreach($response['questions'] as $ques){
+            foreach($response_grade['questions'] as $ques){
                 $questions[]=[
                     'slot'=>$ques['slot'],
                     'status'=>$ques['status'],
@@ -441,17 +464,20 @@ class Course extends BaseController{
             }
 
             $quizGrade=[
-                'quizid'=>$response['attempt']['quiz'],
-                'attemptsid'=>$attemps['attemptsid'],
-                'userid'=>$response['attempt']['userid'],
-                'studentname'=>$attemps['studentname'],
-                'grade'=>$response['grade'],
+                'quizid'=>$response_grade['attempt']['quiz'],
+                'attemptsid'=>$att['attemptsid'],
+                'userid'=>$response_grade['attempt']['userid'],
+                'studentname'=>$att['studentname'],
+                'username'=>$att['username'],
+                'grade'=>$response_grade['grade'],
                 'questions'=>$questions
                 
             ];
-
+            
             array_push($quizGradeAll,  $quizGrade);
         }
+        // var_dump($quizGradeAll);
+        // die();
         //dd($quizGradeAll);         
         //gunakan wsfunction untuk mendapatkan data
         //data idgrade, userid, grade, username(optional)

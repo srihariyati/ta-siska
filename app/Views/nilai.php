@@ -6,7 +6,7 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-lg mt-7 mb-3">
+<div class="container-lg mt-5 mb-3">
       <div class="row">
         <div class="col-md-6">
           <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"></h2>
