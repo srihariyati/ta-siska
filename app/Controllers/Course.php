@@ -38,7 +38,7 @@ class Course extends BaseController{
         $course_info =[
             'token'=>$token,
             'courseid'=>$response["courses"][0]["id"],
-            'displayname'=>$response["courses"][0]["displayname"],
+            'displayname'=>ucwords($response["courses"][0]["displayname"]),
         ];
         $this->data['course_info'] = $course_info;
         return $this->getcoursecontent();

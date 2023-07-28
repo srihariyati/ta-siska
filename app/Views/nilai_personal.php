@@ -64,7 +64,8 @@
   <div class="col-md-0">
       <!-- button back --> 
       <!-- on click kembali ke halaman nilai -->
-      <span id="backButton" class="btn material-icon fa-2x p-2""><i class="bi bi-arrow-left-square-fill"></i></span>
+      <a href="<?=base_url('gradebook/getGradebookView/' .$personal_grade['courseid'])?>"><span id="backButton" class="btn material-icon fa-2x p-2""><i class="bi bi-arrow-left-square-fill"></i></span></a>
+      
     </div>
     <div class="col-md-4">
       <h4 id="StudentName" data-userid="<?=$personal_grade['userid']?>"><?=$personal_grade['userfullname']?></h4>
@@ -105,6 +106,7 @@
       getStudentInfo();
       showPersonalGradeChart(personalGradeItems);
       console.log(personalGradeItems);
+      
 
       $('#modAll').on('click', function(){
         $('#dropdownMenuButtonMod').empty();

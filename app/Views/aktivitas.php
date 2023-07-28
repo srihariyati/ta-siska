@@ -7,18 +7,20 @@
 <?= $this->section('content') ?>
 
 <div class="container-lg mt-7 mb-3">
-
-      <div class="row">
-
-        <div class="col-md-6">
-        <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"> <?= $coursename; ?> </h2>
-
+        <div class="row d-flex flex-row">
+        <a href="<?= base_url('beranda/getEnrolledCourses/') ?>"><span id="backButton" class="btn material-icon fa-2x p-3"><i class="bi bi-arrow-left-square-fill"></i></span></a>
+        
+        <div class="col-md-6" style="display: flex; align-items: center;">
+        <h2 class="font-weight-bolder pr-10 m-1" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"> <?= $coursename; ?> </h2>
         </div>
 
         <div class="col-md-6">
         </div>
 
-      </div>
+        </div>
+        
+
+
       <nav class="nav-menu mt-2">
         <a href="<?= base_url('course/getCourseInfo/' . $courseid) ?>"> <span id="btnCourse" class="nav-menu-link active">Aktivitas</span></a>
         <!-- kirim token dalam bentuk session -->
