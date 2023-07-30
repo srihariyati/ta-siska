@@ -105,6 +105,7 @@ function showTableGradebook(responseData) {
         headerRow.push(headerData);
         // headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGradeView?itemid=${item.itemid}&token=${token}&courseid=${courseId}&cmid=${item.cmid}" style="text-decoration:none;">${item.itemname}</a>`);
     });
+    
 
     responseData.forEach(function(user) {
         var rowData =[`
@@ -369,6 +370,11 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
             var buttonEditAll = '<button type="button" id="editAll" class="btn btn-warning bnt-sm">Ubah Semua</button>';
             $('#btnEditAll').append(buttonEditAll);
 
+            //tambahkan link kembali ke atas setelah semua card muncul
+            $('#backTopButton').empty();
+            var backtop =`<a href="#"> <i class="bi bi-arrow-up-square-fill pr-2"></i>Kembali ke atas</a>`;
+            $('#backTopButton').append(backtop);
+
             //btnEditAll on click
             //kirim data response
             $('#btnEditAll').on('click', '#editAll', function() {
@@ -480,6 +486,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
 }
 
 function getEditGradeModule(courseid, activityid, token, studentId, studentName, grade, itemModule, itemNumber, mean, status) {
+    $('#backTopButton').empty();
 
     var studentInfo = '<h3 class="font-weight-bolder pr-10 mb-0">' + studentName + '</h3>';
     studentInfo += '<p class="card-text text-left"><small class="text-muted">' + status + '</small></p>';
@@ -645,6 +652,11 @@ function getEditGradeModuleAll(response) {
     var buttonEditAll = '<button type="button" data-count="' + response.length + '" class="btn btn-success" id="updateButton">Ubah Semua</button>';
     buttonEditAll += '<button class = "btn btn-danger ml-2" type = "button" onclick="window.location.reload()">Batal</button>';
     $('#btnEditAll').append(buttonEditAll);
+
+    //tambahkan link kembali ke atas setelah semua card muncul
+    $('#backTopButton').empty();
+    var backtop =`<a href="#"> <i class="bi bi-arrow-up-square-fill pr-2"></i>Kembali ke atas</a>`;
+    $('#backTopButton').append(backtop);
 }
 
 function updateModuleGradeAll(countData) {
@@ -794,5 +806,9 @@ function guideAlert(tipe){
     $('#guide').append(guide);
 }
 
+function scrollToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0; 
+}
 
 

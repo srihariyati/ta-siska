@@ -272,52 +272,63 @@ function handleTableAssign(courseId, assignId) {
 function showTableGradeAssignment(responseData) {
     console.log(responseData);
 
-    // Get the table element by its ID
-    var table = document.getElementById("table_assign");
+    var data=[];
+    responseData.forEach(function(item){
+        var rowData=[];
+        rowData=[item.username, item.fullname];
+        
+        //buat kondisi nilai >50 dan <50
+        if (item.grade < 50) {
+            rowData.push(`<span style="color: red;"><strong>${item.grade}</strong></span>`);
+        } else {
+            rowData.push(`<span style="color: green;"><strong>${item.grade}</strong></span>`);
+        }
 
-    // Remove all existing rows from the table when user force click
-    while (table.rows.length > 1) {
-        table.deleteRow(1);
-    }
-    // Sort the responseData array by username
-    responseData.sort(function(a, b) {
-        var usernameA = a.username.toUpperCase();
-        var usernameB = b.username.toUpperCase();
-        if (usernameA < usernameB) {
-            return -1;
+        //buat kondisi nilai >50 dan <50
+        if (item.lettergrade == 'A'||'AB'||'B') {
+            rowData.push(`<span style="color: red;"><strong>${item.lettergrade}</strong></span>`);
+        } else {
+            rowData.push(`<span style="color: green;"><strong>${item.lettergrade}</strong></span>`);
         }
-        if (usernameA > usernameB) {
-            return 1;
-        }
-        return 0;
+
+        data.push(rowData);
     });
 
-    // Loop through the response data and create table rows
-    for (var i = 0; i < responseData.length; i++) {
-        var row = table.insertRow(i + 1); // Insert a new row at index 'i + 1'
+    console.log(data);
 
-        var usernameCell = row.insertCell(0);
-        usernameCell.textContent = responseData[i].username;
-
-        var fullnameCell = row.insertCell(1);
-        fullnameCell.textContent = responseData[i].fullname;
-
-        var gradeCell = row.insertCell(2);
-        gradeCell.textContent = responseData[i].grade;
-
-        var letterGradeCell = row.insertCell(3);
-        letterGradeCell.textContent = responseData[i].lettergrade;
-
-        // Add CSS class based on grade value
-        if (responseData[i].grade <= 50) {
-            gradeCell.classList.add("red-text");
-            letterGradeCell.classList.add("red-text");
-        } else {
-            gradeCell.classList.add("green-text");
-            letterGradeCell.classList.add("green-text");
-        }
-    }
-
+    //buat datatables
+    table = $('#table_assign').DataTable({
+        destroy: true,
+        data: data,
+        scrollY:"500px",
+        scrollX: true,
+        footer: true,
+        autoWidth: false,
+        paging: false,
+        searching: true,
+        info: true,
+        dom: 'lfrtip',
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/id.json',
+        },
+        buttons: [{
+                extend: 'pdf',
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: ':visible'
+                },
+            },
+            {
+                extend: 'excel',
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: ':visible'
+                },
+            },
+            'copy'
+        ],
+    });
+    $('.dt-buttons').hide();
 }
 
 function getCourseParticipant(token, courseId) {
@@ -612,85 +623,138 @@ function handleTableQuiz(quizId) {
                 dataType: 'json',
                 success: function(response) {
                     console.log(response);
+                    //transformasi data kedalam format row table
+                    var dataTableData = [];
+
+                    response.forEach(function(item) {
+                        var rowData=[];
+                        // Extract the desired properties from the item
+                        rowData.username = item.username;
+                        rowData.studentname = item.studentname;
+                        rowData.grade = item.grade;
+
+
+                        /// Iterate through each question in the 'questions' array and extract the status for each slot
+                       item.questions.forEach(function (question) {
+                            rowData['Q' + question.slot] = question.status;
+                        });
+                                        
+                        dataTableData.push(rowData);
+                    });
+                    console.log(dataTableData);
+
+
+                    //generate baris header
                     //kolom paling akhir sebanyak jumlah slot quiz
                     var countingques = (response[0]['questions']).length;
                     console.log(countingques);
-                    var tableGrade = '<table  id="table_quiz" class="table table-sm table-striped"><thead><tr><th scope="col">#</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th>';
+                    
+                    //kolom paling akhir sebanyak jumlah slot quiz
+                    var countingques = (response[0]['questions']).length;
+                    console.log(countingques);
+                    var tableGrade = '<table  id="table_quiz" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Nilai</th>';
                     // Generate <th> elements for Q1, Q2, Q3, ..., Qn
                     for (var i = 1; i <= countingques; i++) {
                         tableGrade += '<th scope="col">Q' + i + '</th>';
                     }
 
-                    tableGrade += '</tr></thead><tbody></tbody></table>';
-
                     $('#tableGradeQuiz').append(tableGrade);
-                    //bawa data untuk diproses kedalam tabel
 
                     window.removeAnimation("load-table");
-                    showTableGradeQuiz(response);
-
+                    showTableGradeQuiz(dataTableData);
                 }
             });
         }
     });
 }
 
-function showTableGradeQuiz(responseData) {
-    // Get the table element by its ID
-    var table = document.getElementById("table_quiz");
+function showTableGradeQuiz(data){
+    $('#ketIcon').show();
+    
+    var dataTableData=[];
+    //buat row data dulu
+    data.forEach(function(item,key) {
+        var rowData=[];
+        rowData =[item.username, item.studentname];
 
-    // Remove all existing rows from the table when user force click
-    while (table.rows.length > 1) {
-        table.deleteRow(1);
-    }
+        //buat kondisi nilai >50 dan <50
+        if (item.grade < 50) {
+            rowData.push(`<span style="color: red;"><strong>${item.grade}</strong></span>`);
+          } else {
+            rowData.push(`<span style="color: green;"><strong>${item.grade}</strong></span>`);
+          }
 
-    // Sort the responseData array by username
-    responseData.sort(function(a, b) {
-        var studentnameA = a.studentname.toUpperCase();
-        var studentnameB = b.studentname.toUpperCase();
-        if (studentnameA < studentnameB) {
-            return -1;
-        }
-        if (studentnameA > studentnameB) {
-            return 1;
-        }
-        return 0;
-    });
-
-    // Loop through the response data and create table rows
-    for (var i = 0; i < responseData.length; i++) {
-        var row = table.insertRow(i + 1); // Insert a new row at index 'i + 1'
-
-        // Add a cell for serial number (nomor urut)
-        var serialNumberCell = row.insertCell(0);
-        serialNumberCell.textContent = i + 1; // The serial number is the row index + 1
-
-        var studentnameCell = row.insertCell(1);
-        studentnameCell.textContent = responseData[i].studentname;
-
-        var gradeCell = row.insertCell(2);
-        gradeCell.textContent = responseData[i].grade;
-
-        //lopping untuk semua question yang ada didalam responseData[i].question;
-        // Loop and populate the Q1, Q2, Q3, Q4, Q5 cells
-        var questions = responseData[i].questions;
-        for (var j = 0; j < questions.length; j++) {
-            var questionCell = row.insertCell(j + 3);
-            //questionCell.textContent = questions[j].status;
-            if (questions[j].status === 'Correct') {
-                questionCell.innerHTML = '<i class="bi bi-check-square-fill text-success"></i>'; // Bootstrap check icon
-            } else {
-                questionCell.innerHTML = '<i class="bi bi-x-square-fill text-danger"></i>'; // Bootstrap x icon
+        //buat kondisi jika answeres pakai icon 
+        const getIconByQValue = (value) => {
+            if (value === "Correct") {
+            return '<i class="bi bi-check-square-fill text-success"></i>';
+            } else if (value === "Incorrect") {
+            return '<i class="bi bi-x-square-fill text-danger"></i>';
+            } else if (value === "Not answered") {
+            return '<i class="bi bi-question-circle-fill text-warning"></i>';
             }
-        }
+            return value;
+        };
 
-        // Add CSS class based on grade value
-        if (responseData[i].grade <= 50) {
-            gradeCell.classList.add("red-text");
-        } else {
-            gradeCell.classList.add("green-text");
+        //sorting agar Q muncul berurutan
+        const sortedQKeys = Object.keys(item)
+            .filter(key => key.startsWith("Q"))
+            .sort((a, b) => {
+            const indexA = parseInt(a.slice(1));
+            const indexB = parseInt(b.slice(1));
+            return indexA - indexB;
+        });
+
+        for (const key of sortedQKeys) {
+            rowData.push(getIconByQValue(item[key]));
         }
-    }
+         
+
+        dataTableData.push(rowData);
+    });
+    console.log(dataTableData);
+    //buat datatables
+    table = $('#table_quiz').DataTable({
+        destroy: true,
+        data: dataTableData,
+        scrollY:"500px",
+        scrollX: true,
+        footer: true,
+        autoWidth: false,
+        paging: false,
+        searching: true,
+        info: true,
+        dom: 'lfrtip',
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/id.json',
+        },
+        buttons: [{
+                extend: 'pdf',
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: ':visible'
+                },
+            },
+            {
+                extend: 'excel',
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: ':visible'
+                },
+            },
+            'copy'
+        ],
+    });
+    $('.dt-buttons').hide();
+
+
+    var keticon =`    
+        <i class="bi bi-question-circle-fill text-warning mr-2"></i><span class="mr-4">: Tidak Dijawab</span>
+        <i class="bi bi-check-square-fill text-success mr-2"></i><span class="mr-4">: Benar</span>
+        <i class="bi bi-x-square-fill text-danger mr-2"></i><span class="mr-4">: Salah</span>       
+    `;
+    $('#ketIcon').append(keticon);
+
 }
 
 
@@ -719,7 +783,6 @@ function emptyPagetable() {
     $('#descQuizQues').empty();
     $('#chartQuizGrades').empty();
 }
-
 
 function formatUnixTimestamp(unixTimestamp) {
         const options = {

@@ -26,7 +26,7 @@ function showPersonalGradeChart(gradeData) {
 
     // Skala y (jumlah mahasiswa)
     var yScale = d3.scaleLinear()
-        .domain([0, (d3.max(data, function(d) { return Math.max(d.graderaw, d.grademean); }) + 10)])
+        .domain([0, (d3.max(data, function(d) { return Math.max(d.graderaw, d.grademean); }) + 50)])
         .range([height, 0]);
 
     //menampilkan yAxis
@@ -137,8 +137,8 @@ function showPersonalGradeChart(gradeData) {
         .attr('y', margin.left + 10)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
-        .text('Nilai (Grade)')
-        .style("font-size", "12px");
+        .text('Nilai')
+        .style("font-size", "14px");
 
     //membuat text y axis
     chart.append('text')
@@ -147,7 +147,7 @@ function showPersonalGradeChart(gradeData) {
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
         .text('Tugas/Kuis')
-        .style("font-size", "12px");
+        .style("font-size", "14px");
 
     //tooltip while hovering
 
@@ -171,4 +171,48 @@ function showPersonalGradeChart(gradeData) {
             font-size: 14px;
             transition: opacity 0.3s ease-in-out;
         }`);
+
+
+         //menambahkan lagend
+    // Tambahkan elemen SVG baru untuk legenda
+    var legend = svg.append("g")
+    .attr("class", "legend")
+    .attr("transform", "translate(" + (width - margin.right -80) + "," + (margin.top + 10) + ")"); // Adjust the '120' for horizontal alignment
+
+    // Buat persegi panjang merah
+    legend.append("rect")
+        .attr("x",0)
+        .attr("y", 5)
+        .attr("rx", 5)
+        .attr("ry", 5)
+        .attr("width", 25)
+        .attr("height", 25)
+        .attr('class', 'bar-green') //chart.css
+
+
+    legend.append("text")
+        .attr("x", 30)
+        .attr("y", 20) 
+        .attr("alignment-baseline", "middle")
+        .text("Nilai Mahasiwa")
+        .style("font-size", "14px");
+
+    // Buat persegi panjang hijau
+    legend.append("rect")
+        .attr("x",0)
+        .attr("y", 35)
+        .attr("rx",5)
+        .attr("ry",5)
+        .attr("width", 25)
+        .attr("height", 25)
+        .attr('class', 'bar-grademean') //chart.css
+
+
+    legend.append("text")
+        .attr("x", 30)
+        .attr("y", 50) 
+        .attr("alignment-baseline", "middle")
+        .text("Nilai Rata-rata")
+        .style("font-size", "14px");
+        
 }
