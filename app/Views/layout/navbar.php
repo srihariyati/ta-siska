@@ -89,9 +89,13 @@
 </footer>
 
   <script> const BASE_URL = "<?= base_url() ?>"</script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+ 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
   <script src="<?=str_replace('/index.php', '', base_url()) .'/js/bootstrap.bundle.min.js'?>"></script>
+
+
+  
   <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
   <script>
       $(".profile .icon_wrap").click(function(){

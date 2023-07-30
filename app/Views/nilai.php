@@ -6,9 +6,13 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-lg mt-5 mb-3">
-      <div class="row">
-        <div class="col-md-6">
+<div class="container-lg mt-7 mb-3">
+    <div class="row pl-2">
+      <a href="<?= base_url('beranda/getEnrolledCourses/') ?>"><span id="backButton" class="btn material-icon fa-1x p-2 "><i class="bi bi-caret-left-fill text-secondary"></i></span>Beranda</a>
+    </div>
+  
+      <div class="row d-flex flex-row">       
+        <div class="col-md-6"  style="display: flex; align-items: center;">
           <h2 class="font-weight-bolder pr-10" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"></h2>
         </div>
         <div class="col-md-6">
@@ -73,7 +77,8 @@
 <?= $this->endSection('content') ?>
 
 <?= $this->section('jshere') ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>

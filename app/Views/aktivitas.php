@@ -7,15 +7,17 @@
 <?= $this->section('content') ?>
 
 <div class="container-lg mt-7 mb-3">
-        <div class="row d-flex flex-row">
-        <a href="<?= base_url('beranda/getEnrolledCourses/') ?>"><span id="backButton" class="btn material-icon fa-2x p-3"><i class="bi bi-arrow-left-square-fill"></i></span></a>
+        <div class="row pl-2">
+        <a href="<?= base_url('beranda/getEnrolledCourses/') ?>"><span id="backButton" class="btn material-icon fa-1x p-2 "><i class="bi bi-caret-left-fill text-secondary"></i></span>Beranda</a>
+        </div>
         
-        <div class="col-md-6" style="display: flex; align-items: center;">
-        <h2 class="font-weight-bolder pr-10 m-1" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"> <?= $coursename; ?> </h2>
-        </div>
+        <div class="row d-flex flex-row">    
+          <div class="col-md-6" style="display: flex; align-items: center;">
+            <h2 class="font-weight-bolder pr-10 m-1 mt-0" id="courseTitle" data-courseid="<?= $courseid; ?>" data-token="<?= $token; ?>"> <?= $coursename; ?> </h2>
+          </div>
 
-        <div class="col-md-6">
-        </div>
+          <div class="col-md-6">
+          </div>
 
         </div>
         
@@ -66,10 +68,13 @@
 
 <div class="container-lg">
 
-  
+
+  <div class="row">
+  <div id="alert" class='w-100 ml-3 mr-3'></div>
+  </div>
    
   <div class="row mt-3">
-    <div id="alert" class='w-100 ml-3 mr-3'></div>
+   
    
     <div class="col-md-6">
       <div id="load-1"></div>
@@ -102,30 +107,36 @@
     <div class="col"><span id="tableGradeAssignment"></span></div>   
   </div>
 
-  <div class="row mt-4">
+  <div class="row mb-5">
     <!-- table disnii aktif jika user memlih view table -->
-    <span id="load-table"></span>
+    <span id="load-table"></span>    
+    <div id="ketIcon" class="mb-3 p-2"></div>  
     <div class="col"><span id="tableGradeQuiz"></span></div>   
   </div>
-
   
-  <div class="row mt-4 mb-5 mr-4">
+  <div class="row mt-0 mb-3 mr-4">
     <!-- QUIZ -->
     <div class="col-sm-4"><span id="descQuizQues"></span></div>
-    <div class="col-sm-8"><div id="chartQuizQues"></div></div>
+    <div class="col-sm-8 mb-5" style="overflow-x: auto; overflow-y:hidden; margin: 0 auto;  display: flex;"><div id="chartQuizQues"></div></div>
 
     <!-- ASSIGN -->
     <div class="col-md-8"><div id="chartGradeAssignment"></div></div>
     <div class="col-md-4"><div id="lagendGradeAssignment"></div></div>
 
   </div>
+
+  
     
 </div>
 
 <?= $this->endSection('content') ?>
 
 <?= $this->section('jshere') ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+
 <script src="<?=str_replace('/index.php', '', base_url()) .'/js/view/loadAnimation.js'?>"></script>
 <script src="<?=str_replace('/index.php', '', base_url()) .'/js/view/course.js'?>"></script>
 <script src="<?=str_replace('/index.php', '', base_url()) .'/js/view/chartAssign.js'?>"></script>
@@ -133,29 +144,36 @@
 <script src="<?=str_replace('/index.php', '', base_url()) .'/js/d3.v7.min.js'?>"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function() {   
+      
       loadAnimation_sm("load-1");
       //block button visdat pada saat lock halaman
-      //ketika halaman masi dalam visdat
+      //ketika halaman masi dalam visda
+      $('#ketIcon').hide();
       handleCourseContentChange();
+    
+      
       
         $('#course_content').on('change', function() {
+          $('#ketIcon').hide();
           handleCourseContentChange(); //menampilkan dropdown 2 : topik/content
         });
         
         $('#content_module').on('change', function() {
-
+          $('#ketIcon').hide();
           handleModuleChange();
         });
         
-
         $('#btnMhs').on('click', function(){
           handleMhsButton();
+          
         });
+
         $('#vis_grade_icon').on('click', function(){
+          $('#ketIcon').hide();
           //block button #vis_grade_icon
           blockiconVis();
-
+    
           //jika diklik batalkan semua tindakan yang ada pada halaman tabel
           //handling error ketika user klik menu visdat ketika tabel data belum selesai diload
 
@@ -171,10 +189,9 @@
           $('#table_grade_icon').css('pointer-events', 'auto');          
         });
 
-
-        $('#table_grade_icon').on('click', function(){
+        $('#table_grade_icon').on('click', function(){        
           //block icon table
-          blockiconVis();
+          blockiconVis();                
 
           //jika diklik batalkan semua tindakan yang ada pada halaman visdat
           //handling error ketika user klik menu tabel ketika visualisasi data belum selesai diload
@@ -201,4 +218,5 @@
         
     });
   </script>
+
 <?= $this->endSection('jshere') ?>

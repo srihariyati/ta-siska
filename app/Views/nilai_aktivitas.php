@@ -6,11 +6,14 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-lg mt-5 mb-3">
+<div class="container-lg mt-7 mb-3">
+  <div class="row pl-2">
+    <a href="<?= base_url('beranda/getEnrolledCourses/') ?>"><span id="backButton" class="btn material-icon fa-1x p-2 "><i class="bi bi-caret-left-fill text-secondary"></i></span>Beranda</a>
+  </div>
 
-  <div class="row">
 
-    <div class="col-md-6">
+  <div class="row d-flex flex-row">
+    <div class="col-md-6" style="display: flex; align-items: center;">
       <h2 class="font-weight-bolder pr-10" id="courseTitle" data-token = "<?=$token?>" data-courseid="<?=$courseid?>"></h2>
     </div>
 
@@ -38,9 +41,9 @@
       <p id="contentName"></p>
     </div>
 
-    <div class="col-md-6 d-flex justify-content-end">
+    <div class="col d-flex justify-content-end">
       <!-- nnananana -->
-      <span id="btnEditAll" class="pr-4"></span>
+      <span id="btnEditAll" class=""></span>
       
     </div>
   </div>    
@@ -63,6 +66,7 @@
   <div id="gradeCard">
     <!--  -->
   </div>
+  <span class="d-flex justify-content-end" id="backTopButton"></span>
 
 <!--   
   tambah div baru untuk update all grade
@@ -87,7 +91,8 @@
 <?= $this->endSection('content') ?>
 
 <?= $this->section('jshere') ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <script src= "<?=str_replace('/index.php', '', base_url()) .'/js/view/gradebook.js'?>"></script>
 
 <script>
@@ -133,6 +138,10 @@
         updateModuleGradeAll(countData);
         //kirim panjang respone
         // response.length
+      });
+
+      $('#backtoTop').on('click',function(){
+        scrollToTop();
       });
       
 

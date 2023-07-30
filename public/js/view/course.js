@@ -150,22 +150,22 @@ function getAssign(token, courseId, instanceid) {
             var showClosedDate = '<p class="mt-0 mb-0" id="closedDate"><strong>Ditutup</strong> : ' + formattedClosedDate + ' </p>';
 
             var tableParticipant = `
-            <table class="table table-bordered">
+            <table class="table table-bordered table-participant">
                 <body>
                     <tr>
                         <td>Peserta Mata Kuliah</td>
                         <td><span id = "courseParticipant"><span></td>
                     </tr>
                     <tr>
-                        <td>Mengumpulkan Tugas</td>
+                        <td>Mengumpulkan</td>
                         <td><span id = "submittedParticipant"></span></td >
                     </tr>
                     <tr>
-                        <td>Telat Mengumpulkan Tugas</td>
+                        <td>Telat Mengumpulkan</td>
                         <td><span id = "lateSubmittedParticipant"></span></td >
                     </tr>
                     <tr>
-                        <td>Mengumpulkan Tugas Tepat Waktu</td>
+                        <td>Mengumpulkan Tepat Waktu</td>
                         <td><span id = "ontimeSubmittedParticipant"></span></td >
                     </tr>
                 </tbody>
