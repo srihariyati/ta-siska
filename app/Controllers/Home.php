@@ -6,6 +6,6 @@ class Home extends BaseController
 {
     public function index()
     {
-        return view('login');
+        return redirect()->to('beranda/getEnrolledCourses');
     }
 }

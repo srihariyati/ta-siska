@@ -10,6 +10,10 @@ class Login extends BaseController
         $this->session = \Config\Services::session();
     }
 
+    public function auth() {
+        return view('login');
+    }
+
     public function login(){
         // Mengambil input dari formulir
         $username = $this->request->getPost('username');
@@ -61,12 +65,16 @@ class Login extends BaseController
             if($response_checkuser['userissiteadmin']==true){
               
                 // Set session data
-                session()->set('token', $token);
-                session()->set('userid', $response_checkuser['userid']);
+                $sessionData = [
+                    'token' => $token,
+                    'userid' => $response_checkuser['userid'],
+                    'isLoggedIn' => TRUE,
+                ];
+                $this->session->set($sessionData);
                 
                 //redirect to controller untuk menampilkan daftar mata kuliah yang dimiliki oleh user
                 //return redirect()->to('beranda/getSiteInfo'); //jika akun memiliki akses
-                return redirect()->to('beranda/getEnrolledCourses');
+                return redirect()->to('/');
             }else{
                //bukan admin beri alert bukan admin
                 return redirect()->back()->with('loginError', 'Akun anda tidak memiliki akses ke sistem.');
@@ -97,7 +105,7 @@ class Login extends BaseController
     public function logout(){
         //delete session
         $this->session->destroy();
-        return view('login');
+        return redirect()->to('/');
     }
 
 }
