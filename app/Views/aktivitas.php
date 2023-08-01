@@ -1,7 +1,7 @@
 <?= $this->extend('layout/navbar') ?>
 
 <?= $this->section('title') ?>
-<title>Visualisasi Data Tugas | SISKA</title>
+<title>SISKA | Aktivitas</title>
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
@@ -20,8 +20,6 @@
           </div>
 
         </div>
-        
-
 
       <nav class="nav-menu mt-2">
         <a href="<?= base_url('course/getCourseInfo/' . $courseid) ?>"> <span id="btnCourse" class="nav-menu-link active">Aktivitas</span></a>
@@ -70,7 +68,7 @@
 
 
   <div class="row">
-  <div id="alert" class='w-100 ml-3 mr-3'></div>
+    <div id="alert" class='w-100 ml-3 mr-3'></div>
   </div>
    
   <div class="row mt-3">
@@ -146,14 +144,21 @@
 <script src="<?=str_replace('/index.php', '', base_url()) .'/js/d3.v7.min.js'?>"></script>
 
 <script>
-    $(document).ready(function() {   
+    $(document).ready(function() {
+
+      //ketika contentcoursechange maka akses data untuk visualisasi dan tabel
+      //show visualisasi data
+      //hide tabel
+
+      //jika user memilih menu tabel
+      //hide visualisasi data
+      //show tabel
       
       loadAnimation_sm("load-1");
       //block button visdat pada saat lock halaman
       //ketika halaman masi dalam visda
       $('#ketIcon').hide();
-      handleCourseContentChange();
-    
+      handleCourseContentChange(); 
       
       
         $('#course_content').on('change', function() {

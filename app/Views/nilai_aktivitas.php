@@ -1,7 +1,7 @@
 <?= $this->extend('layout/navbar') ?>
 
 <?= $this->section('title') ?>
-<title>Edit Gradebook | SISKA</title>
+<title>SISKA | Nilai Aktivitas</title>
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
