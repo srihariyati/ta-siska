@@ -106,18 +106,20 @@
     <span id="load-table"></span>
     <div class="col"><span id="tableGradeAssignment"></span></div>   
   </div>
+  <div class="row">
+  <div id="ketIcon" class="mb-3 p-2"></div>   
+  </div>
 
   <div class="row mb-5">
     <!-- table disnii aktif jika user memlih view table -->
     <span id="load-table"></span>    
-    <div id="ketIcon" class="mb-3 p-2"></div>  
     <div class="col"><span id="tableGradeQuiz"></span></div>   
   </div>
   
   <div class="row mt-0 mb-3 mr-4">
     <!-- QUIZ -->
     <div class="col-sm-4"><span id="descQuizQues"></span></div>
-    <div class="col-sm-8 mb-5" style="overflow-x: auto; overflow-y:hidden; margin: 0 auto;  display: flex;"><div id="chartQuizQues"></div></div>
+    <div class="col-sm-8 mb-5"><div id="chartQuizQues"></div></div>
 
     <!-- ASSIGN -->
     <div class="col-md-8"><div id="chartGradeAssignment"></div></div>
