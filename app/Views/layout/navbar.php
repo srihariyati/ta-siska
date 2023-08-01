@@ -75,7 +75,6 @@
         </div>
 
       </div>
-      
     </div>
   </div>
 </nav>
@@ -93,6 +92,7 @@
  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+
   <script src="<?=str_replace('/index.php', '', base_url()) .'/js/bootstrap.bundle.min.js'?>"></script>
 
   

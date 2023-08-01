@@ -135,7 +135,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
 
 <script src="<?=str_replace('/index.php', '', base_url()) .'/js/view/loadAnimation.js'?>"></script>
 <script src="<?=str_replace('/index.php', '', base_url()) .'/js/view/course.js'?>"></script>
@@ -146,28 +151,15 @@
 <script>
     $(document).ready(function() {
 
-      //ketika contentcoursechange maka akses data untuk visualisasi dan tabel
-      //show visualisasi data
-      //hide tabel
-
-      //jika user memilih menu tabel
-      //hide visualisasi data
-      //show tabel
-      
       loadAnimation_sm("load-1");
-      //block button visdat pada saat lock halaman
-      //ketika halaman masi dalam visda
-      $('#ketIcon').hide();
-      handleCourseContentChange(); 
-      
+      handleCourseContentChange();       
       
         $('#course_content').on('change', function() {
-          $('#ketIcon').hide();
           handleCourseContentChange(); //menampilkan dropdown 2 : topik/content
         });
         
         $('#content_module').on('change', function() {
-          $('#ketIcon').hide();
+
           handleModuleChange();
         });
         
@@ -177,14 +169,40 @@
         });
 
         $('#vis_grade_icon').on('click', function(){
-          $('#ketIcon').hide();
-          //block button #vis_grade_icon
-          blockiconVis();
-    
-          //jika diklik batalkan semua tindakan yang ada pada halaman tabel
-          //handling error ketika user klik menu visdat ketika tabel data belum selesai diload
+           //ambil mode untuk jenis aktivitas
+           var modName = $('#mod').data('modname');
+          console.log("modname di html", modName);
 
-          handleCourseContentChange();
+          if(modName == 'assign'){
+            //hide visualisasi data tugas
+            $('#chartGradeAssignment').show();
+            $('#chartParticipant').show();
+
+            //show tabel data tugas
+            $('#tableGradeAssignment').hide();            
+
+          }else if(modName == 'quiz'){
+            //hide tabel
+            $('#ketIcon').hide();
+            $('#tableGradeQuiz').hide();
+
+            //tampilkan visualisasi data
+            $('#chartQuizGrades').show();
+            $('#descQuizQues').show();
+            $('#chartQuizQues').show(); 
+          }
+
+
+
+
+          
+
+
+          //block button vis
+          blockiconVis();
+
+          //unblock button tabel
+          activeiconTable();
 
           // Ganti ikon #table_grade_icon menjadi aktif
           $('#vis_grade_icon i').removeClass('bi-bar-chart-fill').addClass('bi-bar-chart-fill active');
@@ -192,22 +210,39 @@
           // Ganti ikon #vis_grade_icon menjadi nonaktif
           $('#table_grade_icon i').removeClass('bi-table active').addClass('bi-table');
           
-          //aktifkan kembali icon tabel
-          $('#table_grade_icon').css('pointer-events', 'auto');          
         });
 
         $('#table_grade_icon').on('click', function(){        
           //block icon table
-          blockiconVis();                
+          blockiconTable(); 
 
-          //jika diklik batalkan semua tindakan yang ada pada halaman visdat
-          //handling error ketika user klik menu tabel ketika visualisasi data belum selesai diload
-          //$('#chartQuizGrades').empty();
+          //unblock icon vis
+          activeiconVis();
+
 
           //ambil mode untuk jenis aktivitas
           var modName = $('#mod').data('modname');
           console.log("modname di html", modName);
-          handleTable(modName);
+
+          if(modName == 'assign'){
+            //hide visualisasi data tugas
+            $('#chartGradeAssignment').hide();
+            $('#chartParticipant').hide();
+
+            //show tabel data tugas
+            $('#tableGradeAssignment').show();
+            
+
+          }else if(modName == 'quiz'){
+            //hide visualisasi data
+            $('#chartQuizGrades').hide();
+            $('#descQuizQues').hide();
+            $('#chartQuizQues').hide();         
+
+            //tampilkan tabel quiz
+            $('#ketIcon').show();
+            $('#tableGradeQuiz').show();
+          }
 
           // Ganti ikon #table_grade_icon menjadi aktif
           $('#table_grade_icon i').removeClass('bi-table').addClass('bi-table active');
@@ -215,12 +250,6 @@
           // Ganti ikon #vis_grade_icon menjadi nonaktif
           $('#vis_grade_icon i').removeClass('bi-bar-chart-fill active').addClass('bi-bar-chart');
           
-          //aktifkan kembali icon visdat yang sudah diblock pada halaman awal load
-          // To make the pointer active again (enable pointer events):
-          $('#vis_grade_icon').css('pointer-events', 'auto');
-
-          
-
         });
         
     });

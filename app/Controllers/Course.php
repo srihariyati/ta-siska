@@ -285,6 +285,11 @@ class Course extends BaseController{
         $curlGen = new GenerateCurl();
         $response_grade =  $curlGen->curlGen($param);
        
+        if(count($response_grade['assignments'])==0){ //tidak ada data assignment di moodle
+           $status = 'fail';
+        } else{
+            $status ='success';
+        }
         $grades = $response_grade["assignments"][0]["grades"];
         $response_grade= [];
 
@@ -376,14 +381,20 @@ class Course extends BaseController{
                     }
                 }  
             }   
-        }      
+        }
+        $data = [
+            'status'=>$status,
+            'gradeList'=>$gradeList            
+        ];      
         // data respone dibawa ke controller lagi melalui function js
         // untuk mendapatkan fullname dari user
 
         //cek jika userid grade == userid participant
         // get fullname dan username participant
         //dd($gradeList);
-        return $this->response->setJSON($gradeList);
+        return $this->response->setJSON($data);
+       
+        
     
     }
 
