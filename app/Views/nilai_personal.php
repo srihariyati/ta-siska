@@ -60,14 +60,12 @@
       <?php $personal_grade_items = json_encode($personal_grade['gradeitems']);?>
     </div>
 
-    <div class="col-md-2">      
-      <p class="mb-2">Nilai Mahasiswa</p>
-      <h5>🏆0</h5>
+    <div class="col-md-4">      
+      <p class="mb-2">Nilai Rata-Rata Mahasiswa</p>
+      <h5>🏆<?=$gradefinalmean?></h5>
     </div>
 
     <div class="col-md-4 mt-3">
-      <p></p>
-      <p>Nilai rata-rata mahasiswa : 0</p>
     </div>
 
   </div>

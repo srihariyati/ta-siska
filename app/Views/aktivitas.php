@@ -155,21 +155,24 @@
       handleCourseContentChange();       
       
         $('#course_content').on('change', function() {
+          $('#ketIcon').hide();
           handleCourseContentChange(); //menampilkan dropdown 2 : topik/content
         });
         
         $('#content_module').on('change', function() {
-
+          $('#ketIcon').hide();
           handleModuleChange();
         });
         
         $('#btnMhs').on('click', function(){
           handleMhsButton();
+          $('#ketIcon').hide();
           
         });
 
         $('#vis_grade_icon').on('click', function(){
            //ambil mode untuk jenis aktivitas
+           $('#ketIcon').hide();
            var modName = $('#mod').data('modname');
           console.log("modname di html", modName);
 

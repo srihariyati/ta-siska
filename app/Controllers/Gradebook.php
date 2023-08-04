@@ -12,17 +12,9 @@ class Gradebook extends BaseController
     private $main_url;
 
     public function __construct(){
-        //setting dynamic!!!!
 
         $this->main_url='https://cs.unsyiah.ac.id/~viska/moodle/webservice/rest/server.php';
         $this->session = \Config\Services::session();
-        //kalau bisa ada global variabel untuk user username/nim, dan course name
-
-        // $this->token = $token;
-        // $this->courseid = $courseid;
-
-        //data course bisa diambil dari token dan courseid dari geGradebookView 
-        // pada href visdat_tugas line 24
     }
 
     public function getGradebookView($courseid){
@@ -210,9 +202,7 @@ class Gradebook extends BaseController
 
         $personalGrade =[];
         $gradeRawAll=[];
-
-        $gradeSums = [];
-      
+        $gradeSums = [];      
         $gradeCounts = [];
 
         foreach($response_gradebook as $rg){
@@ -275,11 +265,14 @@ class Gradebook extends BaseController
                     if($gi['itemmodule']=='assign'||$gi['itemmodule']=='quiz'){
                         foreach($gradeMeans as $gm){
                             if($gm['idgrade']==$gi['id']){
+                                //handle null
+                                $graderaw = $this->handleNull($gi['graderaw']);
+
                     
                                 $gradeItems[]= [
                                     'gradeid' => $gi['id'],
                                     'itemname'=> $gi['itemname'],
-                                    'graderaw' => $gi['graderaw'],
+                                    'graderaw' =>$graderaw,
                                     'grademean'=> $gm['mean'],
                                     'moditem'=> $gi['itemmodule']
                                   ];
@@ -298,10 +291,45 @@ class Gradebook extends BaseController
                 ];
             }
         }
+        dd($personalGrade);
        
+        //menghitung jumlah item aktivitas
+        $jmlItem = count($personalGrade['gradeitems']);
+
+        //gunakan function gradereport_overview_get_course_grades
+        //parameter userid, courseid
+
+        //data yang didapatkan berupa sum dari seluruh nilai
+        //jadi perlu proses dibagi dengan banyaknya jumlah item aktivitas
+        //-->butuh parameter jumlah item aktivitas
+        $param_finalsumgrade =[
+            "wstoken" =>$token,
+            "moodlewsrestformat"=>"json",
+            "wsfunction"=>"gradereport_overview_get_course_grades",
+            "userid"=>$userid
+        ];
+        
+        $curlGen = new GenerateCurl();
+        $response_finalsumgrade =  $curlGen->curlGen($param_finalsumgrade);
+        //select data grade dari course id berikut
+        
+        foreach($response_finalsumgrade['grades'] as $gradessum){
+            //resspon yang didapat adalah nilai sum dari seluruh data
+            //mendapatkan mean dengan $response_finalgrade/$jmlItem
+
+            if($gradessum['courseid']==$courseid){
+                $gradesum = $gradessum['rawgrade'];
+                
+                //menghitung mean dan mengambil dua angka belakang koma
+                $gradefinalmean = round($gradesum/$jmlItem,2); 
+            }
+        }
+        
+        //dd($gradefinalmean);  
 
         //return kehalaman baru dengan $mydata dengan isi semua data
         $mydata['token'] = $token;
+        $mydata['gradefinalmean']= $gradefinalmean;
         $mydata['personal_grade'] = $personalGrade;
         //dd($personalGrade);
         return view('nilai_personal', $mydata);
