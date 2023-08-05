@@ -4,6 +4,7 @@ var openedDate;
 var closedDate;
 var token;
 
+
 //////////////////////////////General/////////////////////////////////
 function handleCourseContentChange() {
     $('#alert').empty();
@@ -118,10 +119,6 @@ function getAssign(token, courseId, instanceid) {
     emptyPage();
     loadAnimation_sm("load-1");
 
-    //make loadanimation untuk id show yang dipakai oleh assign
-
-
-
     //ajax to get assign controller
     //ajax to get Quiz controller
     $.ajax({
@@ -164,10 +161,6 @@ function getAssign(token, courseId, instanceid) {
                         <td>Telat Mengumpulkan</td>
                         <td><span id = "lateSubmittedParticipant"></span></td >
                     </tr>
-                    <tr>
-                        <td>Mengumpulkan Tepat Waktu</td>
-                        <td><span id = "ontimeSubmittedParticipant"></span></td >
-                    </tr>
                 </tbody>
             </table>`;
 
@@ -191,6 +184,9 @@ function getAssign(token, courseId, instanceid) {
 }
 
 function getGradeAssignment() {
+    //sembunyikan tombol tabel sebelum data diload
+    $('#table_grade_icon').hide();
+
     var courseId = $('#courseTitle').data('courseid');
     //instanceid==quizid/assignid
     var instanceid = $('#content_module').val().split(',')[0];
@@ -207,13 +203,17 @@ function getGradeAssignment() {
         },
         dataType: 'json',
         success: function(response) {
-            console.log(response);
+            console.log(response.status);
 
+             //cek status apakah data grade assignment ada atau tidak
+            if (response.status !='fail'){
             //hitung jumlah nilai a b c
             // Calculate the mean grade
+            gradedata = response.gradeList;
+            console.log(gradedata);
 
-            for (var i = 0; i < response.length; i++) {
-                var lettergrade = response[i].lettergrade;
+            for (var i = 0; i < gradedata.length; i++) {
+                var lettergrade = gradedata[i].lettergrade;
                 //console.log(lettergrade);
 
                 if (!counts.hasOwnProperty(lettergrade)) {
@@ -237,6 +237,16 @@ function getGradeAssignment() {
 
             console.log(dataArray);
             window.chartAssign(dataArray);
+
+            handleTableAssign(courseId, assignId);
+
+            } else{
+                Swal.fire('Peringatan!', 'Data nilai tugas tidak dapat ditemukan, periksa Moodle anda', 'error');
+            }
+
+           
+
+            
         }
     });
 }
@@ -254,17 +264,22 @@ function handleTableAssign(courseId, assignId) {
         },
         dataType: 'json',
         success: function(response) {
-            console.log(response);
-            //append table here
-            //append table participant khusus assign
-            var tableGrade = '<table  id="table_assign" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
-            $('#tableGradeAssignment').append(tableGrade);
-            window.removeAnimation("load-table");
-            showTableGradeAssignment(response);
-            //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
-            //data ini yang akan ditampilkan dalam tabel
+            //cek status apakah data grade assignment ada atau tidak
+            if (response.status !='fail'){
+                gradedata =response.gradeList;
+                console.log(gradedata);
+                //append table here
+                //append table participant khusus assign
+                var tableGrade = '<table  id="table_assign" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
+                $('#tableGradeAssignment').append(tableGrade);
+                window.removeAnimation("load-table");
+                showTableGradeAssignment(gradedata);
+                //data akhir akan berisi id, userid, username, fullname, grade, lettergrade
+                //data ini yang akan ditampilkan dalam tabel
 
-
+            }else{
+                Swal.fire('Peringatan!', 'Data nilai tugas tidak dapat ditemukan, periksa Moodle anda', 'error');
+            }
         }
     });
 }
@@ -325,10 +340,16 @@ function showTableGradeAssignment(responseData) {
                     columns: ':visible'
                 },
             },
-            'copy'
+            
         ],
+        initComplete: function () {
+        //tampilkan tombol tabel jika data berhasil diload kedalam tabel
+        $('#table_grade_icon').show();
+        }
     });
-    $('.dt-buttons').hide();
+
+
+    $('#tableGradeAssignment').hide();
 }
 
 function getCourseParticipant(token, courseId) {
@@ -358,6 +379,9 @@ function getCourseParticipant(token, courseId) {
             console.log("course participant : " + courseParticipant);
         }
     });
+
+
+
 }
 
 function getSubmittedParticipant(token, assignId, assignName) {
@@ -460,6 +484,10 @@ function getQuiz(token, courseId, instanceid) {
 
 function getGradeQuiz(quizId) {
     blockiconVis();
+
+    //sembunyikan tombol tabel sebelum data diload
+    $('#table_grade_icon').hide();
+
     console.log(quizId);
     var courseId = $('#courseTitle').data('courseid');
     var counts = {};
@@ -515,6 +543,9 @@ function getGradeQuiz(quizId) {
         
                     //remove load animation
                     window.removeAnimation('load-2');
+
+                    //unblock tombol vis
+                    activeiconVis();
                     window.chartQuizGrades(dataQuizGrades);
                     //end chart 1
         
@@ -537,7 +568,10 @@ function getGradeQuiz(quizId) {
                     }
                     getQuizQues(questions);
                 }
-            });      
+            });    
+            
+            //tampilkan tabel quiz juga
+            handleTableQuiz(quizId);
             // for (var i = 0; i < response.length; i++) {
             //     //kirim userid dan studentname(fullname)
             //     var studentname = response[i].fullname;
@@ -588,10 +622,12 @@ function getQuizQues(questionsData) {
     console.log(mappedData);
 
     window.chartQuizQues(mappedData);
+
+    
 }
 
 function handleTableQuiz(quizId) {
-    blockiconTable();
+    //blockiconTable();
     console.log('tble quiz');
     console.log(token);
     //ambil data yang sama kayak data di gradequiz
@@ -599,7 +635,7 @@ function handleTableQuiz(quizId) {
     var counts = {};
     //ambil list participant pada course
 
-    window.loadAnimation_lg("load-table");
+    //window.loadAnimation_lg("load-table");
     $.ajax({
         url: `${BASE_URL}course/getCourseParticipant`,
         method: 'POST',
@@ -660,17 +696,23 @@ function handleTableQuiz(quizId) {
 
                     $('#tableGradeQuiz').append(tableGrade);
 
-                    window.removeAnimation("load-table");
+                  
+
+                    //tampilkan tabel
                     showTableGradeQuiz(dataTableData);
                 }
             });
         }
     });
+
+    
 }
 
 function showTableGradeQuiz(data){
-    $('#ketIcon').show();
-    
+    //block tombol tabel sebelum data berhasil diload kedalam tabel
+
+    //aktifkan kembali ketika tabel sudah berhasil diload
+
     var dataTableData=[];
     //buat row data dulu
     data.forEach(function(item,key) {
@@ -730,6 +772,7 @@ function showTableGradeQuiz(data){
         },
         buttons: [{
                 extend: 'pdf',
+                text:'Simpan PDF',
                 orientation: 'landscape',
                 exportOptions: {
                     columns: ':visible'
@@ -737,15 +780,22 @@ function showTableGradeQuiz(data){
             },
             {
                 extend: 'excel',
+                text:'Simpan Excel',
                 orientation: 'landscape',
                 exportOptions: {
                     columns: ':visible'
                 },
             },
-            'copy'
         ],
+
+              
+        initComplete: function () {
+        //tampilkan tombol tabel jika data berhasil diload kedalam tabel
+        $('#table_grade_icon').show();
+        }
+
     });
-    $('.dt-buttons').hide();
+    //$('.dt-buttons').hide();
 
 
     var keticon =`    
@@ -755,8 +805,10 @@ function showTableGradeQuiz(data){
     `;
     $('#ketIcon').append(keticon);
 
+//hide tabel kuis
+$('#ketIcon').hide();
+$('#tableGradeQuiz').hide();
 }
-
 
 //////////////////////////////General//////////////////////////////
 function emptyPage() {
@@ -819,4 +871,15 @@ function blockiconTable(){
     // Disable pointer events to prevent further clicks on the icon
     $('#table_grade_icon').css('pointer-events', 'none');
 
+}
+
+function activeiconVis(){
+        //aktifkan kembali icon visdat yang sudah diblock pada halaman awal load
+        // To make the pointer active again (enable pointer events):
+        $('#vis_grade_icon').css('pointer-events', 'auto');
+}
+
+function activeiconTable(){
+    //aktifkan kembali icon tabel
+    $('#table_grade_icon').css('pointer-events', 'auto'); 
 }

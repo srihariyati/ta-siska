@@ -103,7 +103,7 @@ function showTableGradebook(responseData) {
             </form> 
         `];
         headerRow.push(headerData);
-        // headerRow.push(`<a href="${BASE_URL}gradebook/getModuleGradeView?itemid=${item.itemid}&token=${token}&courseid=${courseId}&cmid=${item.cmid}" style="text-decoration:none;">${item.itemname}</a>`);
+       
     });
     
 
@@ -136,20 +136,21 @@ function showTableGradebook(responseData) {
             { width: '100%', targets: 0 },
         ],
         columns: [
-            { title: 'Nama Mahasiswa' }, // Set width for 'Nama Mahasiswa' column
+            { title: 'Nama Mahasiswa' }, // Set title for 'Nama Mahasiswa' column
             ...headerRow.map(function(item) {
-                return { title: item }; // Set width for other columns
+                return { title: item[0] }; // Set title for other columns
             })
         ],
-        paging: true,
+        paging: false,
         searching: true,
         info: true,
-        dom: 'lfrtip',
+        dom: 'Blfrtip',
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/id.json',
         },
         buttons: [{
                 extend: 'pdf',
+                className: 'hide-export',
                 orientation: 'landscape',
                 exportOptions: {
                     columns: ':visible'
@@ -157,36 +158,17 @@ function showTableGradebook(responseData) {
             },
             {
                 extend: 'excel',
+                className: 'hide-export',
                 orientation: 'landscape',
                 exportOptions: {
                     columns: ':visible'
                 },
             },
-            'copy'
         ],
-        // Define the footer callback function
-        footerCallback: function(row, data, start, end, display) {
-            var api = this.api();
-
-            // Calculate the mean for each column (starting from the second column)
-            api.columns().every(function() {
-                var column = this;
-                var columnIndex = column.index();
-
-                if (columnIndex > 0) {
-                    var columnData = column.data();
-                    var columnMean = columnData.reduce(function(sum, value) {
-                        return sum + parseFloat(value);
-                    }, 0) / columnData.length;
-
-                    // Set the mean value as the content of the footer for the current column
-                    $(column.footer()).html(columnMean.toFixed(2));
-                }
-            });
+        initComplete: function () {
+            $('.dt-buttons').hide()
         }
-
     });
-    $('.dt-buttons').hide();
 }
 
 function getCourseName() {
@@ -752,35 +734,6 @@ function updateModuleGradeAll(countData) {
             }
         }
     });
-    //kirim array grade ke ajax
-
-
-    //value didalam array 
-    // studentid: studentId,
-    // itemModule: itemModule,
-    // itemNumber: itemNumber,
-    //gradeValue
-    //{studentid, itemmodule, itemnumber, gradevalue}
-
-    // if($itemModule=='assign'){
-    //     $source='assignment';
-    //     $component='mod_assign';
-    // }else if($itemModule =='quiz'){
-    //     $source='quiz';
-    //     $component='mod_quiz';
-    // }
-
-    // ke controller loop untuk semua data
-
-
-    //append input untuk semua data
-    //get data asssignment mod
-    //Ajax here
-
-
-
-    //get data quiz mod
-
 }
 
 function sweetAlertLoad(text) {
