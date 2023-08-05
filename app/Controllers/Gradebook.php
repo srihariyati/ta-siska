@@ -291,7 +291,7 @@ class Gradebook extends BaseController
                 ];
             }
         }
-        dd($personalGrade);
+        //d($personalGrade);
        
         //menghitung jumlah item aktivitas
         $jmlItem = count($personalGrade['gradeitems']);
