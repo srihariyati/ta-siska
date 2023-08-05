@@ -185,7 +185,7 @@ function getAssign(token, courseId, instanceid) {
 
 function getGradeAssignment() {
     //sembunyikan tombol tabel sebelum data diload
-    $('#table_grade_icon').hide();
+    blockiconTable();
 
     var courseId = $('#courseTitle').data('courseid');
     //instanceid==quizid/assignid
@@ -252,6 +252,7 @@ function getGradeAssignment() {
 }
 
 function handleTableAssign(courseId, assignId) {
+    
     window.loadAnimation_lg("load-table");
     //ajax here
     $.ajax({
@@ -344,12 +345,14 @@ function showTableGradeAssignment(responseData) {
         ],
         initComplete: function () {
         //tampilkan tombol tabel jika data berhasil diload kedalam tabel
-        $('#table_grade_icon').show();
+        activeiconTable();
+        
+        $('#tableGradeAssignment').hide();
         }
     });
 
 
-    $('#tableGradeAssignment').hide();
+   
 }
 
 function getCourseParticipant(token, courseId) {
@@ -486,7 +489,8 @@ function getGradeQuiz(quizId) {
     blockiconVis();
 
     //sembunyikan tombol tabel sebelum data diload
-    $('#table_grade_icon').hide();
+    //$('#table_grade_icon').hide();
+    blockiconTable();
 
     console.log(quizId);
     var courseId = $('#courseTitle').data('courseid');
@@ -688,11 +692,24 @@ function handleTableQuiz(quizId) {
                     //kolom paling akhir sebanyak jumlah slot quiz
                     var countingques = (response[0]['questions']).length;
                     console.log(countingques);
-                    var tableGrade = '<table  id="table_quiz" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Nilai</th>';
+                    var tableGrade = `
+                        <table  id="table_quiz" class="table table-sm table-striped">
+                            <thead>
+                            <tr>
+                            <th scope="col">NIM</th>
+                            <th scope="col">Nama Mahasiswa</th>
+                            <th scope="col">Nilai</th>`;
                     // Generate <th> elements for Q1, Q2, Q3, ..., Qn
                     for (var i = 1; i <= countingques; i++) {
                         tableGrade += '<th scope="col">Q' + i + '</th>';
                     }
+
+                    tableGrade += `
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>`;
 
                     $('#tableGradeQuiz').append(tableGrade);
 
@@ -760,7 +777,6 @@ function showTableGradeQuiz(data){
         destroy: true,
         data: dataTableData,
         scrollY:"500px",
-        scrollX: true,
         footer: true,
         autoWidth: false,
         paging: false,
@@ -791,7 +807,10 @@ function showTableGradeQuiz(data){
               
         initComplete: function () {
         //tampilkan tombol tabel jika data berhasil diload kedalam tabel
-        $('#table_grade_icon').show();
+            activeiconTable();
+            //hide tabel kuis
+        $('#ketIcon').hide();
+        $('#tableGradeQuiz').hide();
         }
 
     });
@@ -805,9 +824,7 @@ function showTableGradeQuiz(data){
     `;
     $('#ketIcon').append(keticon);
 
-//hide tabel kuis
-$('#ketIcon').hide();
-$('#tableGradeQuiz').hide();
+
 }
 
 //////////////////////////////General//////////////////////////////

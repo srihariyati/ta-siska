@@ -222,7 +222,7 @@
           //unblock icon vis
           activeiconVis();
 
-
+          
           //ambil mode untuk jenis aktivitas
           var modName = $('#mod').data('modname');
           console.log("modname di html", modName);
@@ -231,6 +231,7 @@
             //hide visualisasi data tugas
             $('#chartGradeAssignment').hide();
             $('#chartParticipant').hide();
+            $('#lagendGradeAssignment').empty();
 
             //show tabel data tugas
             $('#tableGradeAssignment').show();
