@@ -35,54 +35,51 @@ class Course extends BaseController{
         $curlGen = new GenerateCurl();
         $response =  $curlGen->curlGen($param);
       
+        //mendaptkan courseid dan display name
         $course_info =[
             'token'=>$token,
             'courseid'=>$response["courses"][0]["id"],
             'displayname'=>ucwords($response["courses"][0]["displayname"]),
         ];
-        $this->data['course_info'] = $course_info;
-        return $this->getcoursecontent();
-        
-    }
+        // $this->data['course_info'] = $course_info;
+        // return $this->getcoursecontent();
 
-    public function getCourseContent()
-    {
-        $course_info = $this->data['course_info'];
 
-        $token = $course_info['token'];
-        $courseid = $course_info['courseid'];
-        $coursename = $course_info['displayname'];
-
-        $param =[
+        //mendapatkan content dri course
+        $param_content =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
             "wsfunction"=>"core_course_get_contents",
             "courseid"=>$courseid,
         ];
-        
-        $curlGen = new GenerateCurl();
-        $response =  $curlGen->curlGen($param);
 
-        $arrayLength = count($response);
+        $response_content =  $curlGen->curlGen($param_content);
+        
+        $arrayLength_content = count($response_content);
         $i = 1; //skip index 0 yang berisi 'General'
-        while( $i < $arrayLength){
+        while( $i < $arrayLength_content){
                 $course_contents_list[] =[
-                    'contentid'=>$response[$i]["id"],
-                    'contentname'=>$response[$i]["name"],
+                    'contentid'=>$response_content[$i]["id"],
+                    'contentname'=>$response_content[$i]["name"],
                 ]; 
             
             $i++;
         }
-        //dd($course_contents_list);
-        
-        $mydata['course_contents_list'] = $course_contents_list;  
-        $mydata['coursename'] =  $coursename; 
-        $mydata['courseid'] = $courseid;
-        $mydata['token'] = $token;
 
-        
+       
+
+        $mydata=[
+            'token' => $token,
+            'courseid'=> $courseid,
+            'coursename'=>$course_info['displayname'],
+            'course_contents_list' => $course_contents_list
+        ];
+
+        // dd($mydata);
+
         //dd($mydata['course_contents_list']);
         return view ('aktivitas', $mydata);
+        
     }
 
     public function getCourseModule()
