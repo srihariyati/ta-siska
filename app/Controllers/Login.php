@@ -15,17 +15,21 @@ class Login extends BaseController
     }
 
     public function login(){
-        // Mengambil input dari formulir
+        // Mengambil input dari form
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
+        //endpoint url cek token
         $main_url = 'https://cs.unsyiah.ac.id/~viska/moodle/login/token.php?';
 
+        //parameter cek token, berikan nama webservice yang didaftarkan
         $param =[
             "username"=>$username,
             "password"=>$password,
             "service"=>'ws-siska',
         ];
+
+        //panggil function menggunakan CURL
         $data = http_build_query($param);
         $curl = curl_init();
 
@@ -44,6 +48,7 @@ class Login extends BaseController
         $response = json_decode($response, true);
         $count = count($response);
 
+        //jika fungsi menghasilkan respon 
         if($count==2){
             //password dan username benar
             $status = 'success';
@@ -72,8 +77,8 @@ class Login extends BaseController
                 ];
                 $this->session->set($sessionData);
                 
-                //redirect to controller untuk menampilkan daftar mata kuliah yang dimiliki oleh user
-                //return redirect()->to('beranda/getSiteInfo'); //jika akun memiliki akses
+                //beranda/getEnrolledCourses
+                //redirect ke halaman beranda Home:index
                 return redirect()->to('/');
             }else{
                //bukan admin beri alert bukan admin
