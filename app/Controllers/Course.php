@@ -41,10 +41,7 @@ class Course extends BaseController{
             'courseid'=>$response["courses"][0]["id"],
             'displayname'=>ucwords($response["courses"][0]["displayname"]),
         ];
-        // $this->data['course_info'] = $course_info;
-        // return $this->getcoursecontent();
-
-
+        
         //mendapatkan content dri course
         $param_content =[
             "wstoken" =>$token,
