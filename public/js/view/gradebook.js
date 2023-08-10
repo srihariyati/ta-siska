@@ -6,8 +6,8 @@ function handleTableGradebook() {
     $('#guide').empty();
     courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
-    //console.log(token);
-    //console.log(courseId);
+    console.log(token);
+    console.log(courseId);
 
     sweetAlertLoad('Memuat tabel');
     $.ajax({
@@ -19,7 +19,7 @@ function handleTableGradebook() {
         },
         dataType: 'json',
         success: function(response) {
-            //console.log(response);
+            console.log(response);
             swal.close();
             showTableGradebook(response);
             guideAlert('Tugas dan Kuis');
@@ -43,7 +43,7 @@ function handleTableGradebookQuiz() {
         dataType: 'json',
         success: function(response) {
             Swal.close();
-            //console.log(response);
+            console.log(response);
             showTableGradebook(response);
             guideAlert('Kuis');
          
@@ -56,7 +56,7 @@ function handleTableGradebookAssign() {
     var mod = 'assign';
     sweetAlertLoad('Memuat tabel');
 
-    //console.log("handleTableGradebookAssign", courseId);
+    console.log("handleTableGradebookAssign", courseId);
     $.ajax({
         url: `${BASE_URL}gradebook/getGradebook`,
         method: 'POST',
@@ -67,7 +67,7 @@ function handleTableGradebookAssign() {
         },
         dataType: 'json',
         success: function(response) {
-            //console.log(response);
+            console.log(response);
             Swal.close();
             showTableGradebook(response);
             guideAlert('Tugas');
@@ -80,7 +80,7 @@ function showTableGradebook(responseData) {
     //get instance id 
     //var instanceid = 
     //dapatkan courseId
-    //console.log(courseId, token);
+    console.log(courseId, token);
 
     if (table) {
         table.destroy();
@@ -88,7 +88,7 @@ function showTableGradebook(responseData) {
 
     $('#tableGradebook').empty();
 
-    //console.log(responseData);
+    console.log(responseData);
 
     var dataTableData = [];
     var headerRow = [];
@@ -124,7 +124,7 @@ function showTableGradebook(responseData) {
         dataTableData.push(rowData);
     });
 
-    //console.log(dataTableData);
+    console.log(dataTableData);
 
     table = $('#tableGradebook').DataTable({
         destroy: true,
@@ -175,8 +175,8 @@ function getCourseName() {
     courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
 
-    //console.log(token);
-    //console.log(courseId);
+    console.log(token);
+    console.log(courseId);
 
     //ajax to controller yang punya course info 
     $.ajax({
@@ -188,8 +188,8 @@ function getCourseName() {
         method: 'POST',
         dataType: 'json',
         success: function(response) {
-            //console.log(1111);
-            //console.log('js:ocurseinfo', response.displayname);
+            console.log(1111);
+            console.log('js:ocurseinfo', response.displayname);
             var courseName = response.displayname;
             $('#courseTitle').append(courseName);
 
@@ -197,7 +197,7 @@ function getCourseName() {
         },
         error: function(xhr, status, error) {
             // Handle the error
-            //console.log(error);
+            console.log(error);
         }
     });
 
@@ -207,7 +207,7 @@ function getStudentInfo() {
     var userid = $('#StudentName').data('userid');
     token = $('#courseTitle').data('token');
 
-    //console.log(userid);
+    console.log(userid);
 
     //ajax to cntroller get student infomatin
     //ajax to controller yang punya course info 
@@ -220,11 +220,11 @@ function getStudentInfo() {
         },
         dataType: 'json',
         success: function(response) {
-            //console.log(response);
+            console.log(response);
             for (var i = 0; i < response.length; i++) {
                 var student = response[i];
                 var username = student.username;
-                //console.log(username);
+                console.log(username);
 
                 $('#StudentNIM').append(username);
             }
@@ -253,7 +253,7 @@ function getContentModuleInfo() {
         },
         dataType: 'json',
         success: function(response) {
-            //console.log(response);
+            console.log(response);
 
             $('#contentModule').empty();
             var contentname = response.cname;
@@ -274,7 +274,7 @@ function getContentModuleInfo() {
 }
 
 function getMeanGradeModule(module_grade) {
-    //console.log(module_grade);
+    console.log(module_grade);
 
     // Calculate the mean grade
     var sum = 0;
@@ -286,7 +286,7 @@ function getMeanGradeModule(module_grade) {
 
     var showMean = '<p class="mb-0">Rata-rata nilai mahasiswa:</p><h4 class="font-weight-bold" id="mean">' + mean + '</h4>';
     //var showSubmissionPercent = '<p class="mb-0">Ketepatan waktu pengumpulan tugas: </p><h4 class ="font-weight-bold">91 %</h4>';
-    // //console.log('Mean grade:', mean);
+    // console.log('Mean grade:', mean);
     $('#meanGrade').append(showMean);
     //$('#submissionPercent').append(showSubmissionPercent);
 }
@@ -309,7 +309,7 @@ function getSubmissionTimeliness() {
         dataType: 'json',
         success: function(response) {
             courseParticipant = response.length;
-            //console.log("course participant : " + courseParticipant);
+            console.log("course participant : " + courseParticipant);
         }
     });
 
@@ -325,7 +325,7 @@ function getSubmissionTimeliness() {
         dataType: 'json',
         success: function(response) {
             var submittedParticipant = response.length;
-            //console.log("submittedparticipant : " + submittedParticipant);
+            console.log("submittedparticipant : " + submittedParticipant);
         }
     });
 }
@@ -347,7 +347,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
         dataType: 'json',
         success: function(response) {
             Swal.close();
-            //console.log(response);
+            console.log(response);
 
             var buttonEditAll = '<button type="button" id="editAll" class="btn btn-warning bnt-sm">Ubah Semua</button>';
             $('#btnEditAll').append(buttonEditAll);
@@ -385,7 +385,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                 for (var i = 0; i < response.length; i++) {
 
                     var module = response[i];
-                    ////console.log(module.itemnumber);
+                    //console.log(module.itemnumber);
                     
                     if (module.submissionstatus == 'submitted ontime') {
                         var status = 'Mengumpulkan tugas tepat waktu';
@@ -429,7 +429,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                         </div>
                     `
 
-                    //console.log(gradeCard);
+                    console.log(gradeCard);
                     $('#gradeCard').append(gradeCard);
 
                     //hitung ketepatan waktu pengumpulan tugas
@@ -442,7 +442,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                 for (var i = 0; i < response.length; i++) {
 
                     var module = response[i];
-                    //console.log(module.itemnumber);
+                    console.log(module.itemnumber);
                     var gradeCard = '<div class="card mb-3"><div class="row"><div class="col-md-4"> <div class="card-body d-flex align-items-center">';
                     gradeCard += '<h6 class="card-title" id="studentName-' + i + '" data-userid="' + module.userid + '">' + module.userfullname + '</h6>';
                     gradeCard += '</div></div><div class="col-md-4"><div class="card-body d-flex align-items-center">';
@@ -454,7 +454,7 @@ function getModuleGrade(instanceid, cmid, courseId, token, itemid) {
                     gradeCard += '<h4 class="card-title text-center ' + gradeColor + '" id="grade-' + i + '" data-mod="' + module.itemmodule + '" data-itemnumber="' + module.itemnumber + '">' + module.grade + '</h4></div></div>';
                     gradeCard += '<div class="col-md-2"><div class="card-body d-flex align-items-center"><button type="button" class="btn btn-outline-secondary btn-sm" id="btnEditGrade" data-index="' + i + '">Ubah</button></div></div>';
                     gradeCard += '</div></div>';
-                    //console.log(gradeCard);
+                    console.log(gradeCard);
                     $('#gradeCard').append(gradeCard);
 
                 }
@@ -513,13 +513,12 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
         $(this).val(value);
     });
 
-
     // Menambahkan event listener pada tombol "Ubah"
     var updateButton = document.getElementById('updateButton');
     updateButton.addEventListener('click', function() {
         // Mengambil nilai dari input
         var gradeValue = document.getElementById('gradeInput').value;
-        ////console.log(courseid, activityid, token, studentId, itemModule, itemNumber, gradeValue);
+        //console.log(courseid, activityid, token, studentId, itemModule, itemNumber, gradeValue);
 
        sweetAlertLoad('Mengubah data');
         // Misalnya:
@@ -541,7 +540,7 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
                 //jika respone == 0 
                 //reload page
                 if (response == 0) {
-                    //console.log(response);
+                    console.log(response);
                     Swal.close();
 
                     Swal.fire('Berhasil!', 'Yey! Berhasil mempengaruhi data', 'success');
@@ -567,7 +566,7 @@ function getEditGradeModule(courseid, activityid, token, studentId, studentName,
 }
 
 function getEditGradeModuleAll(response) {
-    //console.log(response);
+    console.log(response);
     $('#gradeCard').empty();
     $('#submissionPercent').empty();
     $('#meanGrade').empty();
@@ -597,7 +596,7 @@ function getEditGradeModuleAll(response) {
             gradeCard += '<div class="input-group input-group-lg">';
             gradeCard += '<input type="number" class="form-control" min="0" max="100"  id="gradeInput-' + i + '" value="' + module.grade + '"></div>';
             gradeCard += '</div></div></div>';
-            //console.log(gradeCard);
+            console.log(gradeCard);
 
             $('#gradeCard').append(gradeCard);
 
@@ -621,7 +620,7 @@ function getEditGradeModuleAll(response) {
             gradeCard += '<div class="input-group input-group-lg">';
             gradeCard += '<input type="number" class="form-control" min="0" max="100"  id="gradeInput-' + i + '" value="' + module.grade + '"></div>';
             gradeCard += '</div></div></div>';
-            //console.log(gradeCard);
+            console.log(gradeCard);
 
             $('#gradeCard').append(gradeCard);
 
@@ -648,10 +647,10 @@ function updateModuleGradeAll(countData) {
     var itemModule = $('#studentName-0').data('itemmodule');
 
 
-    //console.log(token, courseid, activityid, itemModule);
-    //console.log(countData);
+    console.log(token, courseid, activityid, itemModule);
+    console.log(countData);
 
-    // //console.log(studentName, grade, itemModule, itemNumber, mean, status);
+    // console.log(studentName, grade, itemModule, itemNumber, mean, status);
     //trigger btnEditAll on click
     //ambil semua value, masukkan kedalam array
     var dataGrade = [];
@@ -697,7 +696,7 @@ function updateModuleGradeAll(countData) {
     // Show loading alert before making the AJAX request
     sweetAlertLoad('Mengubah nilai');
 
-    //console.log(dataGrade);
+    console.log(dataGrade);
     $.ajax({
         url: `${BASE_URL}gradebook/updateModuleGradeAll`,
         method: 'POST',
@@ -710,14 +709,14 @@ function updateModuleGradeAll(countData) {
         },
         dataType: 'json',
         success: function(response) {
-            //console.log(response);
+            console.log(response);
             // Aksi setelah berhasil mengirim data
             //jika respone == 0 
             //reload page
             // Close the loading alert
             Swal.close();
             if (response == 0) {
-                //console.log(response);
+                console.log(response);
 
                 Swal.fire('Berhasil!', 'Yey! Berhasil memperbarui data', 'success');
                 //kasih delay

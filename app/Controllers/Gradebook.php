@@ -240,8 +240,7 @@ class Gradebook extends BaseController
             $gradeCounts[$idgrade]++; //menghitung banyaknya data yang dihitung               
         }
 
-        foreach ($gradeSums as $idgrade => $sum) {
-                
+        foreach ($gradeSums as $idgrade => $sum) {                
             $mean = $sum / $gradeCounts[$idgrade]; //lakukan perhitungan mean
             $mean = number_format($mean, 2);
             $gradeMeans[] = [

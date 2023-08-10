@@ -1,5 +1,5 @@
 .table-container {
-    width: 100%;
+    width:100%!important;
     overflow-x: auto;
     /* max-height: 500px; */
     /* Adjust the maximum height as needed */
@@ -18,4 +18,8 @@ table td:nth-child(1) {
 }
 .table-participant td:first-child {
     width: 400px;
+}
+
+.table{
+    width:100%!important;
 }

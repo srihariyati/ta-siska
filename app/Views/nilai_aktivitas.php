@@ -97,21 +97,17 @@
 
 <script>
     $(document).ready(function() {
-   
-      // var modmodule = $('#contentModule').data('mod');  
-      // console.log(modmodule);   
-     
       getCourseName();
       getContentModuleInfo();    
       
-      // Add click event handler to the Edit button
+      // Add click event handler to the Edit button 
       $('#gradeCard').on('click', '#btnEditGrade', function() {
         $('#btnEditAll').empty();
         var token = $('#courseTitle').data('token');
         var courseid = $('#courseTitle').data('courseid');
         var activityid = $('#contentModule').data('cmid');
 
-        // Retrieve the index and corresponding data
+        // Retrieve the index and corresponding data (index sesuai data pada card)
         var index = $(this).data('index');
         var studentName = $('#studentName-' + index).text();
         var studentId = $('#studentName-' + index).data('userid');
