@@ -1,12 +1,12 @@
 function chartQuizGrades(data) {
-    console.log(data);
+    //console.log(data);
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
     // buat ukuran grafik
     var width = document.getElementById("chartQuizGrades").clientWidth;
     var height = document.getElementById("chartQuizGrades").clientWidth / 1.2 - margin.top - margin.bottom;
-    console.log(width);
+    //console.log(width);
 
     var data = data;
     // Membuat elemen SVG
@@ -194,7 +194,7 @@ function chartQuizGrades(data) {
             return selectedGrades.includes(d.grade);
         });
 
-        console.log(filteredData);
+        //console.log(filteredData);
 
         // Log the selected data to the console
         var selectedData = filteredData.map(function(d) {
@@ -250,7 +250,7 @@ function chartQuizGrades(data) {
             var mouseCoords = d3.pointer(event);
             var mouseX = mouseCoords[0];
             var mouseY = mouseCoords[1];
-            console.log(mouseX);
+            //console.log(mouseX);
 
             tooltip.style("opacity", 1)
                 .html(`<strong>Nilai: ${d.grade}</strong><br/>${d.jumlah} Mahasiswa`)
@@ -426,10 +426,10 @@ function focusBarGrade(data, filteredData, width, height, chart, margin,svg){
 }
 
 function chartQuizQues(data) {
-    console.log(data);
+    //console.log(data);
     var countmhs = data[0]['incorrect'] + data[0]['correct'];
 
-    //console.log(((data[0]['correct']/countmhs)*100).toFixed(2)+'%');
+    ////console.log(((data[0]['correct']/countmhs)*100).toFixed(2)+'%');
     var countQues = data.length;
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
@@ -437,7 +437,7 @@ function chartQuizQues(data) {
     // buat ukuran grafik
     var width = document.getElementById("chartQuizQues").clientWidth;
     var height = document.getElementById("chartQuizQues").clientWidth / 1.5 - margin.top - margin.bottom;
-    console.log(width);
+    //console.log(width);
 
     // Membuat elemen SVG
     var svg = d3.select("#chartQuizQues")
@@ -649,7 +649,7 @@ function chartQuizQues(data) {
             chartQuizQues(data);
         }
 
-        console.log(selectedQuestions);
+        //console.log(selectedQuestions);
     }
 
 
@@ -671,7 +671,7 @@ function chartQuizQues(data) {
             var mouseCoords = d3.pointer(event);
             var mouseX = mouseCoords[0];
             var mouseY = mouseCoords[1];
-            console.log(mouseX);
+            //console.log(mouseX);
 
             var percentgrade = ((d.correct/countmhs)*100).toFixed(2);
 
@@ -779,7 +779,7 @@ function chartQuizQues(data) {
         totalPercentageCorrect += percentageCorrect;
       });
       const averagePercentageCorrect = (totalPercentageCorrect / (data.length)).toFixed(2);
-      console.log(averagePercentageCorrect);
+      //console.log(averagePercentageCorrect);
       
     //append to #descQues
     var descQues = '<p> <strong>' + countQues + ' Pertanyaan</strong></p><p class = "mb-0" > Persentase mahasiswa menjawab dengan benar</p><p class = "mt-0"> <strong> '+averagePercentageCorrect+'% </strong></p>';
@@ -788,7 +788,7 @@ function chartQuizQues(data) {
 }
 
 function focusBarQues(data, filteredData,countmhs, width, height, chart, margin, svg){   
-    console.log("focusbar");
+    //console.log("focusbar");
      // Create the 'esc' group for the icon
     var esc = svg.append("g")
     .attr("class", "iconesc")
@@ -855,7 +855,7 @@ function focusBarQues(data, filteredData,countmhs, width, height, chart, margin,
             var mouseCoords = d3.pointer(event);
             var mouseX = mouseCoords[0];
             var mouseY = mouseCoords[1];
-            console.log(mouseX);
+            //console.log(mouseX);
 
             var percentgrade = ((d.correct/countmhs)*100).toFixed(2);
 

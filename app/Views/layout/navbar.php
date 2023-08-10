@@ -47,15 +47,15 @@
 
 
 <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
-  <div class="navbar_left">
+  <div class="d-flex justify-content-start navbar_left">
     <div class="logo">
       <a class="navbar-brand" href="<?= base_url('beranda/getEnrolledCourses/') ?>">
-        <img src="<?=str_replace('/index.php', '', base_url()) .'/img/logo_siska_2.svg'?>" width="350" height="46" class="d-inline-block align-top" alt="">
+        <img src="<?=str_replace('/index.php', '', base_url()) .'/img/logo_siska_2.svg'?>" width="220" height="50" class="d-inline-block align-top" alt="">
       </a>
     </div>
   </div>
 
-  <div class="navbar_right pr-5">
+  <div class="d-flex justify-content-end navbar_right pr-2">
     <div class="profile">
       <div class="icon_wrap">
         <img src="<?=str_replace('/index.php', '', base_url()) .'/img/profile.png'?>" alt="profile_pic">

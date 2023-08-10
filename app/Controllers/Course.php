@@ -23,7 +23,7 @@ class Course extends BaseController{
        
         $courseid= $courseid;
       
-    
+        //mendapatkan informasi mata kuliah berdasarkan field courseid
         $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -41,11 +41,8 @@ class Course extends BaseController{
             'courseid'=>$response["courses"][0]["id"],
             'displayname'=>ucwords($response["courses"][0]["displayname"]),
         ];
-        // $this->data['course_info'] = $course_info;
-        // return $this->getcoursecontent();
 
-
-        //mendapatkan content dri course
+        //mendapatkan content(topik) dari course
         $param_content =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -66,7 +63,6 @@ class Course extends BaseController{
             $i++;
         }
 
-       
 
         $mydata=[
             'token' => $token,
@@ -84,7 +80,6 @@ class Course extends BaseController{
 
     public function getCourseModule()
     {
-        // Get data from POST request
         $token = $this->request->getPost('token');
         $courseid = $this->request->getPost('courseid');
         $contentid = $this->request->getPost('contentid');
@@ -106,7 +101,6 @@ class Course extends BaseController{
         $i = 1;
 
         //pilih content pada course (hanya pilih content yang id ==contentid)
-         
         foreach($response as $cc){
             if($cc['id']==$contentid){
                 $content_module =[
@@ -153,6 +147,7 @@ class Course extends BaseController{
             $curlGen = new GenerateCurl();
             $response_quiz =  $curlGen->curlGen($param);
 
+            //ambil informasi kuis berdasarkan instanceid(quizid) yang dipilih oleh user
             $filteredQuiz = [];
             foreach($response_quiz['quizzes'] as $quiz){
                 if ($quiz['id']==$instanceid){
@@ -165,8 +160,7 @@ class Course extends BaseController{
                         'quizName'=> $quiz['name'],
                         'openedDate'=> $quiz['timeopen'],
                         'closedDate'=>$quiz['timeclose']
-                    ];
-                   
+                    ];   
                 }
             }
             //dd($filteredQuiz);
@@ -177,7 +171,8 @@ class Course extends BaseController{
         $token = $this->request->getPost('token');
         $courseid = $this->request->getPost('courseid');
         $instanceid = $this->request->getPost('instanceid');
-
+        
+        //mendapatkan informasi assignment
         $param =[
             "wstoken" =>$token,
             "moodlewsrestformat"=>"json",
@@ -198,7 +193,6 @@ class Course extends BaseController{
                         'assignName'=> $assign['name'],
                         'openedDate'=> $assign['allowsubmissionsfromdate'],
                         'closedDate'=>$assign['duedate'],
-                        //'groupId' => $response["cm"]["groupingid"]
                     ];
                    //dd($filteredAssign);
                 }
@@ -266,7 +260,7 @@ class Course extends BaseController{
     {
 
         //mod_assign_get_grades
-        // param : assignmentids[0]
+        //param : assignmentids[0]
         $token = $this->request->getPost('token');
         $courseid = $this->request->getPost('courseid');
         $assignid = $this->request->getPost('assignid');
@@ -281,8 +275,6 @@ class Course extends BaseController{
 
         $curlGen = new GenerateCurl();
         $response_grade =  $curlGen->curlGen($param);
-
-        
        
         if(count($response_grade['assignments'])==0){ //tidak ada data assignment di moodle
             $status = 'fail';
@@ -399,9 +391,6 @@ class Course extends BaseController{
         // get fullname dan username participant
         //dd($gradeList);
         return $this->response->setJSON($data);
-       
-        
-    
     }
 
     public function getGradeQuiz(){
@@ -444,17 +433,7 @@ class Course extends BaseController{
             
             //ambil attemptid untuk ws function mod_quiz_get_attempt_review 
             //untuk mendapatkan nilaigrade dan perpertanyaan
-        
         }
-        
-
-        //ada yang attemptsid nya sama
-        //handling error attempts id sama
-        // $type = gettype($quizAttemptAll);
-        // echo "Tipe data dari \$data adalah: $type";
-        // die();
-        // //ubah json->array
-        // $arrayQuizAttempt =json_decode($quizAttemptAll);
     
         // //hapus duplikasi data 
         $quizAttemptUniqe = array_unique($quizAttemptAll, SORT_REGULAR);
@@ -510,6 +489,7 @@ class Course extends BaseController{
             
             array_push($quizGradeAll,  $quizGrade);
         }
+        
         // var_dump($quizGradeAll);
         // die();
         //dd($quizGradeAll);         

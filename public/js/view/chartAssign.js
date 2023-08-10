@@ -8,7 +8,7 @@ const gradeColors = {
     'E': 'rgba(204, 43, 43, 1)'//red
   };
 function chartParticipant(courseParticipant, submittedParticipant, assignTitle) {
-    console.log("chart participant");
+    //console.log("chart participant");
 
     var persentase = ((submittedParticipant / courseParticipant) * 100).toFixed(2);;
 
@@ -97,7 +97,7 @@ function chartParticipant(courseParticipant, submittedParticipant, assignTitle) 
 function chartAssign(data) {    
     //sorting dari ABC
     data.sort((a, b) => a.grade.localeCompare(b.grade));
-    console.log(data);
+    //console.log(data);
 
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
@@ -105,7 +105,7 @@ function chartAssign(data) {
     // buat ukuran grafik
     var width = document.getElementById("chartGradeAssignment").clientWidth - 100;
     var height = document.getElementById("chartGradeAssignment").clientWidth / 1.5 - margin.top - margin.bottom;
-    console.log(width);
+    //console.log(width);
     var data = data;
     // Membuat elemen SVG
     var svg = d3.select("#chartGradeAssignment")
@@ -269,7 +269,7 @@ function chartAssign(data) {
             return selectedGrades.includes(d.grade);
         });
 
-        console.log(filteredData);
+        //console.log(filteredData);
 
         //jika user tidak berhasil select data
         if (filteredData.length != 0 ){
@@ -485,7 +485,7 @@ var tooltip = d3.select("#chartGradeAssignment")
 
 function legendChartAssignment(data) {
 
-    console.log(data);
+    //console.log(data);
     // Kasih margin yang rapi
     var margin = { top: 20, right: 50, bottom: 50, left: 5 };
 
@@ -493,7 +493,7 @@ function legendChartAssignment(data) {
     var width = document.getElementById("chartGradeAssignment").clientWidth - 100;
     var height = document.getElementById("chartGradeAssignment").clientWidth / 1.5 - margin.top - margin.bottom;
 
-    console.log(width);
+    //console.log(width);
     // Define the legend colors based on grades
     
       const gradeLagend = {

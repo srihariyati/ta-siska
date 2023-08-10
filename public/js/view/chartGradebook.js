@@ -1,6 +1,6 @@
 function showPersonalGradeChart(gradeData) {
     data = gradeData;
-    console.log(data);
+    //console.log(data);
 
     //menentukan leabr dan tinggi svg
     var width = document.getElementById("PersonalGradeChart").clientWidth;
@@ -221,7 +221,7 @@ function brushed(event) {
         showPersonalGradeChart(data);
     }
 
-    console.log(selectedData);
+    //console.log(selectedData);
 }
 
 
@@ -350,7 +350,7 @@ function brushed(event) {
 }
 
 function focusBar(data, filteredData, width, height, chart, margin, svg){
-    console.log("focusbar");
+    //console.log("focusbar");
     // Create the 'esc' group for the icon
    var esc = chart.append("g")
    .attr("class", "iconesc")

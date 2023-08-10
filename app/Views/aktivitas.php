@@ -194,13 +194,6 @@
             $('#descQuizQues').show();
             $('#chartQuizQues').show(); 
           }
-
-
-
-
-          
-
-
           //block button vis
           blockiconVis();
 
@@ -215,7 +208,8 @@
           
         });
 
-        $('#table_grade_icon').on('click', function(){        
+        $('#table_grade_icon').on('click', function(){     
+          $('#ketIcon').hide();   
           //block icon table
           blockiconTable(); 
 

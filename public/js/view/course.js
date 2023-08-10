@@ -14,8 +14,8 @@ function handleCourseContentChange() {
     var courseId = $('#courseTitle').data('courseid');
     token = $('#courseTitle').data('token');
 
-    console.log('courseId : ' + courseId);
-    console.log('contentId : ' + contentId);
+    //console.log('courseId : ' + courseId);
+    //console.log('contentId : ' + contentId);
 
 
     $.ajax({
@@ -29,8 +29,8 @@ function handleCourseContentChange() {
         },
         dataType: 'json',
         success: function(response) {
-            console.log("getCourseModule : ");
-            console.log(response);
+            //console.log("getCourseModule : ");
+            //console.log(response);
             $('#content_module').empty();
             $('#contentName').empty();
 
@@ -84,7 +84,7 @@ function handleModuleChange() {
     var instanceid = $('#content_module').val().split(',')[0];
     var modulemod = $('#content_module').val().split(',')[1];
 
-    console.log(modulemod);
+    //console.log(modulemod);
 
     if (modulemod == 'quiz') {
         getQuiz(token, courseId, instanceid);
@@ -114,7 +114,7 @@ function handleTable(modName) {
 
 //////////////////////////////Assign/////////////////////////////////
 function getAssign(token, courseId, instanceid) {
-    console.log('getassign', token, courseId, instanceid);
+    //console.log('getassign', token, courseId, instanceid);
 
     emptyPage();
     loadAnimation_sm("load-1");
@@ -131,10 +131,10 @@ function getAssign(token, courseId, instanceid) {
         },
         dataType: 'json',
         success: function(response) {
-            console.log(response);
+            //console.log(response);
             var modName = '<h3 class="font-weight-bolder pr-10 mb-0" id="mod" data-modname="' + response.mod + '" >' + response.assignName + '</h3>';
-            console.log('assign harusnya', modName);
-            console.log("AssignId:" + response.assignId);
+            //console.log('assign harusnya', modName);
+            //console.log("AssignId:" + response.assignId);
 
             openedDate = response.openedDate;
             closedDate = response.closedDate;
@@ -203,18 +203,18 @@ function getGradeAssignment() {
         },
         dataType: 'json',
         success: function(response) {
-            console.log(response.status);
+            //console.log(response.status);
 
              //cek status apakah data grade assignment ada atau tidak
             if (response.status !='fail'){
             //hitung jumlah nilai a b c
             // Calculate the mean grade
             gradedata = response.gradeList;
-            console.log(gradedata);
+            //console.log(gradedata);
 
             for (var i = 0; i < gradedata.length; i++) {
                 var lettergrade = gradedata[i].lettergrade;
-                //console.log(lettergrade);
+                ////console.log(lettergrade);
 
                 if (!counts.hasOwnProperty(lettergrade)) {
                     counts[lettergrade] = 0;
@@ -225,7 +225,7 @@ function getGradeAssignment() {
                 counts[lettergrade]++;
 
             }
-            console.log(counts);
+            //console.log(counts);
             const dataArray = [];
 
             // Iterate over the object keys
@@ -235,7 +235,7 @@ function getGradeAssignment() {
                 dataArray.push(obj);
             }
 
-            console.log(dataArray);
+            //console.log(dataArray);
             window.chartAssign(dataArray);
 
             handleTableAssign(courseId, assignId);
@@ -268,7 +268,7 @@ function handleTableAssign(courseId, assignId) {
             //cek status apakah data grade assignment ada atau tidak
             if (response.status !='fail'){
                 gradedata =response.gradeList;
-                console.log(gradedata);
+                //console.log(gradedata);
                 //append table here
                 //append table participant khusus assign
                 var tableGrade = '<table  id="table_assign" class="table table-sm table-striped"><thead><tr><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Grade</th><th scope="col">Nilai Huruf</th></tr></thead><tbody></tbody></table>';
@@ -286,7 +286,7 @@ function handleTableAssign(courseId, assignId) {
 }
 
 function showTableGradeAssignment(responseData) {
-    console.log(responseData);
+    //console.log(responseData);
 
     var data=[];
     responseData.forEach(function(item){
@@ -310,7 +310,7 @@ function showTableGradeAssignment(responseData) {
         data.push(rowData);
     });
 
-    console.log(data);
+    //console.log(data);
 
     //buat datatables
     table = $('#table_assign').DataTable({
@@ -356,8 +356,8 @@ function showTableGradeAssignment(responseData) {
 }
 
 function getCourseParticipant(token, courseId) {
-    console.log(token);
-    console.log(courseId);
+    //console.log(token);
+    //console.log(courseId);
     $('#courseParticipant').empty();
     $('#submittedParticipant').empty();
 
@@ -373,13 +373,13 @@ function getCourseParticipant(token, courseId) {
         },
         dataType: 'json',
         success: function(response) {
-            console.log(response);
+            //console.log(response);
             courseParticipant = response.length;
 
 
             $('#courseParticipant').append(courseParticipant);
 
-            console.log("course participant : " + courseParticipant);
+            //console.log("course participant : " + courseParticipant);
         }
     });
 
@@ -388,8 +388,8 @@ function getCourseParticipant(token, courseId) {
 }
 
 function getSubmittedParticipant(token, assignId, assignName) {
-    console.log(token);
-    console.log(assignId);
+    //console.log(token);
+    //console.log(assignId);
 
     //$('#submittedParticipant').empty();
     $('#chartParticipant').empty();
@@ -434,7 +434,7 @@ function getSubmittedParticipant(token, assignId, assignName) {
             // chartAssign.js
             //buat untuk yang telah mengumpulkan tugas
 
-            console.log("dari get subbmiteed par :coursepart", courseParticipant);
+            //console.log("dari get subbmiteed par :coursepart", courseParticipant);
             window.chartParticipant(courseParticipant, submittedParticipant, assignName);
         }
 
@@ -444,7 +444,7 @@ function getSubmittedParticipant(token, assignId, assignName) {
 //////////////////////////////Quiz//////////////////////////////////
 function getQuiz(token, courseId, instanceid) {
     
-    console.log('quiz', token, courseId, instanceid);
+    //console.log('quiz', token, courseId, instanceid);
     emptyPage();
     loadAnimation_lg("load-2");
 
@@ -460,7 +460,7 @@ function getQuiz(token, courseId, instanceid) {
         },
         dataType: 'json',
         success: function(response) {
-            console.log(response.quizName);
+            //console.log(response.quizName);
 
             var modName = '<h3 class="font-weight-bolder pr-10 mb-0"  id="mod" data-modname="' + response.mod + '">' + response.quizName + '</h3>';
             openedDate = response.openedDate;
@@ -492,7 +492,7 @@ function getGradeQuiz(quizId) {
     //$('#table_grade_icon').hide();
     blockiconTable();
 
-    console.log(quizId);
+    //console.log(quizId);
     var courseId = $('#courseTitle').data('courseid');
     var counts = {};
     //var dataUser=[];
@@ -508,7 +508,7 @@ function getGradeQuiz(quizId) {
         dataType: 'json',
         success: function(response) {
             var participant = response;
-            console.log(participant); 
+            //console.log(participant); 
 
             $.ajax({               
                 url: `${BASE_URL}course/getGradeQuiz`,
@@ -520,11 +520,11 @@ function getGradeQuiz(quizId) {
                 },
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     //start chart 1
                     for (var i = 0; i < response.length; i++) {
                         var grade = response[i].grade;
-                        //console.log(grade);
+                        ////console.log(grade);
         
                         if (!counts.hasOwnProperty(grade)) {
                             counts[grade] = 0;
@@ -535,7 +535,7 @@ function getGradeQuiz(quizId) {
         
                     }
         
-                    console.log(counts);
+                    //console.log(counts);
                     const dataQuizGrades = [];
         
                     // Iterate over the object keys
@@ -561,7 +561,7 @@ function getGradeQuiz(quizId) {
                         var ques = response[i].questions;
         
                         for (var j = 0; j < ques.length; j++) {
-                            //console.log(ques[j]);
+                            ////console.log(ques[j]);
                             //couting jumlah slot corret dan incorret/no answered
                             //hitung jumlah slot
                             // {slot:jumlahslot}
@@ -598,7 +598,7 @@ function getGradeQuiz(quizId) {
 }
 
 function getQuizQues(questionsData) {
-    console.log(questionsData);
+    //console.log(questionsData);
     const countBySlot = {};
     let output = [];
 
@@ -622,8 +622,8 @@ function getQuizQues(questionsData) {
         correct: item.correct,
         incorrect: item.incorrect
     }));
-    console.log(countBySlot);
-    console.log(mappedData);
+    //console.log(countBySlot);
+    //console.log(mappedData);
 
     window.chartQuizQues(mappedData);
 
@@ -632,8 +632,8 @@ function getQuizQues(questionsData) {
 
 function handleTableQuiz(quizId) {
     //blockiconTable();
-    console.log('tble quiz');
-    console.log(token);
+    //console.log('tble quiz');
+    //console.log(token);
     //ambil data yang sama kayak data di gradequiz
     var courseId = $('#courseTitle').data('courseid');
     var counts = {};
@@ -650,7 +650,7 @@ function handleTableQuiz(quizId) {
         dataType: 'json',
         success: function(response) {
             var participant = response;
-            console.log(participant); 
+            //console.log(participant); 
 
             $.ajax({
                 url: `${BASE_URL}course/getGradeQuiz`,
@@ -662,7 +662,7 @@ function handleTableQuiz(quizId) {
                 },
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     //transformasi data kedalam format row table
                     var dataTableData = [];
 
@@ -681,17 +681,17 @@ function handleTableQuiz(quizId) {
                                         
                         dataTableData.push(rowData);
                     });
-                    console.log(dataTableData);
+                    //console.log(dataTableData);
 
 
                     //generate baris header
                     //kolom paling akhir sebanyak jumlah slot quiz
                     var countingques = (response[0]['questions']).length;
-                    console.log(countingques);
+                    //console.log(countingques);
                     
                     //kolom paling akhir sebanyak jumlah slot quiz
                     var countingques = (response[0]['questions']).length;
-                    console.log(countingques);
+                    //console.log(countingques);
                     var tableGrade = `
                         <table  id="table_quiz" class="table table-sm table-striped">
                             <thead>
@@ -771,7 +771,7 @@ function showTableGradeQuiz(data){
 
         dataTableData.push(rowData);
     });
-    console.log(dataTableData);
+    //console.log(dataTableData);
     //buat datatables
     table = $('#table_quiz').DataTable({
         destroy: true,

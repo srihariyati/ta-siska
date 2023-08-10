@@ -91,7 +91,6 @@ class Login extends BaseController
         }      
     }
 
-
     //digunakan juga untuk menampilkan nama user pada header bar
     public function getUserInfo($token){
         $param =[
@@ -105,7 +104,6 @@ class Login extends BaseController
 
         return $response_checkuser;
     }
-
 
     public function logout(){
         //delete session
