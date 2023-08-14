@@ -75,13 +75,19 @@
    
    
     <div class="col-md-6">
-      <div id="load-1"></div>
-      <!-- nama kuis, dan waktu kuis -->
-      <div id="modTitle"></div>
-      <div id="contentName"></div>
-     
-      <div id="openedDate"></div>
-      <div id="closedDate"></div>
+      
+        <div id="load-1"></div>
+        <!-- nama kuis, dan waktu kuis -->
+        <div id="modTitle"></div>
+        <div id="contentName"></div>
+      
+        <div id="openedDate"></div>
+        <div id="closedDate"></div>
+      
+      <div class="row m-1">
+          <div id="participant-quiz"></div>
+      </div>
+      
     </div>
 
     <div class="col-md-6">
@@ -152,11 +158,17 @@
     $(document).ready(function() {
 
       loadAnimation_sm("load-1");
-      handleCourseContentChange();       
+      handleCourseContentChange();  
+      $('#ketIcon').hide();     
       
         $('#course_content').on('change', function() {
           $('#ketIcon').hide();
-          handleCourseContentChange(); //menampilkan dropdown 2 : topik/content
+          handleCourseContentChange(); //menampilkan dropdown 2 : topik/content  
+          // Ganti ikon #table_grade_icon menjadi aktif
+          $('#vis_grade_icon i').removeClass('bi-bar-chart-fill').addClass('bi-bar-chart-fill active');
+
+          // Ganti ikon #vis_grade_icon menjadi nonaktif
+          $('#table_grade_icon i').removeClass('bi-table active').addClass('bi-table');        
         });
         
         $('#content_module').on('change', function() {
@@ -178,6 +190,7 @@
 
           if(modName == 'assign'){
             //hide visualisasi data tugas
+            
             $('#chartGradeAssignment').show();
             $('#chartParticipant').show();
 
@@ -193,6 +206,7 @@
             $('#chartQuizGrades').show();
             $('#descQuizQues').show();
             $('#chartQuizQues').show(); 
+            $('#participant-quiz').show();
           }
           //block button vis
           blockiconVis();
@@ -235,7 +249,8 @@
             //hide visualisasi data
             $('#chartQuizGrades').hide();
             $('#descQuizQues').hide();
-            $('#chartQuizQues').hide();         
+            $('#chartQuizQues').hide(); 
+            $('#participant-quiz').hide();        
 
             //tampilkan tabel quiz
             $('#ketIcon').show();

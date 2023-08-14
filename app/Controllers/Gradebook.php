@@ -181,10 +181,12 @@ class Gradebook extends BaseController
     }
 
     public function getPersonalGrade(){
+        
 
         $userid = $this->request->getPost('userid');
         $courseid = $this->request->getPost('courseid');
         $token = $this->request->getPost('token');
+        //dd($token);
         
 
         $param =[
@@ -197,7 +199,7 @@ class Gradebook extends BaseController
         $curlGen = new GenerateCurl();
         $response =  $curlGen->curlGen($param);
         
-
+        //dd($response);
         $response_gradebook = $response["usergrades"];
 
         $personalGrade =[];
@@ -277,9 +279,7 @@ class Gradebook extends BaseController
                                   ];
                             }
                         }
-                    }
-                    
-                    
+                    }                   
                 }
 
                 $personalGrade=[
@@ -311,6 +311,7 @@ class Gradebook extends BaseController
         $curlGen = new GenerateCurl();
         $response_finalsumgrade =  $curlGen->curlGen($param_finalsumgrade);
         //select data grade dari course id berikut
+        //dd($response_finalsumgrade);
         
         foreach($response_finalsumgrade['grades'] as $gradessum){
             //resspon yang didapat adalah nilai sum dari seluruh data
